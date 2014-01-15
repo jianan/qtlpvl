@@ -1,0 +1,13 @@
+Package: qtlpvl
+Title: QTL: test of pleiotrophy vs. close linkage
+Description: This package deal with multiple trait QTL problem.
+Version: 0.1
+Authors@R: c( 
+    person("Jianan", "Tian", email = "jiant17@gmail.com", role = c("aut","cre")), 
+    person("Karl", "Broman", email = "kbroman@gmail.com", role = "aut") 
+)
+Depends:
+    R (>= 3.0.2)
+Imports:
+    qtl
+License: GPL (>= 2)
