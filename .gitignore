@@ -1,4 +1,5 @@
 *~
 *.RData
 *.Rout
-man/
+*.Rd
+NAMESPACE
