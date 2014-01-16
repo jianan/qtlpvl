@@ -1,19 +1,32 @@
-##' .. content for \description{} (no empty lines) ..
+##' Test of one pleiotrophic QTL vs two close linked QTLs.
 ##'
-##' .. content for \details{} ..
-##' @title 
-##' @param cross 
-##' @param Y 
-##' @param chr 
-##' @param addcov 
-##' @param intcov 
-##' @param region.l 
-##' @param region.r 
-##' @param int.method 
-##' @param search 
-##' @param RandomStart 
-##' @return list...
+##' Test if multitriats are controlled by one pleiotrophic QTL or two
+##' close linked QTLs. p-value is calculated from paramatric
+##' bootstrap.
+##' 
+##' @param Y matrix of multiple traits with n rows.
+##' @param cross An object of class \code{cross}. See \code{read.cross} for
+##' details.
+##' @param chr Optional vector indicating the chromosomes for which
+##' LOD scores should be calculated.  This should be a vector of
+##' character strings referring to chromosomes by name; numeric values
+##' are converted to strings.
+##' @param addcov Additive covariates.
+##' @param intcov Interactive covariates.
+##' @param region.l left bound
+##' @param region.r right bound 
+##' @param int.method "bayes" or "1.5lod"
+##' @param search searching method
+##' @param RandomStart default is TRUE
+##' @return a list of sth
 ##' @export
+##' @examples
+##' library(qtl)
+##' data(hyper)
+##' n <- 250
+##' p <- 5
+##' Y <- matrix(rnorm(n*p),n,p)
+##' scanone.mvn(Y, hyper)
 test.pleio.vs.2qtl <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
                                region.l=NA, region.r=NA, int.method="bayes",
                                search="fast", RandomStart=TRUE){
