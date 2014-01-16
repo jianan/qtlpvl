@@ -1,0 +1,3 @@
+export(scanone.mvn)
+export(test.pleio.vs.2qtl)
+import(qtl)
