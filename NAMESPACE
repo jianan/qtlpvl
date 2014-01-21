@@ -1,3 +1,4 @@
 export(scanone.mvn)
-export(test.pleio.vs.2qtl)
+export(testpleio.1vs2)
+export(testpleio.1vsp)
 import(qtl)

@@ -30,11 +30,11 @@
 ##' n <- 250
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
-##' scanone.mvn(Y, hyper)
+##' testpleio.1vs2(cross=hyper, Y=Y, chr="2")
 
-test.pleio.vs.2qtl <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
-                               region.l=NA, region.r=NA, int.method="bayes",
-                               search="fast", RandomStart=TRUE){
+testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
+                           region.l=NA, region.r=NA, int.method="bayes",
+                           search="fast", RandomStart=TRUE){
 
   ## 1. scanone for each trait and order them by QTL.pos
   ## 2. LOD1 = LOD.scanone   
