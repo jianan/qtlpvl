@@ -2,22 +2,26 @@
 ##'
 ##' Test if multitriats are controlled by one pleiotrophic QTL or two
 ##' close linked QTLs. p-value is calculated from paramatric
-##' bootstrap.
+##' bootstrap, which takes the estimated paramaters under null
+##' hypothesis and generate data from them to get the null empirical
+##' distribution of test statistic.
 ##' 
-##' @param Y matrix of multiple traits with n rows.
-##' @param cross An object of class \code{cross}. See \code{read.cross} for
-##' details.
-##' @param chr Optional vector indicating the chromosomes for which
-##' LOD scores should be calculated.  This should be a vector of
-##' character strings referring to chromosomes by name; numeric values
-##' are converted to strings.
+##' @param Y matrix of multiple traits with rows equals to n, the
+##' number of individuals.
+##' @param cross An object of class \code{cross}. See
+##' \code{read.cross} for details.
+##' @param chr \code{chr, region.l, region.r} are used to specify the
+##' interval of interest. see also \code{int.method}.
 ##' @param addcov Additive covariates.
 ##' @param intcov Interactive covariates.
 ##' @param region.l left bound
-##' @param region.r right bound 
-##' @param int.method "bayes" or "1.5lod"
-##' @param search searching method
-##' @param RandomStart default is TRUE
+##' @param region.r right bound
+##' @param int.method "bayes" or "1.5lod" method to calculated the
+##' interval of interest if \code{region.l} and \code{region.r} is not
+##' specified.
+##' @param search searching method for two-QTL model.
+##' @param RandomStart use random starting point for the two-QTL model
+##' or not. default is \code{TRUE}.
 ##' @return a list of sth
 ##' @export
 ##' @examples
@@ -27,6 +31,7 @@
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' scanone.mvn(Y, hyper)
+
 test.pleio.vs.2qtl <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
                                region.l=NA, region.r=NA, int.method="bayes",
                                search="fast", RandomStart=TRUE){
