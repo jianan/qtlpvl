@@ -4,9 +4,9 @@
 ##' covariates, using multivariate normal model for the multiple
 ##' traits.
 ##'
-##' @param Y matrix of multiple traits with n rows.
 ##' @param cross An object of class \code{cross}. See
 ##' \code{read.cross} for details.
+##' @param Y matrix of multiple traits with n rows.
 ##' @param chr Optional vector indicating the chromosomes for which
 ##' LOD scores should be calculated.  This should be a vector of
 ##' character strings referring to chromosomes by name; numeric values
@@ -29,19 +29,22 @@
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' scanone.mvn(Y, hyper)
 
-scanone.mvn <- function(Y, cross, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
+scanone.mvn <- function(cross, Y, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
 
   ## checking inputs...
-  if(!is.matrix(Y)) stop("Y need to be a matrix.")
-  if(!is.matrix(addcov)) stop("addcov need to be a matrix.")
-  if(!is.matrix(intcov)) stop("intcov need to be a matrix.")
   if(class(cross)[2] != "cross") stop("cross need to be of class cross")
   n <- nrow(cross$pheno)
+  if(missing(Y))  stop("Y needs to be speicfied")
+  if(!missing(Y) & !is.matrix(Y)) stop("Y need to be a matrix.")
+  if(!missing(Y) & is.matrix(Y) & n != nrow(Y)) stop("number of obs. in cross and Y not same.")
   p <- ncol(Y)
-  if(n != nrow(Y)) stop("number of obs. in cross and Y not same.")
   if(p < 1) stop("Y should be a matrix with more than one columns")
-  if(n != nrow(addcov)) stop("number of obs. in cross and addcov not same.")
-  if(n != nrow(intcov)) stop("number of obs. in cross and intcov not same.")
+  ## if(!missing(addcov) & !is.matrix(addcov)) stop("addcov need to be a matrix.")
+  ## if(!missing(intcov) & !is.matrix(intcov)) stop("intcov need to be a matrix.")
+  ## if(!missing(addcov) & is.matrix(addcov) & n != nrow(addcov))
+  ##     stop("number of obs. in cross and addcov not same.")
+  ## if(!missing(intcov) & is.matrix(intcov) & n != nrow(intcov))
+  ##     stop("number of obs. in cross and intcov not same.")
   
   if(missing(chr)){
     chr <- names(cross$geno)
@@ -51,7 +54,7 @@ scanone.mvn <- function(Y, cross, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
 
   ## todo-need to deal with X-chr
   chrclass <- sapply(cross$geno,class)
-  genoprob <- pull.genoprob(cross,chr=chr)
+  genoprob <- pull.genoprob(cross, chr=chr)
   if(attr(cross,"class")[1] == "bc"){
     ngeno <- 2
   }else{
