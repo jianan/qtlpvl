@@ -22,7 +22,10 @@
 ##' @param search searching method for two-QTL model.
 ##' @param RandomStart use random starting point for the two-QTL model
 ##' or not. default is \code{TRUE}.
-##' @return a list of sth
+##' @param n.simu number of simulations for p-value.
+##' @param tol Tolerance value for the \code{qr} decomposition in
+##' \code{lm} fitting.
+##' @return a list of LODdiff, Group, P-value...
 ##' @export
 ##' @examples
 ##' library(qtl)
@@ -34,7 +37,7 @@
 
 testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
                            region.l=NA, region.r=NA, int.method="bayes",
-                           search="fast", RandomStart=TRUE){
+                           search="fast", RandomStart=TRUE, n.simu=NA, tol=1e-7){
 
   ## 1. scanone for each trait and order them by QTL.pos
   ## 2. LOD1 = LOD.scanone   
@@ -78,21 +81,36 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
   ## order the traits by their mapped positions.
   maxPOS <- apply(out[,-(1:2)],2,which.max)
   o <- order(maxPOS)
+  Y.orig <- Y
   Y <- Y[,o]
   maxPOS <- maxPOS[o]
 
   ## ---- scan.mvn ----
-  genoprob <- pull.genoprob(cross, chr=chr)[,(3*marker.l-2):(3*marker.r)]
-  n.marker <- ncol(genoprob)/3
+  genoprob <- pull.genoprob(cross, chr=chr)
+  if(attr(cross,"class")[1] == "bc"){
+    ngeno <- 2
+    genoprob <- pull.genoprob(cross, chr=chr)[,(2*marker.l-1):(2*marker.r)]
+    n.marker <- ncol(genoprob)/2
+  }else{
+    ngeno <- 3
+    genoprob <- pull.genoprob(cross, chr=chr)[,(3*marker.l-2):(3*marker.r)]
+    n.marker <- ncol(genoprob)/3
+  }
+  ##  n.marker <- ncol(genoprob)/ngeno
+
   
   L1 <- numeric(n.marker)
   E <- array(NA,dim=c(n,p,n.marker))
   Sigma.m <- array(NA,dim=c(p,p,n.marker)) ## save all the sigma matrix for later use
   for(i in 1:n.marker){
-    prob <- genoprob[,(1:2)+3*(i-1)]
-    X <- cbind(rep(1,n), prob[,1:2], addcov, intcov,
-               intcov*prob[,1],intcov*prob[,2])
-    fit <- .Call(stats:::C_Cdqrls, X, Y, 1e-7)
+    if(ngeno == 3){
+      prob <- genoprob[,(1:2)+3*(i-1)]
+      X <- cbind(rep(1,n), prob[,1:2], addcov, intcov, intcov*prob[,1], intcov*prob[,2])
+    }else{
+      prob <- genoprob[,2*i-1]
+      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob)
+    }
+    fit <- .Call(stats:::C_Cdqrls, X, Y, tol)
     E[,,i] <- fit$residuals
     Sigma.m[,,i] <- crossprod(E[,,i])
     L1[i] <- determinant(Sigma.m[,,i])$modulus  ## log value
@@ -225,31 +243,54 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
   ## a vectior of length p, with 1/-1 indicating grouped into right or left.'
   Group <- rep(2,p)
   Group[o[1:ind]] <- 1
-  ## attr(LODdiff,"Group") <- Group
   attr(LODdiff,"region") <- c(marker.l, marker.r)
-  ## result <- list(E.marker=E.marker, LODdiff=LODdiff, Group=Group)
   
-  ## return LOD1 and LOD2?
+  ## return LOD1 and LOD2
   X <- cbind(rep(1,n), addcov, intcov)
-  fit <- .Call(stats:::C_Cdqrls, X, Y, 1e-7)
+  fit <- .Call(stats:::C_Cdqrls, X, Y, tol)
   Sigma <- crossprod(fit$residuals)
   L0 <- determinant(Sigma)$modulus  ## return log value
   LOD1 <- n/2*log10(exp(1))*(L0 - L1)
   LOD2 <- n/2*log10(exp(1))*(L0 - L2.save)
 
-  ## return maxPOS and maxLOD for plot
   maxPOS <- apply(out[,-(1:2)],2,which.max)
   maxLOD <- apply(out[,-(1:2)],2,max)
-  ## plot(maxPOS,maxLOD)
-  ## plot(LOD1)
-  ## image(LOD2)
 
   map <- map.chr[map.chr > region.l & map.chr < region.r]
-  result <- list(E.marker=E.marker, LODdiff=LODdiff, Group=Group,
-                 maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
-                 LOD2maxs=LOD2maxs, map=map,
-                 Group.trace=Group.trace, L2inds.trace=L2inds.trace)
 
-  return(result)
+  if(is.na(n.simu)){
+    result <- list(LODdiff=LODdiff, Group=Group,
+                   maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
+                   LOD2maxs=LOD2maxs, map=map,
+                   Group.trace=Group.trace, L2inds.trace=L2inds.trace)
+    return(result)
+  }else{    ## simulation: parametric bootstrap.
+    if(n.simu < 0) stop("n.simu should be a positive integer.")
+    Y.fit <- Y.orig - E.marker
+    Sigma <- cov(E.marker)
+    Sigma.half <-  chol(Sigma)
+    
+    LODdiff.simu <- numeric(n.simu)
+    L2inds <- matrix(NA,n.simu,2)
+    Group <- matrix(NA,n.simu,p)
+
+    for(i.simu in 1:n.simu){
+      mat <- matrix(rnorm(p*n),p,n)      ## p*n
+      mat <- crossprod(mat,Sigma.half)   ## n*p
+      Y.simu <- Y.fit + mat
+      result.i <- testpleio.1vs2(cross, Y.simu, chr=chr, addcov=addcov, intcov=intcov,
+                                 int.method=int.method, search=search, n.simu=NA)
+      L2inds[i.simu,] <- attr(result.i$LODdiff,"L2inds")
+      LODdiff.simu[i.simu] <- result.i$LODdiff
+      Group[i.simu,] <-result.i$Group
+    }
+    result <- list(LODdiff=LODdiff, Group=Group,
+                   maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
+                   LOD2maxs=LOD2maxs, map=map,
+                   Group.trace=Group.trace, L2inds.trace=L2inds.trace,
+                   pvalue=pvalue, LOODdiff.simu=LODdiff.simu, Group=Group, L2inds=L2inds,
+                   )
+    return(result)
+  }
 }
 

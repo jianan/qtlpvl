@@ -2,7 +2,8 @@
 \alias{testpleio.1vsp}
 \title{Test of pleiotrophic QTL vs close linked QTLs.}
 \usage{
-testpleio.1vsp(cross, Y, chr = "6", addcov = NULL, intcov = NULL)
+testpleio.1vsp(cross, Y, chr = "6", addcov = NULL, intcov = NULL,
+  n.simu = NA, tol = 1e-07)
 }
 \arguments{
   \item{Y}{matrix of multiple traits with rows equals to n,
@@ -18,9 +19,15 @@ testpleio.1vsp(cross, Y, chr = "6", addcov = NULL, intcov = NULL)
   \item{addcov}{Additive covariates.}
 
   \item{intcov}{Interactive covariates.}
+
+  \item{n.simu}{number of simulations for p-value.}
+
+  \item{tol}{Tolerance value for the \code{qr}
+  decomposition in \code{lm} fitting.}
 }
 \value{
 a list of LOD1, LODp, LODdiff, LOD1.pos and maxPOS ...
+P-value
 }
 \description{
 Test if multitriats are controlled by one pleiotrophic QTL
