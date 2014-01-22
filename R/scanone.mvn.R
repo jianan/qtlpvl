@@ -39,6 +39,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
   if(!missing(Y) & is.matrix(Y) & n != nrow(Y)) stop("number of obs. in cross and Y not same.")
   p <- ncol(Y)
   if(p < 1) stop("Y should be a matrix with more than one columns")
+  checkcov(intcov,addcov,n)
   ## if(!missing(addcov) & !is.matrix(addcov)) stop("addcov need to be a matrix.")
   ## if(!missing(intcov) & !is.matrix(intcov)) stop("intcov need to be a matrix.")
   ## if(!missing(addcov) & is.matrix(addcov) & n != nrow(addcov))
