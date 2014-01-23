@@ -38,7 +38,8 @@ data(hyper)
 n <- 250
 p <- 5
 Y <- matrix(rnorm(n*p),n,p)
-scanone.mvn(Y, hyper)
+hyper <- calc.genoprob(hyper)
+scanone.mvn(hyper, Y)
 }
 \seealso{
 qtl::scanone

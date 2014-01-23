@@ -26,6 +26,7 @@
 ##' n <- 250
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
+##' hyper <- calc.genoprob(hyper)
 ##' testpleio.1vsp(cross=hyper, Y=Y, chr="2")
 testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.simu=NA, tol=1e-7){
 

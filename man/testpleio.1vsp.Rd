@@ -42,6 +42,7 @@ data(hyper)
 n <- 250
 p <- 5
 Y <- matrix(rnorm(n*p),n,p)
+hyper <- calc.genoprob(hyper)
 testpleio.1vsp(cross=hyper, Y=Y, chr="2")
 }
 

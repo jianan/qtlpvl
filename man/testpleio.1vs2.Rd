@@ -54,6 +54,7 @@ data(hyper)
 n <- 250
 p <- 5
 Y <- matrix(rnorm(n*p),n,p)
+hyper <- calc.genoprob(hyper)
 testpleio.1vs2(cross=hyper, Y=Y, chr="2")
 }
 

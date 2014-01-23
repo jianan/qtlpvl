@@ -26,7 +26,8 @@
 ##' n <- 250
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
-##' scanone.mvn(Y, hyper)
+##' hyper <- calc.genoprob(hyper)
+##' scanone.mvn(hyper, Y)
 
 scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e-7){
 

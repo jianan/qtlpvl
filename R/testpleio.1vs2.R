@@ -32,6 +32,7 @@
 ##' n <- 250
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
+##' hyper <- calc.genoprob(hyper)
 ##' testpleio.1vs2(cross=hyper, Y=Y, chr="2")
 
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
