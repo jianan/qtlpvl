@@ -28,7 +28,6 @@
 ##' @return a list of LODdiff, Group, P-value...
 ##' @export
 ##' @examples
-##' library(qtl)
 ##' data(hyper)
 ##' n <- 250
 ##' p <- 5
@@ -44,7 +43,6 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
   ## 3. LOD2 = LOD for rightQTL and leftQTL
   ## 4. LODdiff = max(LOD2) - max(LOD1)
   
-  require(qtl) || stop("the required package 'qtl' is not installed. ") 
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y); p <- ncol(Y)
   if(int.method!="bayes" && int.method!="1.5lod") stop("int.method need to be 'bayes' or '1.5lod'. ")

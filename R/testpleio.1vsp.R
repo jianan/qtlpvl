@@ -22,7 +22,6 @@
 ##' 
 ##' @export
 ##' @examples
-##' library(qtl)
 ##' data(hyper)
 ##' n <- 250
 ##' p <- 5
