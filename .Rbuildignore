@@ -1,0 +1,3 @@
+\.git
+^ReadMe\.md$
+^Makefile$
