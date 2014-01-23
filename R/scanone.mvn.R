@@ -11,8 +11,8 @@
 ##' LOD scores should be calculated.  This should be a vector of
 ##' character strings referring to chromosomes by name; numeric values
 ##' are converted to strings.
-##' @param addcov Additive covariates.
-##' @param intcov Interactive covariates.
+##' @param addcovar Additive covariates.
+##' @param intcovar Interactive covariates.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
 ##' @return A data.frame whose first column contains the chromosome
@@ -22,14 +22,14 @@
 ##' @seealso qtl::scanone
 ##' @export
 ##' @examples
-##' library(qtl)
 ##' data(hyper)
 ##' n <- 250
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
-##' scanone.mvn(Y, hyper)
+##' hyper <- calc.genoprob(hyper)
+##' scanone.mvn(hyper, Y)
 
-scanone.mvn <- function(cross, Y, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
+scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e-7){
 
   ## checking inputs...
   if(class(cross)[2] != "cross") stop("cross need to be of class cross")
@@ -39,13 +39,13 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
   if(!missing(Y) & is.matrix(Y) & n != nrow(Y)) stop("number of obs. in cross and Y not same.")
   p <- ncol(Y)
   if(p < 1) stop("Y should be a matrix with more than one columns")
-  checkcov(intcov,addcov,n)
-  ## if(!missing(addcov) & !is.matrix(addcov)) stop("addcov need to be a matrix.")
-  ## if(!missing(intcov) & !is.matrix(intcov)) stop("intcov need to be a matrix.")
-  ## if(!missing(addcov) & is.matrix(addcov) & n != nrow(addcov))
-  ##     stop("number of obs. in cross and addcov not same.")
-  ## if(!missing(intcov) & is.matrix(intcov) & n != nrow(intcov))
-  ##     stop("number of obs. in cross and intcov not same.")
+  checkcov(intcovar,addcovar,n)
+  ## if(!missing(addcovar) & !is.matrix(addcovar)) stop("addcovar need to be a matrix.")
+  ## if(!missing(intcovar) & !is.matrix(intcovar)) stop("intcovar need to be a matrix.")
+  ## if(!missing(addcovar) & is.matrix(addcovar) & n != nrow(addcovar))
+  ##     stop("number of obs. in cross and addcovar not same.")
+  ## if(!missing(intcovar) & is.matrix(intcovar) & n != nrow(intcovar))
+  ##     stop("number of obs. in cross and intcovar not same.")
   
   if(missing(chr)){
     chr <- names(cross$geno)
@@ -64,7 +64,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
   m <- ncol(genoprob)/ngeno
   
   E <- matrix(NA, n, p)
-  X <- cbind(rep(1, n), addcov, intcov)
+  X <- cbind(rep(1, n), addcovar, intcovar)
   E <- .Call(stats:::C_Cdqrls, X, Y, tol)$residuals
   Sigma <- crossprod(E)
   L0 <- determinant(Sigma)$modulus
@@ -73,10 +73,10 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcov=NULL, intcov=NULL, tol=1e-7){
   for(i in 1:m){
     if(ngeno == 3){
       prob <- genoprob[,3*i-2:1]
-      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob[,1], intcov*prob[,2])
+      X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob[,1], intcovar*prob[,2])
     }else{
       prob <- genoprob[,2*i-1]
-      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob)
+      X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
     E <- .Call(stats:::C_Cdqrls, X, Y, tol)$residuals
     Sigma <- crossprod(E)

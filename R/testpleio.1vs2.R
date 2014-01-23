@@ -12,8 +12,8 @@
 ##' \code{read.cross} for details.
 ##' @param chr \code{chr, region.l, region.r} are used to specify the
 ##' interval of interest. see also \code{int.method}.
-##' @param addcov Additive covariates.
-##' @param intcov Interactive covariates.
+##' @param addcovar Additive covariates.
+##' @param intcovar Interactive covariates.
 ##' @param region.l left bound
 ##' @param region.r right bound
 ##' @param int.method "bayes" or "1.5lod" method to calculated the
@@ -28,14 +28,14 @@
 ##' @return a list of LODdiff, Group, P-value...
 ##' @export
 ##' @examples
-##' library(qtl)
 ##' data(hyper)
 ##' n <- 250
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
+##' hyper <- calc.genoprob(hyper)
 ##' testpleio.1vs2(cross=hyper, Y=Y, chr="2")
 
-testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
+testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                            region.l=NA, region.r=NA, int.method="bayes",
                            search="fast", RandomStart=TRUE, n.simu=NA, tol=1e-7){
 
@@ -44,15 +44,14 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
   ## 3. LOD2 = LOD for rightQTL and leftQTL
   ## 4. LODdiff = max(LOD2) - max(LOD1)
   
-  require(qtl) || stop("the required package 'qtl' is not installed. ") 
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y); p <- ncol(Y)
   if(int.method!="bayes" && int.method!="1.5lod") stop("int.method need to be 'bayes' or '1.5lod'. ")
   
   p1 <- ncol(cross$pheno)
   cross$pheno <- data.frame(cross$pheno, Y)
-  out <- scanone(cross, pheno=p1+(1:p), method="hk", chr=chr,
-                 addcov=cbind(addcov,intcov), intcov=intcov)
+  out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
+                 addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
 
   if(is.na(region.l)){
     int <- matrix(NA,p,3)
@@ -105,10 +104,10 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
   for(i in 1:n.marker){
     if(ngeno == 3){
       prob <- genoprob[,(1:2)+3*(i-1)]
-      X <- cbind(rep(1,n), prob[,1:2], addcov, intcov, intcov*prob[,1], intcov*prob[,2])
+      X <- cbind(rep(1,n), prob[,1:2], addcovar, intcovar, intcovar*prob[,1], intcovar*prob[,2])
     }else{
       prob <- genoprob[,2*i-1]
-      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob)
+      X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
     fit <- .Call(stats:::C_Cdqrls, X, Y, tol)
     E[,,i] <- fit$residuals
@@ -246,7 +245,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
   attr(LODdiff,"region") <- c(marker.l, marker.r)
   
   ## return LOD1 and LOD2
-  X <- cbind(rep(1,n), addcov, intcov)
+  X <- cbind(rep(1,n), addcovar, intcovar)
   fit <- .Call(stats:::C_Cdqrls, X, Y, tol)
   Sigma <- crossprod(fit$residuals)
   L0 <- determinant(Sigma)$modulus  ## return log value
@@ -278,7 +277,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL,
       mat <- matrix(rnorm(p*n),p,n)      ## p*n
       mat <- crossprod(mat,Sigma.half)   ## n*p
       Y.simu <- Y.fit + mat
-      result.i <- testpleio.1vs2(cross, Y.simu, chr=chr, addcov=addcov, intcov=intcov,
+      result.i <- testpleio.1vs2(cross, Y.simu, chr=chr, addcovar=addcovar, intcovar=intcovar,
                                  int.method=int.method, search=search, n.simu=NA)
       L2inds[i.simu,] <- attr(result.i$LODdiff,"L2inds")
       LODdiff.simu[i.simu] <- result.i$LODdiff

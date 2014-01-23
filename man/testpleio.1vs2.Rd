@@ -2,9 +2,9 @@
 \alias{testpleio.1vs2}
 \title{Test of one pleiotrophic QTL vs two close linked QTLs.}
 \usage{
-testpleio.1vs2(cross, Y, chr = "6", addcov = NULL, intcov = NULL,
+testpleio.1vs2(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
   region.l = NA, region.r = NA, int.method = "bayes", search = "fast",
-  RandomStart = TRUE, n.simu = NA, tol = 1e-07)
+  RandomStart = TRUE, n.simu = NA, tol = 0.0000001)
 }
 \arguments{
   \item{Y}{matrix of multiple traits with rows equals to n,
@@ -17,9 +17,9 @@ testpleio.1vs2(cross, Y, chr = "6", addcov = NULL, intcov = NULL,
   specify the interval of interest. see also
   \code{int.method}.}
 
-  \item{addcov}{Additive covariates.}
+  \item{addcovar}{Additive covariates.}
 
-  \item{intcov}{Interactive covariates.}
+  \item{intcovar}{Interactive covariates.}
 
   \item{region.l}{left bound}
 
@@ -50,11 +50,11 @@ under null hypothesis and generate data from them to get
 the null empirical distribution of test statistic.
 }
 \examples{
-library(qtl)
 data(hyper)
 n <- 250
 p <- 5
 Y <- matrix(rnorm(n*p),n,p)
+hyper <- calc.genoprob(hyper)
 testpleio.1vs2(cross=hyper, Y=Y, chr="2")
 }
 
