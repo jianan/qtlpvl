@@ -2,8 +2,8 @@
 \alias{testpleio.1vsp}
 \title{Test of pleiotrophic QTL vs close linked QTLs.}
 \usage{
-testpleio.1vsp(cross, Y, chr = "6", addcov = NULL, intcov = NULL,
-  n.simu = NA, tol = 1e-07)
+testpleio.1vsp(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
+  n.simu = NA, tol = 0.0000001)
 }
 \arguments{
   \item{Y}{matrix of multiple traits with rows equals to n,
@@ -16,9 +16,9 @@ testpleio.1vsp(cross, Y, chr = "6", addcov = NULL, intcov = NULL,
   specify the interval of interest. see also
   \code{int.method}.}
 
-  \item{addcov}{Additive covariates.}
+  \item{addcovar}{Additive covariates.}
 
-  \item{intcov}{Interactive covariates.}
+  \item{intcovar}{Interactive covariates.}
 
   \item{n.simu}{number of simulations for p-value.}
 
@@ -38,7 +38,6 @@ hypothesis and generate data from them to get the null
 empirical distribution of test statistic.
 }
 \examples{
-library(qtl)
 data(hyper)
 n <- 250
 p <- 5

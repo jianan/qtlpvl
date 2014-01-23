@@ -13,8 +13,8 @@
 ##' \code{read.cross} for details.
 ##' @param chr \code{chr, region.l, region.r} are used to specify the
 ##' interval of interest. see also \code{int.method}.
-##' @param addcov Additive covariates.
-##' @param intcov Interactive covariates.
+##' @param addcovar Additive covariates.
+##' @param intcovar Interactive covariates.
 ##' @param n.simu number of simulations for p-value.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
@@ -27,7 +27,7 @@
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' testpleio.1vsp(cross=hyper, Y=Y, chr="2")
-testpleio.1vsp <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL, n.simu=NA, tol=1e-7){
+testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.simu=NA, tol=1e-7){
 
   ## - scanone for each trait to get E.matrix
   ## - 1 qtl model: same qtl for all trait
@@ -45,7 +45,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL, n.simu=N
   }
   n.marker <- ncol(genoprob)/ngeno
 
-  out1 <- scanone.mvn(cross=cross, Y=Y, chr=chr, addcov=addcov, intcov=intcov)
+  out1 <- scanone.mvn(cross=cross, Y=Y, chr=chr, addcovar=addcovar, intcovar=intcovar)
   LOD1 <- max(out1$lod)
   LOD1.pos <- which.max(out1$lod)
   
@@ -54,12 +54,12 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL, n.simu=N
   cross$pheno <- data.frame(cross$pheno, Y)
   if(!is.null(colnames(Y))) names(cross$pheno)[p1+(1:p)] <- colnames(Y)
   out <- scanone(cross, pheno=p1+(1:p), method="hk", chr=chr,
-                 addcov=cbind(addcov,intcov), intcov=intcov)
+                 addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
   maxPOS <- apply(out[,-(1:2)],2,which.max)
 
   ## p qtl model: use best qtl of each trait 
   E <- matrix(NA, n, p)
-  X <- cbind(rep(1, n), addcov, intcov)
+  X <- cbind(rep(1, n), addcovar, intcovar)
   E <- .Call(stats:::C_Cdqrls, X, Y, tol)$residuals
   Sigma <- crossprod(E)
   L0 <- determinant(Sigma)$modulus
@@ -68,10 +68,10 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL, n.simu=N
   for(i in 1:p){
     if(ngeno == 3){
       prob <- genoprob[,3*maxPOS[i]-2:1]
-      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob[,1], intcov*prob[,2])
+      X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob[,1], intcovar*prob[,2])
     }else{
       prob <- genoprob[,2*maxPOS[i]-1]
-      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob)
+      X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
     E[,i] <- .Call(stats:::C_Cdqrls, X, Y[,i,drop=FALSE], tol)$residuals
   }
@@ -92,10 +92,10 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL, n.simu=N
     if(n.simu < 0) stop("n.simu should be a positive integer.")
     if(ngeno == 3){
       prob <- genoprob[,3*LOD1.pos-2:1]
-      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob[,1], intcov*prob[,2])
+      X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob[,1], intcovar*prob[,2])
     }else{
       prob <- genoprob[,2*LOD1.pos-1]
-      X <- cbind(rep(1,n), addcov, intcov, prob, intcov*prob)
+      X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
     E.marker <- .Call(stats:::C_Cdqrls, X, Y, tol)$residuals
 
@@ -109,7 +109,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcov=NULL, intcov=NULL, n.simu=N
       mat <- matrix(rnorm(p*n),p,n)      ## p*n
       mat <- crossprod(mat,Sigma.half)   ## n*p
       Y.simu <- Y.fit + mat
-      result.i <- testpleio.1vsp(cross, Y.simu, chr=chr, addcov=addcov, intcov=intcov, n.simu=NA)
+      result.i <- testpleio.1vsp(cross, Y.simu, chr=chr, addcovar=addcovar, intcovar=intcovar, n.simu=NA)
       LODdiff.simu[i.simu] <- result.i$LODdiff
     }
     pvalue <- mean(LODdiff > LODdiff.simu)

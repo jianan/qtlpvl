@@ -2,8 +2,8 @@
 \alias{scanone.mvn}
 \title{Multivariate normal genome scan with a single QTL model.}
 \usage{
-scanone.mvn(cross, Y, chr = NULL, addcov = NULL, intcov = NULL,
-  tol = 1e-07)
+scanone.mvn(cross, Y, chr = NULL, addcovar = NULL, intcovar = NULL,
+  tol = 0.0000001)
 }
 \arguments{
   \item{cross}{An object of class \code{cross}. See
@@ -16,9 +16,9 @@ scanone.mvn(cross, Y, chr = NULL, addcov = NULL, intcov = NULL,
   vector of character strings referring to chromosomes by
   name; numeric values are converted to strings.}
 
-  \item{addcov}{Additive covariates.}
+  \item{addcovar}{Additive covariates.}
 
-  \item{intcov}{Interactive covariates.}
+  \item{intcovar}{Interactive covariates.}
 
   \item{tol}{Tolerance value for the \code{qr}
   decomposition in \code{lm} fitting.}
@@ -34,7 +34,6 @@ possible covariates, using multivariate normal model for
 the multiple traits.
 }
 \examples{
-library(qtl)
 data(hyper)
 n <- 250
 p <- 5
