@@ -53,7 +53,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
   p1 <- ncol(cross$pheno)
   cross$pheno <- data.frame(cross$pheno, Y)
   if(!is.null(colnames(Y))) names(cross$pheno)[p1+(1:p)] <- colnames(Y)
-  out <- scanone(cross, pheno=p1+(1:p), method="hk", chr=chr,
+  out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
                  addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
   maxPOS <- apply(out[,-(1:2)],2,which.max)
 

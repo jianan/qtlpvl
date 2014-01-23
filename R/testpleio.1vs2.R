@@ -49,7 +49,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   
   p1 <- ncol(cross$pheno)
   cross$pheno <- data.frame(cross$pheno, Y)
-  out <- scanone(cross, pheno=p1+(1:p), method="hk", chr=chr,
+  out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
                  addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
 
   if(is.na(region.l)){
