@@ -5,15 +5,8 @@
 ##' bootstrap, which takes the estimated paramaters under null
 ##' hypothesis and generate data from them to get the null empirical
 ##' distribution of test statistic.
-##' 
-##' @param Y matrix of multiple traits with rows equals to n, the
-##' number of individuals.
-##' @param cross An object of class \code{cross}. See
-##' \code{read.cross} for details.
-##' @param chr \code{chr, region.l, region.r} are used to specify the
-##' interval of interest. see also \code{int.method}.
-##' @param addcovar Additive covariates.
-##' @param intcovar Interactive covariates.
+##'
+##' @inheritParams scanone.mvn
 ##' @param region.l left bound
 ##' @param region.r right bound
 ##' @param int.method "bayes" or "1.5lod" method to calculated the

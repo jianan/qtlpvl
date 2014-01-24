@@ -6,18 +6,8 @@
 ##' the estimated paramaters under null hypothesis and generate data
 ##' from them to get the null empirical distribution of test
 ##' statistic.
-##' 
-##' @param Y matrix of multiple traits with rows equals to n, the
-##' number of individuals.
-##' @param cross An object of class \code{cross}. See
-##' \code{read.cross} for details.
-##' @param chr \code{chr, region.l, region.r} are used to specify the
-##' interval of interest. see also \code{int.method}.
-##' @param addcovar Additive covariates.
-##' @param intcovar Interactive covariates.
-##' @param n.simu number of simulations for p-value.
-##' @param tol Tolerance value for the \code{qr} decomposition in
-##' \code{lm} fitting.
+##'
+##' @inheritParams testpleio.1vs2
 ##' @return a list of LOD1, LODp, LODdiff, LOD1.pos and maxPOS ... P-value
 ##' 
 ##' @export
