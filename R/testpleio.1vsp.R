@@ -78,7 +78,6 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
   if(is.na(n.simu)){
     result <- list(LOD1 = LOD1, LODp = LODp, LODdiff = LODdiff,
                    LOD1.pos = LOD1.pos, maxPOS = maxPOS)
-    return(result)
   } else{    ## simulation: parametric bootstrap.
     if(n.simu < 0) stop("n.simu should be a positive integer.")
     if(ngeno == 3){
@@ -107,7 +106,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
     result <- list(LOD1 = LOD1, LODp = LODp, LODdiff = LODdiff,
                    LOD1.pos = LOD1.pos, maxPOS = maxPOS,
                    pvalue=pvalue, LODdiff.simu = LODdiff.simu)
-    return(result)
   }
-
+  return(result)
+  class(result) <- c("testpleio1vsp", "list")
 }

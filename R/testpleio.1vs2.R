@@ -255,7 +255,6 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                    maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                    LOD2maxs=LOD2maxs, map=map,
                    Group.trace=Group.trace, L2inds.trace=L2inds.trace)
-    return(result)
   }else{    ## simulation: parametric bootstrap.
     if(n.simu < 0) stop("n.simu should be a positive integer.")
     Y.fit <- Y.orig - E.marker
@@ -282,7 +281,8 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                    Group.trace=Group.trace, L2inds.trace=L2inds.trace,
                    pvalue=pvalue, LOODdiff.simu=LODdiff.simu, Group=Group, L2inds=L2inds,
                    )
-    return(result)
   }
+  return(result)
+  class(result) <- c("testpleio1vs2", "list")
 }
 

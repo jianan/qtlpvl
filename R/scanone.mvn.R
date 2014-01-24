@@ -92,7 +92,10 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
     out <- rbind(out, data.frame(chr=i, pos=map))
   }
   out$lod <- LOD
-
+  class(out) <- c("scanone", "data.frame")
+  attr(out, "method") <- method
+  attr(out, "type") <- type
+  attr(out, "model") <- model
   return(out)
 }
 
