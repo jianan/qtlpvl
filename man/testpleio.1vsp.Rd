@@ -3,18 +3,18 @@
 \title{Test of pleiotrophic QTL vs close linked QTLs.}
 \usage{
 testpleio.1vsp(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
-  n.simu = NA, tol = 0.0000001)
+  n.simu = NA, tol = 1e-07)
 }
 \arguments{
-  \item{Y}{matrix of multiple traits with rows equals to n,
-  the number of individuals.}
-
   \item{cross}{An object of class \code{cross}. See
   \code{read.cross} for details.}
 
-  \item{chr}{\code{chr, region.l, region.r} are used to
-  specify the interval of interest. see also
-  \code{int.method}.}
+  \item{Y}{matrix of multiple traits with n rows.}
+
+  \item{chr}{Optional vector indicating the chromosomes for
+  which LOD scores should be calculated.  This should be a
+  vector of character strings referring to chromosomes by
+  name; numeric values are converted to strings.}
 
   \item{addcovar}{Additive covariates.}
 
@@ -43,6 +43,6 @@ n <- 250
 p <- 5
 Y <- matrix(rnorm(n*p),n,p)
 hyper <- calc.genoprob(hyper)
-testpleio.1vsp(cross=hyper, Y=Y, chr="2")
+summary(testpleio.1vsp(cross=hyper, Y=Y, chr="2"))
 }
 

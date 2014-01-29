@@ -3,7 +3,7 @@
 \title{Multivariate normal genome scan with a single QTL model.}
 \usage{
 scanone.mvn(cross, Y, chr = NULL, addcovar = NULL, intcovar = NULL,
-  tol = 0.0000001)
+  tol = 1e-07)
 }
 \arguments{
   \item{cross}{An object of class \code{cross}. See
@@ -39,7 +39,9 @@ n <- 250
 p <- 5
 Y <- matrix(rnorm(n*p),n,p)
 hyper <- calc.genoprob(hyper)
-scanone.mvn(hyper, Y)
+out <- scanone.mvn(hyper, Y, chr="17")
+summary(out)
+plot(out)
 }
 \seealso{
 qtl::scanone
