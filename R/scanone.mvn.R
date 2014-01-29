@@ -27,7 +27,9 @@
 ##' p <- 5
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' hyper <- calc.genoprob(hyper)
-##' scanone.mvn(hyper, Y)
+##' out <- scanone.mvn(hyper, Y, chr="17")
+##' summary(out)
+##' plot(out)
 
 scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e-7){
 
@@ -93,9 +95,9 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   }
   out$lod <- LOD
   class(out) <- c("scanone", "data.frame")
-  attr(out, "method") <- method
-  attr(out, "type") <- type
-  attr(out, "model") <- model
+  ## attr(out, "method") <- method
+  ## attr(out, "type") <- type
+  ## attr(out, "model") <- model
   return(out)
 }
 
