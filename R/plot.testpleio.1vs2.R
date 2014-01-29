@@ -14,14 +14,15 @@ plot.testpleio.1vs2 <- function(x, ...){
   Group <- object$Group
   pvalue <- object$pvalue
   map <- object$map
+    map.marker <- object$map.marker
   rg <- range(map)
 
   par(mfrow=c(2,1))
   plot(y=LOD1, x=map, type="l",
        ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
        xaxt="n", xlab="cM position", ylab="LOD")
-  rug(map, ticksize=-0.01)
-  axis(side=1, at=map, labels=sprintf("%.1f",map))
+  rug(map.marker, ticksize=-0.01)
+  axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker))
   points(maxPOS, maxLOD, col=Group, pch=20) ## single trait result.
   points(x=attr(LODdiff, "LOD1pos"), y=attr(LODdiff, "LOD1lod"),
          col="blue", pch=17) ## plot the best one QTL

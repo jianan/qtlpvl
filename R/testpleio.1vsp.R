@@ -77,7 +77,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
   
   if(is.na(n.simu)){
     result <- list(LOD1=LOD1, LODp=LODp, LODdiff=LODdiff,
-                   chr=chr, map= map, map.marker=map.marker,
+                   chr=chr, map=map, map.marker=map.marker,
                    maxLOD=maxLOD, maxPOS=maxPOS)
   } else{    ## simulation: parametric bootstrap.
     if(n.simu < 0) stop("n.simu should be a positive integer.")

@@ -63,6 +63,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
     region.r <- max(int)
   }
   
+  map.marker <- unlist(pull.map(cross, chr))
   map.chr <- out$pos[out$chr==chr]
   if(sum(map.chr > region.l & map.chr < region.r)>0){
     rg <- range(which(map.chr > region.l & map.chr < region.r))
@@ -130,7 +131,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
     attr(LODdiff,"LOD2pos") <- rep(attr(LODdiff,"LOD1pos"),2) ## lod for QTL1 and QTL2
     Group <- rep(2,p)
     result <- list(E.marker=E.marker, LODdiff=LODdiff, Group=Group,
-                   chr=chr, LOD1=LOD1)    
+                   chr=chr, map.marker=map.marker, LOD1=LOD1)    
     class(result) <- c("testpleio.1vs2", "list")
     return(result)
   }
@@ -248,6 +249,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   if(is.na(n.simu)){
     result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
                    maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
+                   map.marker=map.marker,
                    ## Group.trace=Group.trace,
                    ## L2inds.trace=L2inds.trace, 
                    LODdiff.trace=LODdiff.trace)
@@ -276,6 +278,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
     result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
                    maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                    LODdiff.trace=LODdiff.trace,
+                   map.marker=map.marker,
                    ## Group.trace=Group.trace,
                    ## L2inds.trace=L2inds.trace,
                    ## LOODdiff.simu=LODdiff.simu, Group.simu=Group.simu,
