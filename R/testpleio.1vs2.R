@@ -28,11 +28,21 @@
 ##' @export
 ##' @examples
 ##' data(hyper)
-##' n <- 250
-##' p <- 5
-##' Y <- matrix(rnorm(n*p),n,p)
 ##' hyper <- calc.genoprob(hyper)
-##' summary(testpleio.1vs2(cross=hyper, Y=Y, chr="2", n.simu=100))
+##' geno <- pull.geno(hyper, chr="1")
+##' genotype1 <- geno[,6]
+##' genotype2 <- geno[,12]
+##' n <- length(genotype1)
+##' p <- 10
+##' p1 <- floor(p/2)
+##' G1 <- matrix(genotype1, n, p1)
+##' G2 <- -matrix(genotype2, n, p-p1)
+##' G <- cbind(G1, G2)
+##' Y <- matrix(rnorm(n*p, sd=0.5), n, p)
+##' Y <- Y + G
+##' obj <- testpleio.1vs2(cross=hyper, Y=Y, chr="1", n.simu=100)
+##' summary(obj)
+##' plot(obj)
 
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                            region.l=NA, region.r=NA, int.method="bayes",
@@ -64,6 +74,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   }
   
   map.marker <- unlist(pull.map(cross, chr))
+  map.marker <- map.marker[map.marker > region.l & map.marker < region.r]
   map.chr <- out$pos[out$chr==chr]
   if(sum(map.chr > region.l & map.chr < region.r)>0){
     rg <- range(which(map.chr > region.l & map.chr < region.r))
@@ -235,7 +246,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   attr(LODdiff,"LOD1lod") <- max(LOD1)  ## lod for the common QTL
   attr(LODdiff,"LOD1pos") <- map.chr[which.max(LOD1)]  ## pos for the common QTL
   attr(LODdiff,"LOD2lod") <- max(LOD2,na.rm=TRUE) ## lod for QTL1 and QTL2
-  attr(LODdiff,"LOD2pos") <- map.chr[L2inds] ## pos for QTL1 and QTL2
+  attr(LODdiff,"LOD2pos") <- map[L2inds] ## pos for QTL1 and QTL2
   ## attr(LODdiff,"L1inds") <- which.min(L1)+marker.l-1  ## index for the common QTL
   ## attr(LODdiff,"L2inds") <- L2inds ## index for QTL1 and QTL2
   ## attr(LODdiff,"region") <- map.chr[c(marker.l, marker.r)]

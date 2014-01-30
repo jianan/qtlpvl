@@ -13,13 +13,23 @@
 ##' @export
 ##' @examples
 ##' data(hyper)
-##' n <- 250
-##' p <- 5
-##' Y <- matrix(rnorm(n*p),n,p)
 ##' hyper <- calc.genoprob(hyper)
-##' summary(testpleio.1vsp(cross=hyper, Y=Y, chr="2"))
+##' geno <- pull.geno(hyper, chr="1")
+##' genotype1 <- geno[,6]
+##' genotype2 <- geno[,12]
+##' n <- length(genotype1)
+##' p <- 10
+##' p1 <- floor(p/2)
+##' G1 <- matrix(genotype1, n, p1)
+##' G2 <- -matrix(genotype2, n, p-p1)
+##' G <- cbind(G1, G2)
+##' Y <- matrix(rnorm(n*p, sd=0.5), n, p)
+##' Y <- Y + G
+##' obj <- testpleio.1vsp(cross=hyper, Y=Y, chr="1", n.simu=100)
+##' summary(obj)
+##' plot(obj)
 
-testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.simu=NA, tol=1e-7){
+testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.simu=1000, tol=1e-7){
 
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y)
