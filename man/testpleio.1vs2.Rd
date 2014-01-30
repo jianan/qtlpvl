@@ -69,7 +69,8 @@ G2 <- -matrix(genotype2, n, p-p1)
 G <- cbind(G1, G2)
 Y <- matrix(rnorm(n*p, sd=0.5), n, p)
 Y <- Y + G
-obj <- testpleio.1vs2(cross=hyper, Y=Y, chr="1", n.simu=100)
+obj <- testpleio.1vs2(cross=hyper, Y=Y, chr="1", n.simu=100,
+                      region.l=19, region.r=90)
 summary(obj)
 plot(obj)
 }
