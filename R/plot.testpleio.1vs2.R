@@ -23,14 +23,13 @@ plot.testpleio.1vs2 <- function(x, ...){
        xaxt="n", xlab="cM position", ylab="LOD")
   rug(map.marker, ticksize=-0.01)
   axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker))
-  points(maxPOS, maxLOD, col=Group, pch=20) ## single trait result.
+  points(maxPOS, maxLOD, col=c("blue","red")[Group], pch=20) ## single trait result.
   points(x=attr(LODdiff, "LOD1pos"), y=attr(LODdiff, "LOD1lod"),
-         col="blue", pch=17) ## plot the best one QTL
+         col="black", pch=17) ## plot the best one QTL
   points(y=c(0,0), x=attr(LODdiff, "LOD2pos"),
-         col=1:2, pch=2)  ## plot the best two QTLs
+         col=c("blue","red"), pch=2)  ## plot the best two QTLs
 
   ind <- arrayInd(which.max(LOD2), .dim=dim(LOD2))
-  
   points(map,LOD2[, ind[2]],type="l",col="blue")
   points(map,LOD2[ind[1], ],type="l",col="red")
   
