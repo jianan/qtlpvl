@@ -12,7 +12,6 @@ plot.testpleio.1vsp <- function(x, ...){
   maxPOS <- x$maxPOS
   rg <- range(map)
   
-  par(mfrow=c(2,1))
   plot(y=LOD1, x=map, type="l",
        ylim=c(0,max(LOD1,na.rm=TRUE)), xlim=rg,
        xaxt="n", xlab="cM position", ylab="LOD")
