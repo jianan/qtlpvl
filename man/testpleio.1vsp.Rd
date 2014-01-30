@@ -3,7 +3,7 @@
 \title{Test of pleiotrophic QTL vs close linked QTLs.}
 \usage{
 testpleio.1vsp(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
-  n.simu = 10, tol = 1e-07)
+  n.simu = 1000, tol = 1e-07)
 }
 \arguments{
   \item{cross}{An object of class \code{cross}. See
