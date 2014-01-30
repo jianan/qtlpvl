@@ -246,7 +246,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   attr(LODdiff,"LOD1lod") <- max(LOD1)  ## lod for the common QTL
   attr(LODdiff,"LOD1pos") <- map.chr[which.max(LOD1)]  ## pos for the common QTL
   attr(LODdiff,"LOD2lod") <- max(LOD2,na.rm=TRUE) ## lod for QTL1 and QTL2
-  attr(LODdiff,"LOD2pos") <- map[L2inds] ## pos for QTL1 and QTL2
+  attr(LODdiff,"LOD2pos") <- map.chr[arrayInd(which.max(LOD2), .dim=dim(LOD2))] ## pos for QTL1 and QTL2
   ## attr(LODdiff,"L1inds") <- which.min(L1)+marker.l-1  ## index for the common QTL
   ## attr(LODdiff,"L2inds") <- L2inds ## index for QTL1 and QTL2
   ## attr(LODdiff,"region") <- map.chr[c(marker.l, marker.r)]
@@ -279,13 +279,14 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       mat <- matrix(rnorm(p*n),p,n)      ## p*n
       mat <- crossprod(mat,Sigma.half)   ## n*p
       Y.simu <- Y.fit + mat
-      result.i <- testpleio.1vs2(cross, Y.simu, chr=chr, addcovar=addcovar, intcovar=intcovar,
+      result.i <- testpleio.1vs2(cross, Y.simu, chr=chr,
+                                 addcovar=addcovar, intcovar=intcovar,
                                  int.method=int.method, search=search, n.simu=NA)
       LOD2pos[i.simu,] <- attr(result.i$LODdiff,"LOD2pos")
       LODdiff.simu[i.simu] <- result.i$LODdiff
       Group.simu[i.simu,] <-result.i$Group
     }
-    pvalue <- mean(LODdiff > LODdiff.simu)
+    pvalue <- mean(LODdiff.simu > LODdiff)
     result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
                    maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                    LODdiff.trace=LODdiff.trace,
