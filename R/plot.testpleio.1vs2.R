@@ -14,9 +14,13 @@ plot.testpleio.1vs2 <- function(x, ...){
   Group <- object$Group
   pvalue <- object$pvalue
   map <- object$map
-    map.marker <- object$map.marker
+  map.marker <- object$map.marker
   rg <- range(map)
 
+  old.yaxt <- par("yaxt")
+  old.mfrow <- par("mfrow")
+  on.exit(par(yaxt = old.yaxt, mfrow = old.mfrow))
+  
   par(mfrow=c(2,1))
   plot(y=LOD1, x=map, type="l",
        ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
@@ -35,5 +39,5 @@ plot.testpleio.1vs2 <- function(x, ...){
   
   plot(x=1:(length(Group)-1), y=object$LODdiff.trace,
        xlab="i.cut", ylab="LODdiff", type="b")
-
+  
 }
