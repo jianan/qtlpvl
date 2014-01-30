@@ -1,3 +1,4 @@
 *~
 *.RData
 *.Rout
+.DS_Store
