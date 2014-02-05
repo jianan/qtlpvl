@@ -3,8 +3,10 @@
 ##' For each trait, the QTL effect direction is used as the sign of
 ##' the LOD score. 
 ##' 
+##' @inheritParams scanone.mvn
 ##' @param Y matrix, columns are quantitative traits maps to the same position. 
-##' @param genotype QTL genotype for the traits.
+##' @param LOD.threshold threshold for QTL to be displayed.
+##' @param ... Optional graphics arguments
 ##' @return a plot of QTL dominance effect versus QTL additive effect.
 ##' @export
 ##' @examples
@@ -22,6 +24,9 @@
 ##' Y <- matrix(rnorm(n*p,sd=0.5),n,p)
 ##' Y <- Y + G
 ##' plotLODsign(listeria, Y, chr="1")
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
 
 plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   n <- nrow(Y)
@@ -56,7 +61,7 @@ plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
   grayplot(0, 0, type="n", mgp=c(1.6, 0.2, 0), 
            yat=pretty(ylim, 10), xat=pretty(xlim, 10), xlim=xlim, ylim=ylim, 
            hlines=pretty(ylim, 10), vlines=pretty(x), ylab="", xlab="QTL pos (cM)", 
-           yaxt="n", xaxt="n", xaxs="i", bgcolor=bgcolor)
+           yaxt="n", xaxt="n", xaxs="i", bgcolor=bgcolor, ...)
   title(ylab="signed LOD score", mgp=c(2.1, 0, 0))
   points(x=x, y=y, col=c("red", "blue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)
   abline(h=0)
