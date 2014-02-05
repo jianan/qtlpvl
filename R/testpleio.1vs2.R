@@ -59,6 +59,8 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
                  addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
 
+  region.l.input <- region.l
+  region.r.input <- region.r
   if(is.na(region.l)){
     int <- matrix(NA,p,3)
     if(int.method=="1.5lod"){
@@ -282,7 +284,9 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       Y.simu <- Y.fit + mat
       result.i <- testpleio.1vs2(cross, Y.simu, chr=chr,
                                  addcovar=addcovar, intcovar=intcovar,
-                                 int.method=int.method, search=search, n.simu=NA)
+                                 region.r=region.r.input, region.l=region.l.input,
+                                 int.method=int.method, search=search, n.simu=NA,
+                                 RandomStart=RandomStart, tol=tol)
       LOD2pos[i.simu,] <- attr(result.i$LODdiff,"LOD2pos")
       LODdiff.simu[i.simu] <- result.i$LODdiff
       Group.simu[i.simu,] <-result.i$Group
