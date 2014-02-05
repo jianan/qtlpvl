@@ -35,8 +35,8 @@ plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
   maxPOS <- out$pos[apply(out[, -(1:2)], 2, which.max)]
   maxLOD <- apply(out[, -(1:2)], 2, max)
 
-  ## geno <- argmax.geno(cross, step=0.5, error.prob=0.002, map="c-f", stepwidth="max")
-  geno <- argmax.geno(cross, step=0.5, error.prob=0.002, map="c-f", stepwidth="max")
+  geno <- argmax.geno(cross, step=0.5, error.prob=0.002,
+                      map.function="c-f", stepwidth="max")
   geno <- pull.argmaxgeno(geno, chr=chr)
   LODsign <- numeric(p)
   for(i in 1:p){
