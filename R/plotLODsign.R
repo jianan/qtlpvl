@@ -24,9 +24,6 @@
 ##' Y <- matrix(rnorm(n*p,sd=0.5),n,p)
 ##' Y <- Y + G
 ##' plotLODsign(listeria, Y, chr="1")
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
 
 plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   n <- nrow(Y)
