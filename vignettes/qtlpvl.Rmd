@@ -13,9 +13,14 @@ knitr::opts_chunk$set(
 
 # Introduction to qtlpvl
 
-## Data
+## Data 
+
+We use data `hyper` from `R\qtl` as an example. A set of 10 phenotypes
+are generated with two QTLs from chromosome 1, each affecting 5
+phenotypes.
 
 ```{r}
+set.seed(123456)
 data(hyper)
 hyper <- calc.genoprob(hyper)
 geno <- pull.geno(hyper, chr="1")
@@ -28,27 +33,43 @@ G1 <- matrix(genotype1, n, p1)
 G2 <- -matrix(genotype2, n, p-p1)
 G <- cbind(G1, G2)
 Y <- matrix(rnorm(n*p, sd=0.5), n, p)
-Y <- Y + G
+Y <- Y + G * 0.2
 ```
 
-## `scanone.mvn`
+## joint mapping: `scanone.mvn`
+
+First we run a joint mapping with `scanone.mvn`, which assumes
+multivariate normal model. 
+
 ```{r}
-out <- scanone.mvn(hyper, Y, chr="17")
+out <- scanone.mvn(hyper, Y, chr="1")
 summary(out)
 plot(out)
 ```
 
-## test of 1 vs 2 QTL `testpleio.1vs2`
+## test of 1 vs 2 QTL: `testpleio.1vs2`
+
+We then test the hypothesis of $H_0$: There is only one QTL affecting
+all the phenotypes; $H_1$: There are two QTLs, each affecting one of
+the two phenotype groups. 
+
 ```{r}
 obj <- testpleio.1vs2(cross=hyper, Y=Y, chr="1", n.simu=100,
                       region.l=19, region.r=90)
 summary(obj)
 plot(obj)
 ```
+* red line: $L_1(\lambda_1) = \max_{\lambda_2} (\lambda_1, \lambda_2)$
+* blue line: $L_2(\lambda_2) = \max_{\lambda_1} (\lambda_1, \lambda_2)$
 
 
 
-## test of 1 vs p QTL `testpleio.1vsp`
+
+## test of 1 vs p QTL: `testpleio.1vsp`
+We could also test the hypothesis of $H_0$: There is only one QTL affecting
+all the phenotypes; $H_1$: There are p QTLs, each affecting one of
+the phenotypes. i.e., each pheotype is allowed to has its own QTL.
+
 ```{r}
 obj2 <- testpleio.1vsp(cross=hyper, Y=Y, chr="1", n.simu=100)
 summary(obj2)
@@ -56,9 +77,15 @@ plot(obj2)
 ```
 
 
-## plot LOD score with sign `plotLODsign` 
+## plot Genetic Pattern: `plotGenetpattern`
+
+To illustrate the use of explorational plots, we generate data with
+two different QTLs, the first QTL is additive, the second QTL is
+dominant. We can tell from the plot the there are two different
+genetic patterns, thus there might be two different QTLs, even if the
+are closely linked.
+
 ```{r}
-#####
 data(listeria)
 geno <- pull.geno(listeria, chr="1")
 genotype1 <- geno[,7]
@@ -76,7 +103,9 @@ Y <- Y + G
 plotGenetpattern(Y, genotype1)
 ```
 
-## plot Genetic Pattern `plotGenetpattern`
+## plot LOD score with sign: `plotLODsign` 
+The direction of the QTL might be usfull as well.
+
 ```{r}
 data(listeria)
 listeria <- calc.genoprob(listeria)
@@ -92,5 +121,6 @@ G <- cbind(G1, G2)
 Y <- matrix(rnorm(n*p,sd=0.5),n,p)
 Y <- Y + G
 plotLODsign(listeria, Y, chr="1")
-
 ```
+
+
