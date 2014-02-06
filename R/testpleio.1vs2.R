@@ -12,7 +12,7 @@
 ##' @param int.method "bayes" or "1.5lod" method to calculated the
 ##' interval of interest if \code{region.l} and \code{region.r} is not
 ##' specified.
-##' @param search searching method for two-QTL model.
+##' @param search searching method for two-QTL model, "fast" or "complete". 
 ##' @param RandomStart use random starting point for the two-QTL model
 ##' or not. default is \code{TRUE}.
 ##' @param n.simu number of simulations for p-value.
