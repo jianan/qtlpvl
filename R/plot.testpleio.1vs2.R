@@ -17,11 +17,6 @@ plot.testpleio.1vs2 <- function(x, ...){
   map.marker <- object$map.marker
   rg <- range(map)
 
-  old.yaxt <- par("yaxt")
-  old.mfrow <- par("mfrow")
-  on.exit(par(yaxt = old.yaxt, mfrow = old.mfrow))
-  
-  par(mfrow=c(2,1))
   plot(y=LOD1, x=map, type="l",
        ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
        xaxt="n", xlab="cM position", ylab="LOD")
@@ -36,8 +31,22 @@ plot.testpleio.1vs2 <- function(x, ...){
   ind <- arrayInd(which.max(LOD2), .dim=dim(LOD2))
   points(map,LOD2[, ind[2]],type="l",col="blue")
   points(map,LOD2[ind[1], ],type="l",col="red")
+}
+
+
+##' @export
+plottrace <- function(x)
+    UseMethod("plottrace")
+
+##' @export
+plottrace.testpleio.1vs2 <- function(x, ...){
   
-  plot(x=1:(length(Group)-1), y=object$LODdiff.trace,
+  object <- x
+  if (!any(class(object) == "testpleio.1vs2")) 
+      stop("Input should have class \"testpleio.1vs2\".")
+  dots <- list(...)
+
+  plot(x=1:(length(object$Group)-1), y=object$LODdiff.trace,
        xlab="i.cut", ylab="LODdiff", type="b")
   
 }

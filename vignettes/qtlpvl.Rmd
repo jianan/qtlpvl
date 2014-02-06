@@ -62,7 +62,9 @@ plot(obj)
 * red line: $L_1(\lambda_1) = \max_{\lambda_2} (\lambda_1, \lambda_2)$
 * blue line: $L_2(\lambda_2) = \max_{\lambda_1} (\lambda_1, \lambda_2)$
 
-
+```{r}
+plottrace(obj)
+```
 
 
 ## test of 1 vs p QTL: `testpleio.1vsp`
