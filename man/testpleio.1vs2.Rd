@@ -16,7 +16,8 @@ testpleio.1vs2(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
   calculated the interval of interest if \code{region.l}
   and \code{region.r} is not specified.}
 
-  \item{search}{searching method for two-QTL model.}
+  \item{search}{searching method for two-QTL model, "fast"
+  or "complete".}
 
   \item{RandomStart}{use random starting point for the
   two-QTL model or not. default is \code{TRUE}.}
