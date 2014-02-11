@@ -1,8 +1,8 @@
 ##' Test of one pleiotrophic QTL vs two close linked QTLs.
 ##'
 ##' Test if multitriats are controlled by one pleiotrophic QTL or two
-##' close linked QTLs. p-value is calculated from paramatric
-##' bootstrap, which takes the estimated paramaters under null
+##' close linked QTLs. p-value is calculated from parametric
+##' bootstrap, which takes the estimated parameters under null
 ##' hypothesis and generate data from them to get the null empirical
 ##' distribution of test statistic.
 ##'
@@ -18,30 +18,33 @@
 ##' @param n.simu number of simulations for p-value.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
-##' @return a list of LODdiff, Group, P-value...
-##' \item{LOD1}{One dimesional joint mapping.}
+##' @return a list.
+##' \item{LOD1}{LOD score of one dimensional joint mapping.}
 ##' \item{LOD2}{LOD score for estimate of best two QTL model, each trait
 ##'             is influenced by the left or the right QTL.}
 ##' \item{LODdiff}{Difference of best one QTL model and best two QTL model,
-##' LODdiff = max(LOD2) - max(LOD1)}
+##'                LODdiff = max(LOD2) - max(LOD1)}
 ##' \item{pvalue}{P-value from parametric bootstrap simulations.}
 ##' @export
 ##' @examples
-##' data(hyper)
-##' hyper <- calc.genoprob(hyper)
-##' geno <- pull.geno(hyper, chr="1")
-##' genotype1 <- geno[,6]
-##' genotype2 <- geno[,12]
-##' n <- length(genotype1)
+##' set.seed(92950640)
+##' data(listeria)
+##' listeria <- calc.genoprob(listeria,step=1)
+##' n <- nind(listeria)
+##' chr <- "1"
+##' geno <- pull.geno(listeria, chr=chr)
+##' genotype1 <- geno[,7]
+##' genotype2 <- geno[,10]
 ##' p <- 10
 ##' p1 <- floor(p/2)
 ##' G1 <- matrix(genotype1, n, p1)
-##' G2 <- -matrix(genotype2, n, p-p1)
-##' G <- cbind(G1, G2)
-##' Y <- matrix(rnorm(n*p, sd=0.5), n, p)
+##' G2 <- matrix(genotype2, n, p-p1)
+##' G2[G2==3] <- 2
+##' G <- cbind(G1, G2*(-2))
+##' Y <- matrix(rnorm(n*p),n,p)
 ##' Y <- Y + G
-##' obj <- testpleio.1vs2(cross=hyper, Y=Y, chr="1", n.simu=100,
-##'                       region.l=19, region.r=90)
+##' obj <- testpleio.1vs2(listeria, Y, chr, n.simu=100,
+##'                       region.l=60, region.r=90)
 ##' summary(obj)
 ##' plot(obj)
 

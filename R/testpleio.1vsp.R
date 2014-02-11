@@ -2,30 +2,39 @@
 ##'
 ##' Test if multitriats are controlled by one pleiotrophic QTL or
 ##' multiple close linked QTLs, allowing each trait to have its own
-##' QTL. p-value is calculated from paramatric bootstrap, which takes
-##' the estimated paramaters under null hypothesis and generate data
+##' QTL. p-value is calculated from parametric bootstrap, which takes
+##' the estimated parameters under null hypothesis and generate data
 ##' from them to get the null empirical distribution of test
 ##' statistic.
 ##'
 ##' @inheritParams testpleio.1vs2
 ##' @return a list of LOD1, LODp, LODdiff, LOD1.pos and maxPOS ... P-value
+##' \item{LOD1}{LOD score of one dimensional joint mapping.}
+##' \item{LODp}{LOD score for estimate of p QTL model, each trait
+##'             is influenced by a seperate QTL.}
+##' \item{LODdiff}{Difference of best one QTL model and best p QTL model,
+##'                LODdiff = max(LODp) - max(LOD1)}
+##' \item{pvalue}{P-value from parametric bootstrap simulations.}
 ##' 
 ##' @export
 ##' @examples
-##' data(hyper)
-##' hyper <- calc.genoprob(hyper)
-##' geno <- pull.geno(hyper, chr="1")
-##' genotype1 <- geno[,6]
-##' genotype2 <- geno[,12]
-##' n <- length(genotype1)
+##' set.seed(92950640)
+##' data(listeria)
+##' listeria <- calc.genoprob(listeria,step=1)
+##' n <- nind(listeria)
+##' chr <- "1"
+##' geno <- pull.geno(listeria, chr=chr)
+##' genotype1 <- geno[,7]
+##' genotype2 <- geno[,10]
 ##' p <- 10
 ##' p1 <- floor(p/2)
 ##' G1 <- matrix(genotype1, n, p1)
-##' G2 <- -matrix(genotype2, n, p-p1)
-##' G <- cbind(G1, G2)
-##' Y <- matrix(rnorm(n*p, sd=0.5), n, p)
+##' G2 <- matrix(genotype2, n, p-p1)
+##' G2[G2==3] <- 2
+##' G <- cbind(G1, G2*(-2))
+##' Y <- matrix(rnorm(n*p),n,p)
 ##' Y <- Y + G
-##' obj <- testpleio.1vsp(cross=hyper, Y=Y, chr="1", n.simu=100)
+##' obj <- testpleio.1vsp(listeria, Y, chr, n.simu=100)
 ##' summary(obj)
 ##' plot(obj)
 
