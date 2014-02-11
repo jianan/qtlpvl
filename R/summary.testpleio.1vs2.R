@@ -1,9 +1,8 @@
 ##' @export
 print.summary.testpleio.1vs2 <- function(x, ...){
   
-  object <- x
-  LODdiff <- object$LODdiff
-  Group <- object$Group
+  LODdiff <- x$LODdiff
+  Group <- x$Group
   cat("Single QTL model: ")
   cat("lod ")
   cat(sprintf("%.2f",attr(LODdiff,"LOD1lod")))
@@ -26,11 +25,12 @@ print.summary.testpleio.1vs2 <- function(x, ...){
   cat("\n")
   
   cat("Difference of LOD score: ")
-  cat(sprintf("%.2f",object$LODdiff))
+  cat(sprintf("%.2f",x$LODdiff))
   cat("\n")
 
   cat("P-value is: ")
-  cat(sprintf("%.3f",object$pvalue))
+  cat(x$pvalue)
+  cat(", (form", x$n.simu ,"simulations)")
   cat("\n")
 }
 
@@ -39,7 +39,7 @@ print.summary.testpleio.1vs2 <- function(x, ...){
 summary.testpleio.1vs2 <- function(object, ...){
   if(!any(class(object) == "testpleio.1vs2"))
       stop("Input should have class 'testpleio.1vs2'. ")
-  result <- object[c("LODdiff","Group","pvalue")]
+  result <- object[c("LODdiff","Group","pvalue","n.simu")]
   class(result) <- "summary.testpleio.1vs2"
   return(result)
 }
