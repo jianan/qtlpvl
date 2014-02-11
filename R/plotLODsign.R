@@ -37,12 +37,17 @@ plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
   maxPOS <- out$pos[apply(out[, -(1:2)], 2, which.max)]
   maxLOD <- apply(out[, -(1:2)], 2, max)
 
-  geno <- argmax.geno(cross, step=0.5, error.prob=0.002,
-                      map.function="c-f", stepwidth="max")
+  step <- attr(listeria[[c("geno",chr,"prob")]],"step")
+  off.end <- attr(listeria[[c("geno",chr,"prob")]],"off.end")
+  error.prob <- attr(listeria[[c("geno",chr,"prob")]],"error.prob") 
+  map.function <- attr(listeria[[c("geno",chr,"prob")]],"map.function")
+  stepwidth <- attr(listeria[[c("geno",chr,"prob")]],"stepwidth")
+  geno <- argmax.geno(cross, step, off.end, error.prob, map.function, stepwidth)
   geno <- pull.argmaxgeno(geno, chr=chr)
+  
   LODsign <- numeric(p)
   for(i in 1:p){
-    LODsign[i] <- sign(mean(Y[geno[, i]==1, i]) - mean(Y[geno[, i]==3, i]))
+    LODsign[i] <- sign(mean(Y[geno[, maxPOS[i]]==1, i]) - mean(Y[geno[, maxPOS[i]]==3, i]))
   }
 
   x <- maxPOS
