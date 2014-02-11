@@ -34,19 +34,22 @@ For each trait, the QTL effect direction is used as the
 sign of the LOD score.
 }
 \examples{
+set.seed(92950640)
 data(listeria)
 listeria <- calc.genoprob(listeria)
-geno <- pull.geno(listeria, chr="1")
+n <- nind(listeria)
+chr <- "1"
+geno <- pull.geno(listeria, chr=chr)
 genotype1 <- geno[,7]
 genotype2 <- geno[,10]
-n <- length(genotype1)
 p <- 100
 p1 <- floor(p/2)
 G1 <- matrix(genotype1, n, p1)
 G2 <- -matrix(genotype2, n, p-p1)
-G <- cbind(G1, G2)
-Y <- matrix(rnorm(n*p,sd=0.5),n,p)
+G2[G2==3] <- 2
+G <- cbind(G1, G2*(-2))
+Y <- matrix(rnorm(n*p),n,p)
 Y <- Y + G
-plotLODsign(listeria, Y, chr="1")
+plotLODsign(listeria, Y, chr)
 }
 

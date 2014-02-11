@@ -19,19 +19,21 @@ QTL additive effect is defined as a=(RR-BB)/2; QTL dominant
 effect is defined as d=BR-(BB+RR)/2.
 }
 \examples{
+set.seed(92950640)
 data(listeria)
-geno <- pull.geno(listeria, chr="1")
+listeria <- calc.genoprob(listeria)
+n <- nind(listeria)
+chr <- "1"
+geno <- pull.geno(listeria, chr=chr)
 genotype1 <- geno[,7]
 genotype2 <- geno[,10]
-n <- length(genotype1)
 p <- 100
 p1 <- floor(p/2)
 G1 <- matrix(genotype1, n, p1)
-G2 <- matrix(genotype2, n, p-p1)
+G2 <- -matrix(genotype2, n, p-p1)
 G2[G2==3] <- 2
-G2 <- -G2
-G <- cbind(G1, G2)
-Y <- matrix(rnorm(n*p,sd=0.5),n,p)
+G <- cbind(G1, G2*(-2))
+Y <- matrix(rnorm(n*p),n,p)
 Y <- Y + G
 plotGenetpattern(Y, genotype1)
 }
