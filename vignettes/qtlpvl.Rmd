@@ -13,148 +13,227 @@ knitr::opts_chunk$set(
 
 # Introduction to qtlpvl
 
-This package is focusing on QTL mapping with multiple tratis and
-testing of pleiotrophy vs. close linkage.  We assume the traits follow
-multivariate normal distribution and perform joint mapping to locate
-the single-QTL under the null hypothesis that there is one pleotrophic
-QTL affecting all the tratis; we then run single trait analysis on
-each trait and find the trait-specific QTL, sort the traits by their
-QTL position and search for the best seperation of the tratis into two
-groups, where the first group (contains the first several traits) is
-controlled by the right QTL and the second group (contains the rest
-tratis) is controlled by the left QTL. The LOD score of this two-QTL
-model is then substracted by the LOD score of the singel-QTL model to
-arrived at the final test statistic. To get the null distribution of
-the statistics, we generate data from the parameters estimated under
-the null hypothesis, repeat the whole procedure and save the test
-statistics. The P-value is claculated from this emperical
-distribution.
-
+This package is focusing on QTL mapping with multiple traits and
+testing of pleiotrophy vs. close linkage. 
 
 
 ## Data
 
-We use data `hyper` from `R\qtl` as an example. We will be only using
-the genotypes of this data set and generate the phenotypes from normal
-distribution. 
+We use data `listeria` from `R\qtl` as an example. We will be only
+using the genotypes of this F$_2$ population and generate the
+phenotypes from normal distribution.
 
 ```{r}
-set.seed(79778432)
-data(hyper)
-geno <- pull.geno(hyper, chr="1")
-genotype1 <- geno[,6]
-genotype2 <- geno[,12]
-n <- length(genotype1)
+set.seed(92950640)
+data(listeria)
+listeria <- calc.genoprob(listeria,step=1)
+n <- nind(listeria)
+chr <- "1"
+geno <- pull.geno(listeria, chr=chr)
+genotype1 <- geno[,7]
+genotype2 <- geno[,10]
+(pos <- unlist(pull.map(listeria, chr="1"))[c(7,10)])
 p <- 10
 p1 <- floor(p/2)
 G1 <- matrix(genotype1, n, p1)
-G2 <- -matrix(genotype2, n, p-p1)
-G <- cbind(G1, G2)
-Y <- matrix(rnorm(n*p), n, p)
-Y <- Y + G * 0.2
+G2 <- matrix(genotype2, n, p-p1)
+G2[G2==3] <- 2
+G <- cbind(G1, G2*(-2))
+Y <- matrix(rnorm(n*p),n,p)
+Y <- Y + G
 ```
 
 In the above code, after setting the random seed, we load the data
-hyper and pull out the genotype data from the cross object `hyper` on
-chromosome 1 as a data matrix `geno`, which is of size `r n` $\time$
-`r ncol(geno)`. We pick the 6th and 12th marker as the two QTLs and
-save their genotypes in `genotype1` and `genotype2`. Assuming the QTLs
-to have addtive effects only, we use matrix G to save the QTL effects.
-The first 5 traits are controlled by the first QTL and the other 5
-trait of the total 10 are controlled by the second QTL with negative
-effect.  The 10 phenotypes are generated with two these two QTLs and
-effect size 0.2 plus independent noise generated from standard normal
-distribution.
+`listeria` and pull out the genotype data from the cross object
+`listeria` on chromosome `r chr` as a data matrix `geno`, which is of
+size `r n` $\times$ `r ncol(geno)`. We pick the 7th and 10th marker as
+the two QTLs and save their genotypes in `genotype1` and
+`genotype2`. These two QTLs are at position `r sprintf("%.2f",pos[1])`
+cM and `r sprintf("%.2f",pos[2])` cM on chromosome `r chr`.
 
+Assume the first QTL have additive effect only and the second QTL have
+dominant effect --individuals with genotype 2 and 3 are grouped
+together to have the same shift in mean.  The first 5 traits are
+controlled by the first QTL and the other 5 trait of the total 10 are
+controlled by the second QTL with negative effect.  We use matrix G to
+save the QTL effects and the second QTL group, `G2` is multiply by -2
+to have a negative QTL effect.  The 10 phenotypes are generated with
+these QTL effect matrix G plus independent noise generated from
+standard normal distribution.
 
 ## joint mapping: `scanone.mvn`
 
-First we run a joint mapping with `scanone.mvn`, which assumes
-multivariate normal model.  
+Having the cross object `listeria` and phenotype trait matrix `Y`
+prepared, we can first run a joint mapping with `scanone.mvn`, which
+assumes multivariate normal model. chr is set to be "1", which
+indicates the mapping is only on chromosome 1. Function `scanone.mvn`
+has two more parameters `addcovar` and `intcovar`, they could be used
+to control for additive and interactive covariates when needed.
+
+The result of joint mapping is a data frame with class `scanone`, we
+could apply (S3) method `summary` and `plot` to look at the result.
 
 ```{r}
-hyper <- calc.genoprob(hyper)
-out <- scanone.mvn(hyper, Y, chr="1")
+out <- scanone.mvn(listeria, Y, chr)
 summary(out)
 plot(out)
 ```
 
+We could see the QTL is at `r sprintf("%.2f",summary(out)$pos)` cM
+with LOD score `r sprintf("%.2f",summary(out)$lod)`.
+
 ## test of 1 vs 2 QTL: `testpleio.1vs2`
 
-We then test the hypothesis of $H_0$: There is only one QTL affecting
-all the phenotypes; $H_1$: There are two QTLs, each affecting one of
-the two phenotype groups. 
+We test the hypothesis of: 
+
+* $H_0$: There is only one QTL affecting all the phenotypes; 
+* $H_1$: There are two QTLs, each affecting one of the two phenotype groups.
+
+We assume the traits follow multivariate normal distribution and
+perform joint mapping to locate the single-QTL under the null
+hypothesis that there is one pleiotrophic QTL affecting all the
+traits; we then run single trait analysis on each trait and find the
+trait-specific QTL, sort the traits by their QTL position and search
+for the best separation of the traits into two groups, where the first
+group (contains the first several traits) is controlled by the right
+QTL and the second group (contains the rest traits) is controlled by
+the left QTL. The LOD score of this two-QTL model is then subtracted
+by the LOD score of the single-QTL model to arrived at the final test
+statistic. To get the null distribution of the statistics, we generate
+data from the parameters estimated under the null hypothesis, repeat
+the whole procedure and save the test statistics. The P-value is
+calculated from this empirical distribution.
+
+Function `testpleio.1vs2` is used to do this test. input parameters:
+
+* cross: An object of class ‘cross’. 
+* Y: matrix of multiple traits with n rows.
+* chr: One character strings referring to chromosome of interest by name.
+* region.l, region.r: left and right bound for the interval of interest.
+* int.method: can have value of "bayes" or "1.5lod", method to
+              calculated the interval of interest if ‘region.l’ and
+              ‘region.r’ is not specified.
+* search: searching method for two-QTL model, can have value of "fast"
+          or "complete", default is "fast".
+* RandomStart: use random starting point for the two-QTL model or not,
+          default is ‘TRUE’.
+* n.simu: number of simulations for p-value.
+* tol: Tolerance value for the ‘qr’ decomposition in ‘lm’ fitting.
+* addcovar, intcovar: Additive and interactive covariates to control 
+                      for when mapping.
+
+This function will return a list with class "testpleio.1vs2", similar
+to "scanone", we could apply (S3) method `summary` and `plot` to look
+at the result. In the summary, we could see the position and LOD score
+for the single QTL and best two QTL model, as well as test statistics
+LODdiff=LOD2-LOD1 and its P-value.
 
 ```{r}
-obj <- testpleio.1vs2(cross=hyper, Y=Y, chr="1", n.simu=100,
-                      region.l=19, region.r=90)
+obj <- testpleio.1vs2(listeria, Y, chr, n.simu=100, region.l=60, region.r=90)
 summary(obj)
 plot(obj)
 ```
-* red line: $L_1(\lambda_1) = \max_{\lambda_2} (\lambda_1, \lambda_2)$
-* blue line: $L_2(\lambda_2) = \max_{\lambda_1} (\lambda_1, \lambda_2)$
+
+The above figure shows the joint mapping resut in black and profile
+for each of the two QTLs under $H_1$:
+
+* red line: $L_1(\lambda_1) = \max_{\lambda_2} LOD2(\lambda_1, \lambda_2)$
+* blue line: $L_2(\lambda_2) = \max_{\lambda_1} LOD2(\lambda_1, \lambda_2)$
+
+Triangles indicate the position of the QTLs and solid points indicate
+QTL positions and LODs from single trait mapping.
+
+We could also use `plottrace` to see how LODdiff changes when we move
+the cut-point of the left versus right group. There are 7 possile QTL
+positions from the above plot (result of single trait mapping), thus
+we have 6 possible ways of grouping these positions into the left
+versus right group. The 6 open dot indict the cut and their LODdiff.
+Thus when the first 5 traits and the last 5 triats are grouped
+seperately, the LODdiff is the biggest, it is our best two QTL model.
+This figure could be used as a diagnositc figure, to see if our best
+two QTL model is better than the rest of all the possible models.
 
 ```{r}
 plottrace(obj)
 ```
 
-
 ## test of 1 vs p QTL: `testpleio.1vsp`
-We could also test the hypothesis of $H_0$: There is only one QTL affecting
-all the phenotypes; $H_1$: There are p QTLs, each affecting one of
-the phenotypes. i.e., each pheotype is allowed to has its own QTL.
+
+We could also test the hypothesis of:
+
+* $H_0$: There is only one QTL affecting all the phenotypes; 
+* $H_1$: There are p QTLs, each affecting one of the phenotypes,
+         i.e., each phenotype is allowed to has its own QTL.
+
+This function has much less parameters than the previous one. We have
+`cross`, `Y`, `chr`, `addcovar`, `intcovar` and `n.simu`, the usage is
+same as before.  This function will return a list with class
+"testpleio.1vsp", similar to "scanone" and "testpleio.1vs2", we could
+apply (S3) method `summary` and `plot` to look at the result.  In the
+summary, we could see the position and LOD score for the single QTL
+and p QTL model, as well as test statistics LODdiff=LODp-LOD1 and its
+P-value.
 
 ```{r}
-obj2 <- testpleio.1vsp(cross=hyper, Y=Y, chr="1", n.simu=100)
+obj2 <- testpleio.1vsp(listeria, Y, chr, n.simu=100)
 summary(obj2)
 plot(obj2)
 ```
 
-
 ## plot Genetic Pattern: `plotGenetpattern`
 
-To illustrate the use of explorational plots, we generate data with
-two different QTLs, the first QTL is additive, the second QTL is
-dominant. We can tell from the plot the there are two different
-genetic patterns, thus there might be two different QTLs, even if the
-are closely linked.
+To illustrate the use of exploration plots, we generate data with more
+number of traits, 100. Same as before, the first half of the traits
+are controlled by the first QTL and the rest are controlled by the
+second QTL.
 
 ```{r}
-data(listeria)
-geno <- pull.geno(listeria, chr="1")
-genotype1 <- geno[,7]
-genotype2 <- geno[,10]
-n <- length(genotype1)
 p <- 100
 p1 <- floor(p/2)
 G1 <- matrix(genotype1, n, p1)
 G2 <- matrix(genotype2, n, p-p1)
 G2[G2==3] <- 2
-G2 <- -G2
-G <- cbind(G1, G2)
-Y <- matrix(rnorm(n*p,sd=0.5),n,p)
+G <- cbind(G1, G2*(-2))
+Y <- matrix(rnorm(n*p),n,p)
 Y <- Y + G
+```
+
+Function `plotGenetpattern` takes two input parameters, a phenotype
+matrix `Y` and a genotype vector `genotype`, the later should be
+genotype of the common QTL in most suspicious. QTL additive effect is
+defined as a=(RR-BB)/2, QTL dominant effect is defined as
+d=BR-(BB+RR)/2, when plotted against each other, traits with pure
+additive effects are near the x-axis and traits with dominant effects
+are along the diagonals, $y=x$ and $y=-x$.
+
+```{r}
 plotGenetpattern(Y, genotype1)
 ```
 
+We can tell from the plot the there are two different genetic
+patterns, thus possible two different QTLs, even if they are closely
+linked.
+
+
 ## plot LOD score with sign: `plotLODsign` 
-The direction of the QTL might be usfull as well.
+
+Using the same data, we could also display the direction of the QTL
+effect with `plotLODsign`.  Function `plotLODsign` takes input
+`cross`, `Y` and `chr`, as well as `addcovar` and `intcovar`, all has
+been introduced above.
+
+For each trait, the QTL effect direction is used as the sign of the
+LOD score. We first run single trait mapping for LOD scores and QTL
+positions, then we use `argmax.geno` to impute QTL genotypes and
+calculate mean for each of the 3 genotype group. We define the
+direction positive when the mean of the first group is bigger than the
+mean of the third group, and negative while not.
 
 ```{r}
-data(listeria)
-listeria <- calc.genoprob(listeria)
-geno <- pull.geno(listeria, chr="1")
-genotype1 <- geno[,7]
-genotype2 <- geno[,10]
-n <- length(genotype1)
-p <- 100
-p1 <- floor(p/2)
-G1 <- matrix(genotype1, n, p1)
-G2 <- -matrix(genotype2, n, p-p1)
-G <- cbind(G1, G2)
-Y <- matrix(rnorm(n*p,sd=0.5),n,p)
-Y <- Y + G
-plotLODsign(listeria, Y, chr="1")
+plotLODsign(listeria, Y, chr)
 ```
 
 
+```{r}
+sessionInfo()
+```
