@@ -13,16 +13,34 @@ knitr::opts_chunk$set(
 
 # Introduction to qtlpvl
 
-## Data 
+This package is focusing on QTL mapping with multiple tratis and
+testing of pleiotrophy vs. close linkage.  We assume the traits follow
+multivariate normal distribution and perform joint mapping to locate
+the single-QTL under the null hypothesis that there is one pleotrophic
+QTL affecting all the tratis; we then run single trait analysis on
+each trait and find the trait-specific QTL, sort the traits by their
+QTL position and search for the best seperation of the tratis into two
+groups, where the first group (contains the first several traits) is
+controlled by the right QTL and the second group (contains the rest
+tratis) is controlled by the left QTL. The LOD score of this two-QTL
+model is then substracted by the LOD score of the singel-QTL model to
+arrived at the final test statistic. To get the null distribution of
+the statistics, we generate data from the parameters estimated under
+the null hypothesis, repeat the whole procedure and save the test
+statistics. The P-value is claculated from this emperical
+distribution.
 
-We use data `hyper` from `R\qtl` as an example. A set of 10 phenotypes
-are generated with two QTLs from chromosome 1, each affecting 5
-phenotypes.
+
+
+## Data
+
+We use data `hyper` from `R\qtl` as an example. We will be only using
+the genotypes of this data set and generate the phenotypes from normal
+distribution. 
 
 ```{r}
-set.seed(123456)
+set.seed(79778432)
 data(hyper)
-hyper <- calc.genoprob(hyper)
 geno <- pull.geno(hyper, chr="1")
 genotype1 <- geno[,6]
 genotype2 <- geno[,12]
@@ -32,16 +50,30 @@ p1 <- floor(p/2)
 G1 <- matrix(genotype1, n, p1)
 G2 <- -matrix(genotype2, n, p-p1)
 G <- cbind(G1, G2)
-Y <- matrix(rnorm(n*p, sd=0.5), n, p)
+Y <- matrix(rnorm(n*p), n, p)
 Y <- Y + G * 0.2
 ```
+
+In the above code, after setting the random seed, we load the data
+hyper and pull out the genotype data from the cross object `hyper` on
+chromosome 1 as a data matrix `geno`, which is of size `r n` $\time$
+`r ncol(geno)`. We pick the 6th and 12th marker as the two QTLs and
+save their genotypes in `genotype1` and `genotype2`. Assuming the QTLs
+to have addtive effects only, we use matrix G to save the QTL effects.
+The first 5 traits are controlled by the first QTL and the other 5
+trait of the total 10 are controlled by the second QTL with negative
+effect.  The 10 phenotypes are generated with two these two QTLs and
+effect size 0.2 plus independent noise generated from standard normal
+distribution.
+
 
 ## joint mapping: `scanone.mvn`
 
 First we run a joint mapping with `scanone.mvn`, which assumes
-multivariate normal model. 
+multivariate normal model.  
 
 ```{r}
+hyper <- calc.genoprob(hyper)
 out <- scanone.mvn(hyper, Y, chr="1")
 summary(out)
 plot(out)
