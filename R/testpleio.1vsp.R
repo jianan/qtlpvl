@@ -114,7 +114,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
                                  addcovar=addcovar, intcovar=intcovar, n.simu=NA)
       LODdiff.simu[i.simu] <- result.i$LODdiff
     }
-    pvalue <- mean(LODdiff > LODdiff)
+    pvalue <- mean(LODdiff.simu > LODdiff - tol)
     result <- list(LOD1=LOD1, LODp=LODp, LODdiff=LODdiff, 
                    chr=chr, map=map, map.marker=map.marker,
                    maxLOD=maxLOD, maxPOS=maxPOS, 

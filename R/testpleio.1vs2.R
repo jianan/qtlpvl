@@ -291,7 +291,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       LODdiff.simu[i.simu] <- result.i$LODdiff
       Group.simu[i.simu,] <-result.i$Group
     }
-    pvalue <- mean(LODdiff.simu > LODdiff)
+    pvalue <- mean(LODdiff.simu > LODdiff - tol)
     result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
                    maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                    LODdiff.trace=LODdiff.trace,
