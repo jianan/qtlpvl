@@ -9,8 +9,19 @@ plotGenetpattern(Y, genotype = NULL, cross, chr, addcovar = NULL,
 \arguments{
   \item{genotype}{QTL genotype for the common QTL.}
 
-  \item{Y}{matrix, columns are quantitative traits maps to
-  the same position.}
+  \item{Y}{matrix of multiple traits with n rows.}
+
+  \item{cross}{An object of class \code{cross}. See
+  \code{read.cross} for details.}
+
+  \item{chr}{Optional vector indicating the chromosomes for
+  which LOD scores should be calculated.  This should be a
+  vector of character strings referring to chromosomes by
+  name; numeric values are converted to strings.}
+
+  \item{addcovar}{Additive covariates.}
+
+  \item{intcovar}{Interactive covariates.}
 
   \item{LOD.threshold}{threshold for QTL to be displayed.}
 
