@@ -50,7 +50,7 @@ plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
   
   LODsign <- numeric(p)
   for(i in 1:p){
-    LODsign[i] <- sign(mean(Y[geno[, maxPOS[i]]==1, i]) - mean(Y[geno[, maxPOS[i]]==3, i]))
+    LODsign[i] <- sign(mean(Y[geno[, maxPOSind[i]]==1, i]) - mean(Y[geno[, maxPOSind[i]]==3, i]))
   }
 
   x <- maxPOS
