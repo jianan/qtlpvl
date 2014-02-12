@@ -3,13 +3,26 @@
 \alias{plotGenetpattern}
 \title{Plot the QTL dominance effect versus QTL additive effect.}
 \usage{
-plotGenetpattern(Y, genotype)
+plotGenetpattern(Y, genotype = NULL, cross, chr, addcovar = NULL,
+  intcovar = NULL, LOD.threshold = 3, ...)
 }
 \arguments{
   \item{Y}{matrix, columns are quantitative traits maps to
   the same position.}
 
-  \item{genotype}{QTL genotype for the traits.}
+  \item{genotype}{QTL genotype for the common QTL.}
+
+  \item{cross}{An object of class \code{cross}. See
+  \code{read.cross} for details.}
+
+  \item{chr}{Optional vector indicating the chromosomes for
+  which LOD scores should be calculated.  This should be a
+  vector of character strings referring to chromosomes by
+  name; numeric values are converted to strings.}
+
+  \item{addcovar}{Additive covariates.}
+
+  \item{intcovar}{Interactive covariates.}
 }
 \value{
 a plot of QTL dominance effect versus QTL additive effect.
@@ -35,6 +48,7 @@ G2[G2==3] <- 2
 G <- cbind(G1, G2*(-2))
 Y <- matrix(rnorm(n*p),n,p)
 Y <- Y + G
-plotGenetpattern(Y, genotype1)
+plotGenetpattern(Y, genotype=genotype1)
+plotGenetpattern(Y, cross=listeria, chr=chr)
 }
 
