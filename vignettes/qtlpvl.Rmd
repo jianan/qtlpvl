@@ -32,7 +32,7 @@ chr <- "1"
 geno <- pull.geno(listeria, chr=chr)
 genotype1 <- geno[,7]
 genotype2 <- geno[,10]
-(pos <- unlist(pull.map(listeria, chr="1"))[c(7,10)])
+(pos <- unlist(pull.map(listeria, chr=chr))[c(7,10)])
 p <- 10
 p1 <- floor(p/2)
 G1 <- matrix(genotype1, n, p1)
@@ -106,24 +106,24 @@ calculated from this empirical distribution.
 
 Function `testpleio.1vs2` is used to do this test. input parameters:
 
-* cross: An object of class ‘cross’. 
+* cross: An object of class `cross`. 
 * Y: matrix of multiple traits with n rows.
 * chr: One character strings referring to chromosome of interest by name.
 * region.l, region.r: left and right bound for the interval of interest.
-* int.method: can have value of "bayes" or "1.5lod", method to
-              calculated the interval of interest if ‘region.l’ and
-              ‘region.r’ is not specified.
-* search: searching method for two-QTL model, can have value of "fast"
-          or "complete", default is "fast".
+* int.method: can have value of `bayes` or `1.5lod`, method to
+              calculated the interval of interest if `region.l` and
+              `region.r` is not specified.
+* search: searching method for two-QTL model, can have value of `fast`
+          or `complete`, default is `fast`.
 * RandomStart: use random starting point for the two-QTL model or not,
-          default is ‘TRUE’.
+          default is `TRUE`.
 * n.simu: number of simulations for p-value.
-* tol: Tolerance value for the ‘qr’ decomposition in ‘lm’ fitting.
+* tol: Tolerance value for the `qr` decomposition in `lm` fitting.
 * addcovar, intcovar: Additive and interactive covariates to control 
                       for when mapping.
 
-This function will return a list with class "testpleio.1vs2", similar
-to "scanone", we could apply (S3) method `summary` and `plot` to look
+This function will return a list with class `testpleio.1vs2`, similar
+to `scanone`, we could apply (S3) method `summary` and `plot` to look
 at the result. In the summary, we could see the position and LOD score
 for the single QTL and best two QTL model, as well as test statistics
 LODdiff=LOD2-LOD1 and its P-value.
@@ -168,7 +168,7 @@ We could also test the hypothesis of:
 This function has much less parameters than the previous one. We have
 `cross`, `Y`, `chr`, `addcovar`, `intcovar` and `n.simu`, the usage is
 same as before.  This function will return a list with class
-"testpleio.1vsp", similar to "scanone" and "testpleio.1vs2", we could
+`testpleio.1vsp`, similar to `scanone` and `testpleio.1vs2`, we could
 apply (S3) method `summary` and `plot` to look at the result.  In the
 summary, we could see the position and LOD score for the single QTL
 and p QTL model, as well as test statistics LODdiff=LODp-LOD1 and its
