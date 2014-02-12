@@ -4,7 +4,7 @@
 ##' QTL dominant effect is defined as d=BR-(BB+RR)/2.
 ##' 
 ##' @inheritParams scanone.mvn
-##' @param Y matrix, columns are quantitative traits maps to the same position. 
+##' @inheritParams plotLODsign
 ##' @param genotype QTL genotype for the common QTL.
 ##' @return a plot of QTL dominance effect versus QTL additive effect.
 ##' @export
