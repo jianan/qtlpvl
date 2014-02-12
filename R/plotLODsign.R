@@ -7,7 +7,7 @@
 ##' @param Y matrix, columns are quantitative traits maps to the same position. 
 ##' @param LOD.threshold threshold for QTL to be displayed.
 ##' @param ... Optional graphics arguments
-##' @return a plot of QTL dominance effect versus QTL additive effect.
+##' @return a plot the signed LOD score versus QTL position for multiple traits.
 ##' @export
 ##' @examples
 ##' set.seed(92950640)
@@ -61,16 +61,24 @@ plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
 
   xlim <- range(x) * c(0.9, 1.1)
   ylim <- c(-max(maxLOD), max(maxLOD)) * 1.1
+  xp <- pretty(xlim, 10)
+  yp <- pretty(ylim, 10)
   
+  mgp <- c(1.6, 0.2, 0) 
+  plot(0, 0, type="n", mgp=mgp,
+       xlim=xlim, ylim=ylim, ylab="", xlab="QTL pos (cM)", 
+       yaxt="n", xaxt="n", xaxs="i")
   bgcolor <- "gray80"
-  grayplot(0, 0, type="n", mgp=c(1.6, 0.2, 0), 
-           yat=pretty(ylim, 10), xat=pretty(xlim, 10), xlim=xlim, ylim=ylim, 
-           hlines=pretty(ylim, 10), vlines=pretty(x), ylab="", xlab="QTL pos (cM)", 
-           yaxt="n", xaxt="n", xaxs="i", bgcolor=bgcolor, ...)
+  u <- par("usr")
+  rect(u[1], u[3], u[2], u[4], border=NA, col=bgcolor)
+  abline(h=yp, v=xp, col="white")
+  axis(2, at=yp, mgp=mgp, tick=FALSE)
+  axis(1, at=xp, mgp=mgp, tick=FALSE)
   title(ylab="signed LOD score", mgp=c(2.1, 0, 0))
   points(x=x, y=y, col=c("red", "blue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)
   abline(h=0)
-  
+  rect(u[1], u[3], u[2], u[4], border=TRUE)  
+
 }
 
 

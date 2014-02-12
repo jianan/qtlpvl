@@ -26,8 +26,7 @@
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' Y <- Y + G
 ##' plotLODsign(listeria, Y, chr)
-
-plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
+plotLOD <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   
   n <- nrow(Y)
   p <- ncol(Y)
