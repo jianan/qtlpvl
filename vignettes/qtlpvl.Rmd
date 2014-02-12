@@ -207,7 +207,8 @@ additive effects are near the x-axis and traits with dominant effects
 are along the diagonals, $y=x$ and $y=-x$.
 
 ```{r}
-plotGenetpattern(Y, genotype1)
+plotGenetpattern(Y, genotype=genotype1)
+plotGenetpattern(Y, cross=listeria, chr=chr)
 ```
 
 We can tell from the plot the there are two different genetic
