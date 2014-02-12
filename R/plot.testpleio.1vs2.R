@@ -32,21 +32,3 @@ plot.testpleio.1vs2 <- function(x, ...){
   points(map,LOD2[, ind[2]],type="l",col="blue")
   points(map,LOD2[ind[1], ],type="l",col="red")
 }
-
-
-##' @export
-plottrace <- function(x)
-    UseMethod("plottrace")
-
-##' @export
-plottrace.testpleio.1vs2 <- function(x, ...){
-  
-  object <- x
-  if (!any(class(object) == "testpleio.1vs2")) 
-      stop("Input should have class \"testpleio.1vs2\".")
-  dots <- list(...)
-
-  plot(x=1:(length(object$Group)-1), y=object$LODdiff.trace,
-       xlab="i.cut", ylab="LODdiff", type="b")
-  
-}
