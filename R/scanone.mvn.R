@@ -60,6 +60,11 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   ## if(!missing(intcovar) & is.matrix(intcovar) & n != nrow(intcovar))
   ##     stop("number of obs. in cross and intcovar not same.")
   
+  if (!("prob" %in% names(cross[[c("geno",1)]]))){
+    warning("First running calc.genoprob.")
+    cross <- calc.genoprob(cross)
+  }
+
   if(missing(chr)){
     chr <- names(cross$geno)
   }else{

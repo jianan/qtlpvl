@@ -29,11 +29,16 @@
 ##' plotLODsign(listeria, Y, chr)
 
 plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
+  
   n <- nrow(Y)
   p <- ncol(Y)
   p1 <- ncol(cross$pheno)
   cross$pheno <- data.frame(cross$pheno, Y)
   if(!is.null(colnames(Y))) names(cross$pheno)[p1+(1:p)] <- colnames(Y)
+  if (!("prob" %in% names(cross[[c("geno",1)]]))){
+    warning("First running calc.genoprob.")
+    cross <- calc.genoprob(cross)
+  }
   out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr, 
                  addcovar=addcovar, intcovar=intcovar)
   maxPOSind <- apply(out[, -(1:2)], 2, which.max)
