@@ -49,6 +49,6 @@ G2[G2==3] <- 2
 G <- cbind(G1, G2*(-2))
 Y <- matrix(rnorm(n*p),n,p)
 Y <- Y + G
-plotLODsign(listeria, Y, chr)
+plotLOD(listeria, Y, chr)
 }
 

@@ -56,7 +56,7 @@ right QTL.} \item{LODdiff}{Difference of best one QTL model
 and best two QTL model, LODdiff = max(LOD2) - max(LOD1)}
 \item{pvalue}{P-value from parametric bootstrap
 simulations.} \item{Group}{Indicating which traits are
-inflenced by which QTL under alternative.}
+influenced by which QTL under alternative.}
 }
 \description{
 Test if multitriats are controlled by one pleiotrophic QTL

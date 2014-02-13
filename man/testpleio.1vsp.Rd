@@ -30,7 +30,7 @@ testpleio.1vsp(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
 a list of LOD1, LODp, LODdiff, LOD1.pos and maxPOS ...
 P-value \item{LOD1}{LOD score of one dimensional joint
 mapping.} \item{LODp}{LOD score for estimate of p QTL
-model, each trait is influenced by a seperate QTL.}
+model, each trait is influenced by a separate QTL.}
 \item{LODdiff}{Difference of best one QTL model and best p
 QTL model, LODdiff = max(LODp) - max(LOD1)}
 \item{pvalue}{P-value from parametric bootstrap
