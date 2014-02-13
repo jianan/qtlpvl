@@ -5,7 +5,8 @@
 \usage{
 testpleio.1vs2(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
   region.l = NA, region.r = NA, int.method = "bayes", search = "fast",
-  RandomStart = TRUE, n.simu = 1000, tol = 1e-07)
+  RandomStart = TRUE, RandomCut = FALSE, simu = "parametric",
+  n.simu = 1000, tol = 1e-07)
 }
 \arguments{
   \item{region.l}{left bound}
@@ -21,6 +22,12 @@ testpleio.1vs2(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
 
   \item{RandomStart}{use random starting point for the
   two-QTL model or not. default is \code{TRUE}.}
+
+  \item{RandomCut}{use random cutting or not when there are
+  traits mapped to the same location. default is "FALSE".}
+
+  \item{simu}{"parametric" or "permutation" method for
+  simulations. default is "parametric".}
 
   \item{n.simu}{number of simulations for p-value.}
 
@@ -48,7 +55,8 @@ QTL model, each trait is influenced by the left or the
 right QTL.} \item{LODdiff}{Difference of best one QTL model
 and best two QTL model, LODdiff = max(LOD2) - max(LOD1)}
 \item{pvalue}{P-value from parametric bootstrap
-simulations.}
+simulations.} \item{Group}{Indicating which traits are
+inflenced by which QTL under alternative.}
 }
 \description{
 Test if multitriats are controlled by one pleiotrophic QTL
