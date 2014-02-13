@@ -30,7 +30,7 @@ print.summary.testpleio.1vs2 <- function(x, ...){
 
   cat("P-value is: ")
   cat(x$pvalue)
-  cat(" (form", x$n.simu ,"simulations)")
+  cat(" (from", x$n.simu ,"simulations)")
   cat("\n")
 }
 
