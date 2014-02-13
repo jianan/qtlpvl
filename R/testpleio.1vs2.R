@@ -29,7 +29,7 @@
 ##' \item{LODdiff}{Difference of best one QTL model and best two QTL model,
 ##'                LODdiff = max(LOD2) - max(LOD1)}
 ##' \item{pvalue}{P-value from parametric bootstrap simulations.}
-##' \item{Group}{Indicating which traits are inflenced by which QTL
+##' \item{Group}{Indicating which traits are influenced by which QTL
 ##' under alternative.}
 ##' @export
 ##' @examples

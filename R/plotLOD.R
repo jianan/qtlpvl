@@ -25,7 +25,7 @@
 ##' G <- cbind(G1, G2*(-2))
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' Y <- Y + G
-##' plotLODsign(listeria, Y, chr)
+##' plotLOD(listeria, Y, chr)
 plotLOD <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   
   n <- nrow(Y)
@@ -57,11 +57,14 @@ plotLOD <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3
   abline(h=pretty(ylim, 10), v=pretty(xlim),col="white")
   axis(2, at=pretty(ylim,10),mgp=mgp,tick=FALSE)
   axis(1, at=pretty(xlim),mgp=mgp,tick=FALSE)
-  title(ylab="signed LOD score", mgp=c(2.1, 0, 0))
+  title(ylab="LOD score", mgp=c(2.1, 0, 0))
   points(x=x, y=y, col=c("red", "blue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)
   abline(h=0)
-  rect(u[1], u[3], u[2], u[4], border=TRUE)  
+  rect(u[1], u[3], u[2], u[4], border=TRUE)
 
+  map <- unlist(pull.map(cross, chr=chr))
+  map <- map[map>xlim[1] & map<xlim[2]]
+  rug(map, ticksize=0.01)
 }
 
 
