@@ -94,9 +94,9 @@ with LOD score `r sprintf("%.2f",summary(out)$lod)`.
 ## test of 1 vs 2 QTL: `testpleio.1vs2`
 
 We test the hypothesis of: 
-
-* $H_0$: There is only one QTL affecting all the phenotypes; 
-* $H_1$: There are two QTLs, each affecting one of the two phenotype groups.
+* $H_0$: There is only one QTL affecting all the phenotypes;
+* $H_1$: There are two QTLs, each affecting one of the two phenotype
+  groups.
 
 We assume the traits follow multivariate normal distribution and
 perform joint mapping to locate the single-QTL under the null
@@ -108,37 +108,40 @@ group (contains the first several traits) is controlled by the right
 QTL and the second group (contains the rest traits) is controlled by
 the left QTL. The LOD score of this two-QTL model is then subtracted
 by the LOD score of the single-QTL model to arrived at the final test
-statistic. 
+statistic.
 
 To get the null distribution of the statistics, we have two methods:
-
-* parametric bootstrap: generate data from the parameters estimated under the null hypothesis
-* stratified permutation: randomly permute the genotype data versus phenotype data with in each QTL genotype group, 
+* parametric bootstrap: generate data from the parameters estimated
+  under the null hypothesis
+* stratified permutation: randomly permute the genotype data versus
+  phenotype data with in each QTL genotype group,
 
 we repeat the whole procedure on data from either method and save the
 test statistics. The P-value is calculated from this empirical
 distribution.
 
 Function `testpleio.1vs2` is used to do this test. input parameters:
-
 * cross: An object of class `cross`. 
 * Y: matrix of multiple traits with n rows.
-* chr: One character strings referring to chromosome of interest by name.
-* region.l, region.r: left and right bound for the interval of interest.
+* chr: One character strings referring to chromosome of interest by
+  name.
+* region.l, region.r: left and right bound for the interval of
+  interest.
 * int.method: can have value of `bayes` or `1.5lod`, method to
-              calculated the interval of interest if `region.l` and
-              `region.r` is not specified.
+  calculated the interval of interest if `region.l` and `region.r` is
+  not specified.
 * search: searching method for two-QTL model, can have value of `fast`
-          or `complete`, default is `fast`.
+  or `complete`, default is `fast`.
 * RandomStart: use random starting point for the two-QTL model or not,
-          default is `TRUE`.
-* RandomCut: use random cutting or not when there are traits
-             mapped to the same location. default is "FALSE".
-* simu: "parametric" or "permutation" method for simulations. default is "parametric".
+  default is `TRUE`.
+* RandomCut: use random cutting or not when there are traits mapped to
+  the same location. default is "FALSE".
+* simu: "parametric" or "permutation" method for simulations. default
+  is "parametric".
 * n.simu: number of simulations for p-value.
 * tol: Tolerance value for the `qr` decomposition in `lm` fitting.
-* addcovar, intcovar: Additive and interactive covariates to control 
-                      for when mapping.
+* addcovar, intcovar: Additive and interactive covariates to control
+  for when mapping.
 
 This function will return a list with class `testpleio.1vs2`, similar
 to `scanone`, we could apply (S3) method `summary` and `plot` to look
@@ -155,8 +158,10 @@ plot(obj)
 The above figure shows the joint mapping result in black and profile
 for each of the two QTLs under $H_1$:
 
-* red line: $L_1(\lambda_1) = \max_{\lambda_2} LOD2(\lambda_1, \lambda_2)$
-* blue line: $L_2(\lambda_2) = \max_{\lambda_1} LOD2(\lambda_1, \lambda_2)$
+* red line: $L_1(\lambda_1) = \max_{\lambda_2} LOD2(\lambda_1,
+  \lambda_2)$
+* blue line: $L_2(\lambda_2) = \max_{\lambda_1} LOD2(\lambda_1,
+  \lambda_2)$
 
 Triangles indicate the position of the QTLs and solid points indicate
 QTL positions and LODs from single trait mapping.
@@ -178,10 +183,9 @@ plottrace(obj)
 ## test of 1 vs p QTL: `testpleio.1vsp`
 
 We could also test the hypothesis of:
-
 * $H_0$: There is only one QTL affecting all the phenotypes; 
-* $H_1$: There are p QTLs, each affecting one of the phenotypes,
-         i.e., each phenotype is allowed to has its own QTL.
+* $H_1$: There are p QTLs, each affecting one of the phenotypes, i.e.,
+  each phenotype is allowed to has its own QTL.
 
 This function has much less parameters than the previous one. We have
 `cross`, `Y`, `chr`, `addcovar`, `intcovar` and `n.simu`, the usage is
@@ -217,15 +221,13 @@ Y <- Y + G
 ```
 
 Function `plotGenetpattern` takes two kinds of input parameters:
-
 * a phenotype matrix `Y` and a genotype vector `genotype`, the later
-should be genotype of the common QTL in most suspicious.
-
+  should be genotype of the common QTL in most suspicious.
 * a phenotype matrix `Y` and a cross object and chromosome
   number. This is used when there is no certainty of a single QTL for
   all traits and thus each trait is mapped separately and its own QTL
   genotype is used.
-
+  
 QTL additive effect is defined as a=(RR-BB)/2, QTL dominant effect is
 defined as d=BR-(BB+RR)/2, when plotted against each other, traits
 with pure additive effects are near the x-axis and traits with
@@ -239,7 +241,6 @@ plotGenetpattern(Y, cross=listeria, chr=chr)
 We can tell from both plots the there are two different genetic
 patterns, thus possible two different QTLs, even if they are closely
 linked.
-
 
 ## plot LOD score with sign: `plotLODsign` 
 
