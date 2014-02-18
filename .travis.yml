@@ -14,6 +14,7 @@ before_install:
 
 install:
   - ./travis-tool.sh install_deps
+  - ./travis-tool.sh install_r roxygen2
 
 script: ./travis-tool.sh run_tests
 
@@ -25,3 +26,17 @@ notifications:
     on_success: change
     on_failure: change
 
+after_success:
+  - git config --global user.email "luckyrand@gmail.com"
+  - git config --global user.name "Chenliang Xu"
+  - curl -OL https://github.com/luckyrandom/r-deploy-git/raw/master/deploy-service.sh
+  - chmod 755 ./deploy-service.sh
+  - ./deploy-service.sh
+  
+env:
+  global:
+    secure: "I+IlrxePtZNcDxDsP0/jBGAyH0dAN9ZyZwui8UOSgFCs+0NHiTGSr4AVd0HmfzpuPwCh0TL+mtFkPNdfV05onYmHUQc8eCCcpHz6AlGHOojVK66ODcTlRa7t6BgsGRfhAPRQALJU55wCTH4xL9w1scyMgfUabdBgSih/HrNbNoc="
+
+branches:
+  except:
+    - master-pkg
