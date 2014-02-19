@@ -3,3 +3,5 @@
 *.RData
 *.Rout
 .DS_Store
+*.Rd
+NAMESPACE
