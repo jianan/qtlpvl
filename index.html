@@ -1,0 +1,383 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>QTLpvl by jianan</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>QTLpvl</h1>
+        <p>testing of pleiotrophy vs close linkage</p>
+
+        <p class="view"><a href="https://github.com/jianan/qtlpvl">View the Project on GitHub <small>jianan/qtlpvl</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/jianan/qtlpvl/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jianan/qtlpvl/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jianan/qtlpvl">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>R package still in working...</p>
+
+<p><a href="https://travis-ci.org/jianan/qtlpvl"><img src="https://travis-ci.org/jianan/qtlpvl.png?branch=master" alt="Build Status"></a></p>
+
+<h1>
+<a name="introduction-to-qtlpvl" class="anchor" href="#introduction-to-qtlpvl"><span class="octicon octicon-link"></span></a>Introduction to qtlpvl</h1>
+
+<p>This package is focusing on QTL mapping with multiple traits and
+testing of pleiotrophy vs. close linkage.</p>
+
+<h2>
+<a name="data" class="anchor" href="#data"><span class="octicon octicon-link"></span></a>Data</h2>
+
+<p>We use data <code>listeria</code> from <code>R\qtl</code> as an example. We will be only
+using the genotypes of this F$_2$ population and generate the
+phenotypes from normal distribution.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">set.seed(92950640)</span>
+<span class="c">data(listeria)</span>
+<span class="c">listeria &lt;- calc.genoprob(listeria,step=1)</span>
+<span class="c">n &lt;- nind(listeria)</span>
+<span class="c">chr &lt;- "1"</span>
+<span class="c">geno &lt;- pull.geno(listeria, chr=chr)</span>
+<span class="c">genotype1 &lt;- geno[,7]</span>
+<span class="c">genotype2 &lt;- geno[,10]</span>
+<span class="c">(pos &lt;- unlist(pull.map(listeria, chr=chr))[c(7,10)])</span>
+</pre></div>
+
+<pre><code>#&gt; 1.D1M451 1.D1M355 
+#&gt;    70.11    81.40
+</code></pre>
+
+<div class="highlight highlight-r"><pre><span class="c">p &lt;- 10</span>
+<span class="c">p1 &lt;- floor(p/2)</span>
+<span class="c">G1 &lt;- matrix(genotype1, n, p1)</span>
+<span class="c">G2 &lt;- matrix(genotype2, n, p-p1)</span>
+<span class="c">G2[G2==3] &lt;- 2</span>
+<span class="c">G &lt;- cbind(G1, G2*(-2))</span>
+<span class="c">Y &lt;- matrix(rnorm(n*p),n,p)</span>
+<span class="c">Y &lt;- Y + G</span>
+</pre></div>
+
+<p>In the above code, after setting the random seed, we load the data
+<code>listeria</code> and pull out the genotype data from the cross object
+<code>listeria</code> on chromosome 1 as a data matrix <code>geno</code>, which is of
+size 120 $\times$ 13. We pick the 7th and 10th marker as
+the two QTLs and save their genotypes in <code>genotype1</code> and
+<code>genotype2</code>. These two QTLs are at position 70.11
+cM and 81.40 cM on chromosome 1.</p>
+
+<p>Assume the first QTL have additive effect only and the second QTL have
+dominant effect --individuals with genotype 2 and 3 are grouped
+together to have the same shift in mean.  The first 5 traits are
+controlled by the first QTL and the other 5 trait of the total 10 are
+controlled by the second QTL with negative effect.  We use matrix G to
+save the QTL effects and the second QTL group, <code>G2</code> is multiply by -2
+to have a negative QTL effect.  The 10 phenotypes are generated with
+these QTL effect matrix G plus independent noise generated from
+standard normal distribution.</p>
+
+<p>We could first look at the single triat analysis result.  For each
+trait, we plot its LOD score versus QTL position when the LOD is
+bigger than a threshold (default value is 3).</p>
+
+<div class="highlight highlight-r"><pre><span class="c">plotLOD(listeria, Y, chr)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-3.png" alt="plot of chunk unnamed-chunk-3"></p>
+
+<h2>
+<a name="joint-mapping-scanonemvn" class="anchor" href="#joint-mapping-scanonemvn"><span class="octicon octicon-link"></span></a>joint mapping: <code>scanone.mvn</code>
+</h2>
+
+<p>Having the cross object <code>listeria</code> and phenotype trait matrix <code>Y</code>
+prepared, we can first run a joint mapping with <code>scanone.mvn</code>, which
+assumes multivariate normal model. chr is set to be "1", which
+indicates the mapping is only on chromosome 1. Function <code>scanone.mvn</code>
+has two more parameters <code>addcovar</code> and <code>intcovar</code>, they could be used
+to control for additive and interactive covariates when needed.</p>
+
+<p>The result of joint mapping is a data frame with class <code>scanone</code>, we
+could apply (S3) method <code>summary</code> and <code>plot</code> to look at the result.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">out &lt;- scanone.mvn(listeria, Y, chr)</span>
+<span class="c">summary(out)</span>
+</pre></div>
+
+<pre><code>#&gt;          chr pos  lod
+#&gt; c1.loc78   1  78 63.5
+</code></pre>
+
+<div class="highlight highlight-r"><pre><span class="c">plot(out)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-4.png" alt="plot of chunk unnamed-chunk-4"></p>
+
+<p>We could see the QTL is at 78.00 cM
+with LOD score 63.46.</p>
+
+<h2>
+<a name="test-of-1-vs-2-qtl-testpleio1vs2" class="anchor" href="#test-of-1-vs-2-qtl-testpleio1vs2"><span class="octicon octicon-link"></span></a>test of 1 vs 2 QTL: <code>testpleio.1vs2</code>
+</h2>
+
+<p>We test the hypothesis of: </p>
+
+<ul>
+<li>$H_0$: There is only one QTL affecting all the phenotypes;</li>
+<li>$H_1$: There are two QTLs, each affecting one of the two phenotype
+groups.</li>
+</ul><p>We assume the traits follow multivariate normal distribution and
+perform joint mapping to locate the single-QTL under the null
+hypothesis that there is one pleiotrophic QTL affecting all the
+traits; we then run single trait analysis on each trait and find the
+trait-specific QTL, sort the traits by their QTL position and search
+for the best separation of the traits into two groups, where the first
+group (contains the first several traits) is controlled by the right
+QTL and the second group (contains the rest traits) is controlled by
+the left QTL. The LOD score of this two-QTL model is then subtracted
+by the LOD score of the single-QTL model to arrived at the final test
+statistic.</p>
+
+<p>To get the null distribution of the statistics, we have two methods:</p>
+
+<ul>
+<li>parametric bootstrap: generate data from the parameters estimated
+under the null hypothesis</li>
+<li>stratified permutation: randomly permute the genotype data versus
+phenotype data with in each QTL genotype group,</li>
+</ul><p>we repeat the whole procedure on data from either method and save the
+test statistics. The P-value is calculated from this empirical
+distribution.</p>
+
+<p>Function <code>testpleio.1vs2</code> is used to do this test. input parameters:</p>
+
+<ul>
+<li>cross: An object of class <code>cross</code>. </li>
+<li>Y: matrix of multiple traits with n rows.</li>
+<li>chr: One character strings referring to chromosome of interest by
+name.</li>
+<li>region.l, region.r: left and right bound for the interval of
+interest.</li>
+<li>int.method: can have value of <code>bayes</code> or <code>1.5lod</code>, method to
+calculated the interval of interest if <code>region.l</code> and <code>region.r</code> is
+not specified.</li>
+<li>search: searching method for two-QTL model, can have value of <code>fast</code>
+or <code>complete</code>, default is <code>fast</code>.</li>
+<li>RandomStart: use random starting point for the two-QTL model or not,
+default is <code>TRUE</code>.</li>
+<li>RandomCut: use random cutting or not when there are traits mapped to
+the same location. default is "FALSE".</li>
+<li>simu: "parametric" or "permutation" method for simulations. default
+is "parametric".</li>
+<li>n.simu: number of simulations for p-value.</li>
+<li>tol: Tolerance value for the <code>qr</code> decomposition in <code>lm</code> fitting.</li>
+<li>addcovar, intcovar: Additive and interactive covariates to control
+for when mapping.</li>
+</ul><p>This function will return a list with class <code>testpleio.1vs2</code>, similar
+to <code>scanone</code>, we could apply (S3) method <code>summary</code> and <code>plot</code> to look
+at the result. In the summary, we could see the position and LOD score
+for the single QTL and best two QTL model, as well as test statistics
+LODdiff=LOD2-LOD1 and its P-value.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">obj &lt;- testpleio.1vs2(listeria, Y, chr, n.simu=100, region.l=60, region.r=90)</span>
+<span class="c">summary(obj)</span>
+</pre></div>
+
+<pre><code>#&gt; Single QTL model: lod 63.46, pos 78.00 cM
+#&gt; Two QTLs model: lod 81.66, pos 70.11 cM, 81.40 cM
+#&gt;   Traits influenced by the left QTL: 1 2 3 4 5
+#&gt;   Traits influenced by the right QTL: 6 7 8 9 10
+#&gt; Difference of LOD score: 18.20
+#&gt; P-value is: 0 (from 100 simulations)
+</code></pre>
+
+<div class="highlight highlight-r"><pre><span class="c">plot(obj)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-5.png" alt="plot of chunk unnamed-chunk-5"></p>
+
+<p>The above figure shows the joint mapping result in black and profile
+for each of the two QTLs under $H_1$:</p>
+
+<ul>
+<li>red line: $L_1(\lambda_1) = \max_{\lambda_2} LOD2(\lambda_1,
+\lambda_2)$</li>
+<li>blue line: $L_2(\lambda_2) = \max_{\lambda_1} LOD2(\lambda_1,
+\lambda_2)$</li>
+</ul><p>Triangles indicate the position of the QTLs and solid points indicate
+QTL positions and LODs from single trait mapping.</p>
+
+<p>We could also use <code>plottrace</code> to see how LODdiff changes when we move
+the cut-point of the left versus right group. There are 7 possible QTL
+positions from the above plot (result of single trait mapping), thus
+we have 6 possible ways of grouping these positions into the left
+versus right group. The 6 open dot indict the cut and their LODdiff.
+Thus when the first 5 traits and the last 5 traits are grouped
+separately, the LODdiff is the biggest, it is our best two QTL model.
+This figure could be used as a diagnostic figure, to see if our best
+two QTL model is better than the rest of all the possible models.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">plottrace(obj)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-6.png" alt="plot of chunk unnamed-chunk-6"></p>
+
+<h2>
+<a name="test-of-1-vs-p-qtl-testpleio1vsp" class="anchor" href="#test-of-1-vs-p-qtl-testpleio1vsp"><span class="octicon octicon-link"></span></a>test of 1 vs p QTL: <code>testpleio.1vsp</code>
+</h2>
+
+<p>We could also test the hypothesis of:</p>
+
+<ul>
+<li>$H_0$: There is only one QTL affecting all the phenotypes; </li>
+<li>$H_1$: There are p QTLs, each affecting one of the phenotypes, i.e.,
+each phenotype is allowed to has its own QTL.</li>
+</ul><p>This function has much less parameters than the previous one. We have
+<code>cross</code>, <code>Y</code>, <code>chr</code>, <code>addcovar</code>, <code>intcovar</code> and <code>n.simu</code>, the usage is
+same as before.  This function will return a list with class
+<code>testpleio.1vsp</code>, similar to <code>scanone</code> and <code>testpleio.1vs2</code>, we could
+apply (S3) method <code>summary</code> and <code>plot</code> to look at the result.  In the
+summary, we could see the position and LOD score for the single QTL
+and p QTL model, as well as test statistics LODdiff=LODp-LOD1 and its
+P-value.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">obj2 &lt;- testpleio.1vsp(listeria, Y, chr, n.simu=100)</span>
+<span class="c">summary(obj2)</span>
+</pre></div>
+
+<pre><code>#&gt; Single QTL model: lod 63.46, pos 78.00 cM
+#&gt; Multiple QTLs model: lod 82.28
+#&gt;     Triat   POS    LOD
+#&gt; X1      1 70.11 10.863
+#&gt; X2      2 70.11 10.174
+#&gt; X3      3 69.00  9.896
+#&gt; X4      4 70.11 14.309
+#&gt; X5      5 68.00  9.652
+#&gt; X6      6 80.62 18.919
+#&gt; X7      7 79.00 17.460
+#&gt; X8      8 81.40 17.945
+#&gt; X9      9 82.00 15.928
+#&gt; X10    10 81.40 16.367
+#&gt; 
+#&gt; Difference of LOD score: 18.82
+#&gt; P-value is: 0 (from 100 simulations)
+</code></pre>
+
+<div class="highlight highlight-r"><pre><span class="c">plot(obj2)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-7.png" alt="plot of chunk unnamed-chunk-7"></p>
+
+<h2>
+<a name="plot-genetic-pattern-plotgenetpattern" class="anchor" href="#plot-genetic-pattern-plotgenetpattern"><span class="octicon octicon-link"></span></a>plot Genetic Pattern: <code>plotGenetpattern</code>
+</h2>
+
+<p>To illustrate the use of exploration plots, we generate data with more
+number of traits, 100. Same as before, the first half of the traits
+are controlled by the first QTL and the rest are controlled by the
+second QTL.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">p &lt;- 100</span>
+<span class="c">p1 &lt;- floor(p/2)</span>
+<span class="c">G1 &lt;- matrix(genotype1, n, p1)</span>
+<span class="c">G2 &lt;- matrix(genotype2, n, p-p1)</span>
+<span class="c">G2[G2==3] &lt;- 2</span>
+<span class="c">G &lt;- cbind(G1, G2*(-2))</span>
+<span class="c">Y &lt;- matrix(rnorm(n*p),n,p)</span>
+<span class="c">Y &lt;- Y + G</span>
+</pre></div>
+
+<p>Function <code>plotGenetpattern</code> takes two kinds of input parameters:</p>
+
+<ul>
+<li>a phenotype matrix <code>Y</code> and a genotype vector <code>genotype</code>, the later
+should be genotype of the common QTL in most suspicious.</li>
+<li>a phenotype matrix <code>Y</code> and a cross object and chromosome
+number. This is used when there is no certainty of a single QTL for
+all traits and thus each trait is mapped separately and its own QTL
+genotype is used.</li>
+</ul><p>QTL additive effect is defined as a=(RR-BB)/2, QTL dominant effect is
+defined as d=BR-(BB+RR)/2, when plotted against each other, traits
+with pure additive effects are near the x-axis and traits with
+dominant effects are along the diagonals, $y=x$ and $y=-x$.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">plotGenetpattern(Y, genotype=genotype1)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-91.png" alt="plot of chunk unnamed-chunk-9"></p>
+
+<div class="highlight highlight-r"><pre><span class="c">plotGenetpattern(Y, cross=listeria, chr=chr)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-92.png" alt="plot of chunk unnamed-chunk-9"></p>
+
+<p>We can tell from both plots the there are two different genetic
+patterns, thus possible two different QTLs, even if they are closely
+linked.</p>
+
+<h2>
+<a name="plot-lod-score-with-sign-plotlodsign" class="anchor" href="#plot-lod-score-with-sign-plotlodsign"><span class="octicon octicon-link"></span></a>plot LOD score with sign: <code>plotLODsign</code>
+</h2>
+
+<p>Using the same data, we could also display the direction of the QTL
+effect with <code>plotLODsign</code>.  Function <code>plotLODsign</code> takes input
+<code>cross</code>, <code>Y</code> and <code>chr</code>, as well as <code>addcovar</code> and <code>intcovar</code>, all has
+been introduced above.</p>
+
+<p>For each trait, the QTL effect direction is used as the sign of the
+LOD score. We first run single trait mapping for LOD scores and QTL
+positions, then we use <code>argmax.geno</code> to impute QTL genotypes and
+calculate mean for each of the 3 genotype group. We define the
+direction positive when the mean of the first group is bigger than the
+mean of the third group, and negative while not.</p>
+
+<div class="highlight highlight-r"><pre><span class="c">plotLODsign(listeria, Y, chr)</span>
+</pre></div>
+
+<p><img src="figure/unnamed-chunk-10.png" alt="plot of chunk unnamed-chunk-10"></p>
+
+<h2>
+<a name="session-info" class="anchor" href="#session-info"><span class="octicon octicon-link"></span></a>Session Info</h2>
+
+<div class="highlight highlight-r"><pre><span class="c">sessionInfo()</span>
+</pre></div>
+
+<pre><code>#&gt; R version 3.0.2 (2013-09-25)
+#&gt; Platform: x86_64-apple-darwin10.8.0 (64-bit)
+#&gt; 
+#&gt; locale:
+#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+#&gt; 
+#&gt; attached base packages:
+#&gt; [1] parallel  stats     graphics  grDevices utils     datasets  methods  
+#&gt; [8] base     
+#&gt; 
+#&gt; other attached packages:
+#&gt; [1] qtlpvl_0.1     qtl_1.29-2     knitr_1.5      devtools_1.4.1
+#&gt; 
+#&gt; loaded via a namespace (and not attached):
+#&gt; [1] digest_0.6.3   evaluate_0.5.1 formatR_0.9    httr_0.2      
+#&gt; [5] memoise_0.1    RCurl_1.95-4.1 stringr_0.6.2  tools_3.0.2   
+#&gt; [9] whisker_0.3-2
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jianan">jianan</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
