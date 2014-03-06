@@ -12,6 +12,7 @@ before_install:
   - chmod 755 ./travis-tool.sh
   - ./travis-tool.sh bootstrap
   - ./travis-tool.sh install_r devtools
+  - ./travis-tool.sh install_github klutometis/roxygen
   - make -k prebuild
 
 install:
@@ -37,7 +38,7 @@ env:
   global:
     secure: "d2DBA/nVsUFj1sctxqm5uwsDK9nE60TgYoNduaEbAPqw7ZEAh38torfMZv4WT+bAFpni8Rr8UbthD8vsrfgpYIUW6Va4BX3l1nCRyYz2dm2taYAvshkOqS0JFW3zy1X99H3AslDvFdUuSNbU9ZqnoS/Ztuy2qBSPEdYFShlbHWo="
 
+## exclude the deploy branch from build on travis-ci
 branches:
   except:
-    ## exclude the deploy branch from build on travis-ci
     - master
