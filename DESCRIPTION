@@ -10,7 +10,7 @@ Maintainer: Jianan Tian <jiant17@gmail.com>
 Depends:
     R (>= 3.0.2),
     qtl,
-    Rcpp (>= 0.11.0), 
+    Rcpp (>= 0.11.0),
     RcppEigen (>= 0.3.2.0.2)
 Suggests:
     knitr

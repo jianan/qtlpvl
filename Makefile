@@ -13,7 +13,7 @@ $(TARGET_RCPP_ATTRIBUTE) : $(SRC_CPP)
 ## time.
 
 Rd:
-	R -e 'library(devtools);document(roclets=c("namespace", "rd"))'
+	R -e 'roxygen2::roxygenise(); devtools::document()'
 # build package documentation and vignettes
 
 
