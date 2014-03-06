@@ -1,4 +1,6 @@
 \.git
 ^ReadMe\.md$
 ^Makefile$
-.travis.yml
+^\.travis\.yml$
+^\.travis\.deplot\.sh$
+
