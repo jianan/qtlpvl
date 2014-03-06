@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## This file is initially downloaded from: 
+## http://github.com/luckyrandom/r-deploy-git/blob/master/deploy.sh
+
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
@@ -80,7 +83,7 @@ commit(){
     if  git diff-index --quiet --cached HEAD ; then
         echo "Nothing to deploy"
     else
-        git commit -m "pkg built from  $(echo ${SRC_COMMIT_ID} | head -c 8 )"  -m "[ci skip]"
+        git commit -m "package built from  $(echo ${SRC_COMMIT_ID} | head -c 8 ) for installing"  -m "[ci skip]"
     fi
 }
 
