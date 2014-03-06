@@ -22,6 +22,6 @@ vig:
 # generate vignette html
 
 clean:
-	rm -rf $(TARGET_RCPP_ATTRIBUTE) man/*.Rd
+	rm -rf $(TARGET_RCPP_ATTRIBUTE) man/*.Rd NAMESPACE
 
 

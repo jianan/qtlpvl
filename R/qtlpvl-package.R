@@ -5,5 +5,6 @@
 #'
 #' @import qtl
 #' @name qtlpvl
+#' @useDynLib qtlpvl
 #' @docType package
 NULL
