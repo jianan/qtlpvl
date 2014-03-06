@@ -13,10 +13,11 @@ before_install:
   - ./travis-tool.sh bootstrap
   - ./travis-tool.sh install_r devtools
   - ./travis-tool.sh install_github klutometis/roxygen
-  - make -k prebuild
+
 
 install:
   - ./travis-tool.sh install_deps
+  - make -k prebuild
 
 script: ./travis-tool.sh run_tests
 
