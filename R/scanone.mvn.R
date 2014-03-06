@@ -83,7 +83,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   
   E <- matrix(NA, n, p)
   X <- cbind(rep(1, n), addcovar, intcovar)
-  E <- .Call(stats:::C_Cdqrls, X, Y, tol)$residuals
+  E <- lmresid_llt(X, Y)
   Sigma <- crossprod(E)
   L0 <- determinant(Sigma)$modulus
   
@@ -96,7 +96,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
       prob <- genoprob[,2*i-1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
-    E <- .Call(stats:::C_Cdqrls, X, Y, tol)$residuals
+    E <- lmresid_llt(X, Y)
     Sigma <- crossprod(E)
     L1[i] <- determinant(Sigma)$modulus
   }

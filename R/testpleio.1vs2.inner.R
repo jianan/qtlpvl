@@ -12,8 +12,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
   if(RandomCut) maxPOS <- 1:p
   
   X <- cbind(rep(1,n), addcovar, intcovar)
-  fit <- .Call(stats:::C_Cdqrls, X, Y, tol)
-  Sigma <- crossprod(fit$residuals)
+  Sigma <- crossprod(lmresid_llt(X, Y))
   L0 <- determinant(Sigma)$modulus  ## return log value
   
   n.marker <- ncol(genoprob)/ngeno
@@ -28,8 +27,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
       prob <- genoprob[,2*i-1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
-    fit <- .Call(stats:::C_Cdqrls, X, Y, tol)
-    E[,,i] <- fit$residuals
+    E[,,i] <- lmresid_llt(X, Y)
     Sigma.m[,,i] <- crossprod(E[,,i])
     L1[i] <- determinant(Sigma.m[,,i])$modulus  ## log value
   }
