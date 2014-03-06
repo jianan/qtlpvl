@@ -1,3 +1,3 @@
 R package still in working...
 
-[![Build Status](https://travis-ci.org/jianan/qtlpvl.png?branch=master)](https://travis-ci.org/jianan/qtlpvl)
+[![Build Status](https://travis-ci.org/jianan/qtlpvl.png?branch=source)](https://travis-ci.org/jianan/qtlpvl)

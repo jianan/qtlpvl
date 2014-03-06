@@ -25,3 +25,17 @@ notifications:
     on_success: change
     on_failure: change
 
+# use travis to auto-make: generate Rd and RcppExports
+after_success:
+  - git config --global user.email "jiant17@gmail.com"
+  - git config --global user.name "Jianan Tian"
+  - ./.travis.deploy.sh -s source -d master -c 'make -k prebuild'
+
+env:
+  global:
+    secure: "d2DBA/nVsUFj1sctxqm5uwsDK9nE60TgYoNduaEbAPqw7ZEAh38torfMZv4WT+bAFpni8Rr8UbthD8vsrfgpYIUW6Va4BX3l1nCRyYz2dm2taYAvshkOqS0JFW3zy1X99H3AslDvFdUuSNbU9ZqnoS/Ztuy2qBSPEdYFShlbHWo="
+
+branches:
+  except:
+    ## exclude the deploy branch from build on travis-ci
+    - master
