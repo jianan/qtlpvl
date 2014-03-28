@@ -7,24 +7,23 @@ plotLODsign(cross, Y, chr, addcovar = NULL, intcovar = NULL,
   LOD.threshold = 3, ...)
 }
 \arguments{
-  \item{Y}{matrix, columns are quantitative traits maps to
-  the same position.}
+\item{Y}{matrix, columns are quantitative traits maps to the same position.}
 
-  \item{LOD.threshold}{threshold for QTL to be displayed.}
+\item{LOD.threshold}{threshold for QTL to be displayed.}
 
-  \item{...}{Optional graphics arguments}
+\item{...}{Optional graphics arguments}
 
-  \item{cross}{An object of class \code{cross}. See
-  \code{read.cross} for details.}
+\item{cross}{An object of class \code{cross}. See
+\code{read.cross} for details.}
 
-  \item{chr}{Optional vector indicating the chromosomes for
-  which LOD scores should be calculated.  This should be a
-  vector of character strings referring to chromosomes by
-  name; numeric values are converted to strings.}
+\item{chr}{Optional vector indicating the chromosomes for which
+LOD scores should be calculated.  This should be a vector of
+character strings referring to chromosomes by name; numeric values
+are converted to strings.}
 
-  \item{addcovar}{Additive covariates.}
+\item{addcovar}{Additive covariates.}
 
-  \item{intcovar}{Interactive covariates.}
+\item{intcovar}{Interactive covariates.}
 }
 \value{
 a plot the signed LOD score versus QTL position for multiple traits.

@@ -6,10 +6,10 @@
 det_AtA(X, logarithm = TRUE)
 }
 \arguments{
-  \item{X}{matrix}
+\item{X}{matrix}
 
-  \item{logarithm}{A bool value indicating whether
-  determinant or log determinate should be returned.}
+\item{logarithm}{A bool value indicating whether determinant or
+log determinate should be returned.}
 }
 \value{
 The determinant or log determinant

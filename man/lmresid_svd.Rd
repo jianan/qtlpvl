@@ -6,13 +6,13 @@
 lmresid_svd(X, Y, threshold = 1e-07)
 }
 \arguments{
-  \item{X}{matrix}
+\item{X}{matrix}
 
-  \item{Y}{matrix}
+\item{Y}{matrix}
 
-  \item{threshold}{Eigen decomposition is used in
-  calculation. An eigen value smaller than threshold *
-  largest eigen value is considered zero.}
+\item{threshold}{Eigen decomposition is used in calculation. An
+eigen value smaller than threshold * largest eigen value is
+considered zero.}
 }
 \value{
 The residual matrix

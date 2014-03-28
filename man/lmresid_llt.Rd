@@ -6,9 +6,9 @@
 lmresid_llt(X, Y)
 }
 \arguments{
-  \item{X}{matrix}
+\item{X}{matrix}
 
-  \item{Y}{matrix}
+\item{Y}{matrix}
 }
 \value{
 The residual matrix

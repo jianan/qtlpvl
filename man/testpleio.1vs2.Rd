@@ -9,44 +9,43 @@ testpleio.1vs2(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
   n.simu = 1000, tol = 1e-07)
 }
 \arguments{
-  \item{region.l}{left bound}
+\item{region.l}{left bound}
 
-  \item{region.r}{right bound}
+\item{region.r}{right bound}
 
-  \item{int.method}{"bayes" or "1.5lod" method to
-  calculated the interval of interest if \code{region.l}
-  and \code{region.r} is not specified.}
+\item{int.method}{"bayes" or "1.5lod" method to calculated the
+interval of interest if \code{region.l} and \code{region.r} is not
+specified.}
 
-  \item{search}{searching method for two-QTL model, "fast"
-  or "complete".}
+\item{search}{searching method for two-QTL model, "fast" or "complete".}
 
-  \item{RandomStart}{use random starting point for the
-  two-QTL model or not. default is \code{TRUE}.}
+\item{RandomStart}{use random starting point for the two-QTL model
+or not. default is \code{TRUE}.}
 
-  \item{RandomCut}{use random cutting or not when there are
-  traits mapped to the same location. default is "FALSE".}
+\item{RandomCut}{use random cutting or not when there are traits
+mapped to the same location. default is "FALSE".}
 
-  \item{simu}{"parametric" or "permutation" method for
-  simulations. default is "parametric".}
+\item{simu}{"parametric" or "permutation" method for
+simulations. default is "parametric".}
 
-  \item{n.simu}{number of simulations for p-value.}
+\item{n.simu}{number of simulations for p-value.}
 
-  \item{tol}{Tolerance value for the \code{qr}
-  decomposition in \code{lm} fitting.}
+\item{tol}{Tolerance value for the \code{qr} decomposition in
+\code{lm} fitting.}
 
-  \item{cross}{An object of class \code{cross}. See
-  \code{read.cross} for details.}
+\item{cross}{An object of class \code{cross}. See
+\code{read.cross} for details.}
 
-  \item{Y}{matrix of multiple traits with n rows.}
+\item{Y}{matrix of multiple traits with n rows.}
 
-  \item{chr}{Optional vector indicating the chromosomes for
-  which LOD scores should be calculated.  This should be a
-  vector of character strings referring to chromosomes by
-  name; numeric values are converted to strings.}
+\item{chr}{Optional vector indicating the chromosomes for which
+LOD scores should be calculated.  This should be a vector of
+character strings referring to chromosomes by name; numeric values
+are converted to strings.}
 
-  \item{addcovar}{Additive covariates.}
+\item{addcovar}{Additive covariates.}
 
-  \item{intcovar}{Interactive covariates.}
+\item{intcovar}{Interactive covariates.}
 }
 \value{
 a list.

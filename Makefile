@@ -12,13 +12,13 @@ $(TARGET_RCPP_ATTRIBUTE) : $(SRC_CPP)
 ## files, if no update is needed. Use touch to update the modification
 ## time.
 
-Rd:
+Rd: 
 	R -e 'roxygen2::roxygenise(); devtools::document()'
 # build package documentation and vignettes
 
 
 vig:
-	cd vignettes; R -e 'library(devtools);install("../");library(knitr);knit2html("qtlpvl.Rmd")'
+	cd vignettes; R -e 'devtools::install("../"); knitr::knit2html("qtlpvl.Rmd")'
 # generate vignette html
 
 clean:

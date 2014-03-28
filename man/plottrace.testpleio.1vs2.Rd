@@ -6,7 +6,7 @@
 \method{plottrace}{testpleio.1vs2}(x)
 }
 \arguments{
-  \item{x}{object of class "testpleio.1vs2"}
+\item{x}{object of class "testpleio.1vs2"}
 }
 \description{
 plot trace of \code{testpleio.1vs2} to see how \code{LODdiff}

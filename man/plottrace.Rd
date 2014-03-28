@@ -6,7 +6,7 @@
 plottrace(x)
 }
 \arguments{
-  \item{x}{object to plot}
+\item{x}{object to plot}
 }
 \description{
 plot trace of a searching method to see how the object function
