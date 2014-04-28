@@ -6,18 +6,18 @@
 #' @param X matrix
 #' @param Y matrix
 #' @return The residual matrix
-lmresid_llt <- function(X, Y) {
-    .Call('qtlpvl_lmresid_llt', PACKAGE = 'qtlpvl', X, Y)
+lm_resid_llt <- function(X, Y) {
+    .Call('qtlpvl_lm_resid_llt', PACKAGE = 'qtlpvl', X, Y)
 }
 
-lmresid_qr <- function(X, Y) {
-    .Call('qtlpvl_lmresid_qr', PACKAGE = 'qtlpvl', X, Y)
+lm_resid_qr <- function(X, Y) {
+    .Call('qtlpvl_lm_resid_qr', PACKAGE = 'qtlpvl', X, Y)
 }
 
 #' Residual of lm(Y ~ X)
 #'
 #' An implementation for calculate residual of linear
-#' regression. It's ' not as fast as lmresid_llt (about 50% slower),
+#' regression. It's ' not as fast as lm_resid_llt (about 50% slower),
 #' but is rank revealing, so should be safe for linear correlated X.
 #'
 #' @param X matrix
@@ -26,24 +26,24 @@ lmresid_qr <- function(X, Y) {
 #' eigen value smaller than threshold * largest eigen value is
 #' considered zero.
 #' @return The residual matrix
-lmresid_svd <- function(X, Y, threshold = 1e-7) {
-    .Call('qtlpvl_lmresid_svd', PACKAGE = 'qtlpvl', X, Y, threshold)
+lm_resid_svd <- function(X, Y, threshold = 1e-7) {
+    .Call('qtlpvl_lm_resid_svd', PACKAGE = 'qtlpvl', X, Y, threshold)
 }
 
-lmresid_symmEigen <- function(X, Y, threshold = 1e-7) {
-    .Call('qtlpvl_lmresid_symmEigen', PACKAGE = 'qtlpvl', X, Y, threshold)
+lm_resid_symmEigen <- function(X, Y, threshold = 1e-7) {
+    .Call('qtlpvl_lm_resid_symmEigen', PACKAGE = 'qtlpvl', X, Y, threshold)
 }
 
 #' Sample covarance matrix of residual for linear model
 #'
-lmresid_cov <- function(X, Y, threshold = 1e-7) {
-    .Call('qtlpvl_lmresid_cov', PACKAGE = 'qtlpvl', X, Y, threshold)
+lm_resid_cov <- function(X, Y, threshold = 1e-7) {
+    .Call('qtlpvl_lm_resid_cov', PACKAGE = 'qtlpvl', X, Y, threshold)
 }
 
 #' Determinant of residual for linear model
 #'
-lmresid_cov_det <- function(X, Y, logarithm = TRUE, threshold = 1e-7) {
-    .Call('qtlpvl_lmresid_cov_det', PACKAGE = 'qtlpvl', X, Y, logarithm, threshold)
+lm_resid_cov_det <- function(X, Y, logarithm = TRUE, threshold = 1e-7) {
+    .Call('qtlpvl_lm_resid_cov_det', PACKAGE = 'qtlpvl', X, Y, logarithm, threshold)
 }
 
 #' Determinant of self cross product

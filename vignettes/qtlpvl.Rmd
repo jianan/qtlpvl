@@ -135,9 +135,9 @@ Function `testpleio.1vs2` is used to do this test. input parameters:
 * RandomStart: use random starting point for the two-QTL model or not,
   default is `TRUE`.
 * RandomCut: use random cutting or not when there are traits mapped to
-  the same location. default is "FALSE".
-* simu: "parametric" or "permutation" method for simulations. default
-  is "parametric".
+  the same location. default is `FALSE`.
+* simu: `parametric` or `permutation` method for simulations. default
+  is `parametric`.
 * n.simu: number of simulations for p-value.
 * tol: Tolerance value for the `qr` decomposition in `lm` fitting.
 * addcovar, intcovar: Additive and interactive covariates to control

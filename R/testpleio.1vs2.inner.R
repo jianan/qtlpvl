@@ -1,6 +1,6 @@
 testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar, 
-                             search, RandomStart, RandomCut, tol,
-                             in.simu=TRUE){
+                                 search, RandomStart, RandomCut, tol,
+                                 in.simu=TRUE){
 
   if(in.simu & !RandomCut & length(unique(maxPOS))==1){    ## all QTLs mapped into same position...
     LODdiff <- 0
@@ -12,7 +12,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
   if(RandomCut) maxPOS <- 1:p
   
   X <- cbind(rep(1,n), addcovar, intcovar)
-  Sigma <- crossprod(lmresid_llt(X, Y))
+  Sigma <- crossprod(lm.resid(X, Y))
   L0 <- determinant(Sigma)$modulus  ## return log value
   
   n.marker <- ncol(genoprob)/ngeno
@@ -27,7 +27,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
       prob <- genoprob[,2*i-1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
-    E[,,i] <- lmresid_llt(X, Y)
+    E[,,i] <- lm.resid(X, Y)
     Sigma.m[,,i] <- crossprod(E[,,i])
     L1[i] <- determinant(Sigma.m[,,i])$modulus  ## log value
   }
