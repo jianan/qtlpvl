@@ -53,12 +53,6 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   p <- ncol(Y)
   if(p < 1) stop("Y should be a matrix with more than one columns")
   checkcov(intcovar,addcovar,n)
-  ## if(!missing(addcovar) & !is.matrix(addcovar)) stop("addcovar need to be a matrix.")
-  ## if(!missing(intcovar) & !is.matrix(intcovar)) stop("intcovar need to be a matrix.")
-  ## if(!missing(addcovar) & is.matrix(addcovar) & n != nrow(addcovar))
-  ##     stop("number of obs. in cross and addcovar not same.")
-  ## if(!missing(intcovar) & is.matrix(intcovar) & n != nrow(intcovar))
-  ##     stop("number of obs. in cross and intcovar not same.")
   
   if (!("prob" %in% names(cross[[c("geno",1)]]))){
     warning("First running calc.genoprob.")
@@ -83,7 +77,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   
   E <- matrix(NA, n, p)
   X <- cbind(rep(1, n), addcovar, intcovar)
-  E <- lmresid_llt(X, Y)
+  E <- lm.resid(X, Y)
   Sigma <- crossprod(E)
   L0 <- determinant(Sigma)$modulus
   
@@ -96,7 +90,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
       prob <- genoprob[,2*i-1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
-    E <- lmresid_llt(X, Y)
+    E <- lm.resid(X, Y)
     Sigma <- crossprod(E)
     L1[i] <- determinant(Sigma)$modulus
   }

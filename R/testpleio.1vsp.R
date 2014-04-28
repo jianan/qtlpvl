@@ -69,7 +69,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
   ## p qtl model: use best qtl of each trait 
   E <- matrix(NA, n, p)
   X <- cbind(rep(1, n), addcovar, intcovar)
-  E <- lmresid_llt(X, Y)
+  E <- lm.resid(X, Y)
   Sigma <- crossprod(E)
   L0 <- determinant(Sigma)$modulus
 
@@ -82,7 +82,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
       prob <- genoprob[,2*maxPOSind[i]-1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
-    E[,i] <- lmresid_llt(X, Y[, i, drop=FALSE])
+    E[,i] <- lm.resid(X, Y[, i, drop=FALSE])
   }
   Sigma <- crossprod(E)
   L1 <- determinant(Sigma)$modulus
@@ -108,7 +108,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
       prob <- genoprob[,2*ind-1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
-    E.marker <- lmresid_llt(X, Y)
+    E.marker <- lm.resid(X, Y)
 
     Y.fit <- Y - E.marker
     Sigma <- cov(E.marker)

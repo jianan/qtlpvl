@@ -21,7 +21,7 @@ inline ArrayXd Dplus(const ArrayXd& d, const double threshold) {
 //' @param Y matrix
 //' @return The residual matrix
 // [[Rcpp::export]]
-MatrixXd lmresid_llt(const MapMatd& X,
+MatrixXd lm_resid_llt(const MapMatd& X,
                      const MapMatd& Y){
   const LLT<MatrixXd> llt(AtA(X));
   return Y - X * llt.solve(X.adjoint() * Y);
@@ -29,7 +29,7 @@ MatrixXd lmresid_llt(const MapMatd& X,
 
 
 // [[Rcpp::export]]
-MatrixXd lmresid_qr(const MapMatd& X,
+MatrixXd lm_resid_qr(const MapMatd& X,
 		    const MapMatd& Y){
   Eigen::HouseholderQR<MatrixXd> QR(X);
   return Y - X * QR.solve(Y);
@@ -38,7 +38,7 @@ MatrixXd lmresid_qr(const MapMatd& X,
 //' Residual of lm(Y ~ X)
 //'
 //' An implementation for calculate residual of linear
-//' regression. It's ' not as fast as lmresid_llt (about 50% slower),
+//' regression. It's ' not as fast as lm_resid_llt (about 50% slower),
 //' but is rank revealing, so should be safe for linear correlated X.
 //'
 //' @param X matrix
@@ -48,7 +48,7 @@ MatrixXd lmresid_qr(const MapMatd& X,
 //' considered zero.
 //' @return The residual matrix
 // [[Rcpp::export]]
-MatrixXd lmresid_svd(const MapMatd& X,
+MatrixXd lm_resid_svd(const MapMatd& X,
 		     const MapMatd& Y,
 		     const double threshold=1e-7){
   JacobiSVD<MatrixXd>  UDV(X.jacobiSvd(ComputeThinU|ComputeThinV));
@@ -58,7 +58,7 @@ MatrixXd lmresid_svd(const MapMatd& X,
 }
 
 // [[Rcpp::export]]
-MatrixXd lmresid_symmEigen(const MapMatd& X,
+MatrixXd lm_resid_symmEigen(const MapMatd& X,
 			   const MapMatd& Y,
 			   const double threshold = 1e-7){
   SelfAdjointEigenSolver<MatrixXd> eig(AtA(X).selfadjointView<Lower>());
@@ -90,7 +90,7 @@ inline double det_selfadjoint(const MatrixXd& X, bool logarithm = true){
 //' Sample covarance matrix of residual for linear model
 //'
 // [[Rcpp::export]]
-MatrixXd lmresid_cov(const MapMatd& X,
+MatrixXd lm_resid_cov(const MapMatd& X,
                      const MapMatd& Y,
                      const double threshold = 1e-7){
   const int d(Y.cols());
@@ -106,11 +106,11 @@ MatrixXd lmresid_cov(const MapMatd& X,
 //' Determinant of residual for linear model
 //'
 // [[Rcpp::export]]
-double lmresid_cov_det(const MapMatd& X,
+double lm_resid_cov_det(const MapMatd& X,
 		       const MapMatd& Y,
 		       const bool logarithm = true,
 		       const double threshold = 1e-7){
-  MatrixXd ete = lmresid_cov(X, Y, threshold);
+  MatrixXd ete = lm_resid_cov(X, Y, threshold);
   const VectorXd Dvec(ete.selfadjointView<Lower>().ldlt().vectorD());
   double res = Dvec.array().log().sum();
   if (logarithm) {
