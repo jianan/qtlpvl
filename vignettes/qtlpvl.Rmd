@@ -130,14 +130,14 @@ Function `testpleio.1vs2` is used to do this test. input parameters:
 * int.method: can have value of `bayes` or `1.5lod`, method to
   calculated the interval of interest if `region.l` and `region.r` is
   not specified.
-* search: searching method for two-QTL model, can have value of `fast`
-  or `complete`, default is `fast`.
+* search.method: searching method for two-QTL model, can have value of
+  `fast` or `complete`, default is `fast`.
 * RandomStart: use random starting point for the two-QTL model or not,
   default is `TRUE`.
 * RandomCut: use random cutting or not when there are traits mapped to
   the same location. default is `FALSE`.
-* simu: `parametric` or `permutation` method for simulations. default
-  is `parametric`.
+* simu.method: `parametric` or `permutation` method for
+  simulations. default is `parametric`.
 * n.simu: number of simulations for p-value.
 * tol: Tolerance value for the `qr` decomposition in `lm` fitting.
 * addcovar, intcovar: Additive and interactive covariates to control
