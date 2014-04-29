@@ -1,5 +1,5 @@
 testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar, 
-                                 search, RandomStart, RandomCut, tol,
+                                 search.method, RandomStart, RandomCut, tol,
                                  in.simu=TRUE){
 
   if(in.simu & !RandomCut & length(unique(maxPOS))==1){    ## all QTLs mapped into same position...
@@ -46,7 +46,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
   ## ---- scan.2.mvn ----
   L2mins <- rep(Inf,p-1) ## saves min of L2 for each cutting point.
   
-  if(search=="complete"){    ## ---- do Complete Search in 2-dim ----
+  if(search.method=="complete"){    ## ---- do Complete Search in 2-dim ----
     for(i.cut in 1:(p-1)){
       if(!RandomCut & maxPOS[i.cut] == maxPOS[i.cut+1]){
         next  ## skip when there are a group of traits mapped to the same pos
@@ -66,7 +66,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
     }
   }
   
-  if(search=="fast"){    ## Search 1-dim and then the other dim
+  if(search.method=="fast"){    ## Search 1-dim and then the other dim
     m.L1 <- which.min(L1)
     for(i.cut in 1:(p-1)){
       if(!RandomCut & maxPOS[i.cut] == maxPOS[i.cut+1]){
