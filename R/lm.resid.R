@@ -18,7 +18,7 @@ lm.resid <- function(X, Y, method=c("llt", "qr", "svd")){
   if(method=="llt"){
     res <- lm_resid_llt(X, Y)
   }else if(method=="qr"){
-    res <- lm_qr(X, Y)
+    res <- lm_resid_qr(X, Y)
   }else if(method=="svd"){
     res <- lm_resid_svd(X, Y)
   }

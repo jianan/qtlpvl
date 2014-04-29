@@ -61,6 +61,7 @@ MatrixXd lm_resid_qr(const MapMatd& X,
 
 //' Calculate the residual of lm(Y ~ X)
 //' @inheritParams lm_resid_svd
+//' @return The residual matrix
 // [[Rcpp::export]]
 MatrixXd lm_resid_symmEigen(const MapMatd& X,
 			   const MapMatd& Y,
