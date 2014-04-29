@@ -85,16 +85,16 @@ inline double det_selfadjoint(const Eigen::SelfAdjointView< MatrixType, UpLo >& 
   }
 }
 
-// It's the caller's resposibility to ensure X is self adjoint matrix
+// It's the caller's responsibility to ensure X is self adjoint matrix
 inline double det_selfadjoint(const MatrixXd& X, bool logarithm = true){
   return det_selfadjoint(X.selfadjointView<Lower>(),
 			 logarithm);
 }
 
 
-//' Sample covarance matrix of residual for linear model
-//' 
+//' Sample covariance matrix of residual for linear model
 //' @inheritParams lm_resid_svd
+//' @return The residual covariance matrix
 // [[Rcpp::export]]
 MatrixXd lm_resid_cov(const MapMatd& X,
                      const MapMatd& Y,
@@ -109,11 +109,11 @@ MatrixXd lm_resid_cov(const MapMatd& X,
     .rankUpdate(fitsqrt.adjoint(), -1.0);
 }
 
-//' Determinant of covarance matrix of residual for linear model
-//' 
+//' Determinant of covariance matrix of residual for linear model
 //' @inheritParams lm_resid_svd
 //' @param logarithm A bool value indicating whether determinant or
 //' log determinate should be returned.
+//' @return The log determinant of residual covariance matrix
 // [[Rcpp::export]]
 double lm_resid_cov_det(const MapMatd& X,
 		       const MapMatd& Y,
