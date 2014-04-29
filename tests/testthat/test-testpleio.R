@@ -20,9 +20,6 @@ G <- cbind(G1, G2*(-2))
 Y <- matrix(rnorm(n*p),n,p)
 Y <- Y + G
 
-library(devtools)
-load_all("~/Project/R-pkg/qtlpvl")
-
 test_that("tests of testpleio",{
 
   n.simu <- 10
