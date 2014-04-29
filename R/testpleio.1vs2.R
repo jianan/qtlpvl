@@ -55,10 +55,14 @@
 ##' plot(obj)
 
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
-                           region.l=NA, region.r=NA, int.method="bayes", 
-                           search="fast", RandomStart=TRUE, RandomCut=FALSE,
-                           simu="parametric", n.simu=1000, tol=1e-7){
+                           region.l=NA, region.r=NA, int.method=c("bayes", "1.5lod"), 
+                           search=c("fast", "complete"), RandomStart=TRUE, RandomCut=FALSE,
+                           simu=c("parametric", "permutation"), n.simu=1000, tol=1e-7){
 
+  int.method <- match.arg(int.method)
+  search <- match.arg(search)
+  simu <- match.arg(simu)
+  
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y); p <- ncol(Y)
   if(int.method!="bayes" && int.method!="1.5lod")
