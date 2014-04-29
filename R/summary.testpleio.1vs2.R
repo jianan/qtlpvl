@@ -43,3 +43,8 @@ summary.testpleio.1vs2 <- function(object, ...){
   class(result) <- "summary.testpleio.1vs2"
   return(result)
 }
+
+##' @export
+print.testpleio.1vs2 <- function(x, ...){
+  print.summary.testpleio.1vs2(x, ...)  
+}
