@@ -7,19 +7,19 @@
 ##' distribution of test statistic.
 ##'
 ##' @inheritParams scanone.mvn
-##' @param region.l left bound
-##' @param region.r right bound
+##' @param region.l Left bound
+##' @param region.r Right bound
 ##' @param int.method "bayes" or "1.5lod" method to calculated the
 ##' interval of interest if \code{region.l} and \code{region.r} is not
 ##' specified.
-##' @param search searching method for two-QTL model, "fast" or "complete". 
+##' @param search Searching method for two-QTL model, "fast" or "complete". 
 ##' @param RandomStart use random starting point for the two-QTL model
 ##' or not. default is \code{TRUE}.
-##' @param RandomCut use random cutting or not when there are traits
-##' mapped to the same location. default is "FALSE".
+##' @param RandomCut Wse random cutting or not when there are traits
+##' mapped to the same location. Default is \code{FALSE}.
 ##' @param simu "parametric" or "permutation" method for
-##' simulations. default is "parametric".
-##' @param n.simu number of simulations for p-value.
+##' simulations. Default is "parametric".
+##' @param n.simu Number of simulations for p-value.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
 ##' @return a list.

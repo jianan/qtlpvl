@@ -1,14 +1,14 @@
-##' Calculte residual matrix.
+##' Calculate residual matrix.
 ##'
 ##' Run lm(Y~X) with specific method through Rcpp and return a
 ##' residual matrix.
 ##'
-##' @param X a model matrix
-##' @param Y thr response matrix
+##' @param X A model matrix
+##' @param Y The response matrix
 ##' @param method 'llt' for the LLT Cholesky, 'qr' for the
 ##' column-pivoted QR decomposition, 'svd' for the Jacobi singular
 ##' value decomposition (SVD)
-##' @return residual matrix.
+##' @return The residual matrix.
 ##' @export
 lm.resid <- function(X, Y, method=c("llt", "qr", "svd")){
   stopifnot(is.matrix(X))

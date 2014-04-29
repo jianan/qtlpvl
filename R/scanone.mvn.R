@@ -6,7 +6,7 @@
 ##'
 ##' @param cross An object of class \code{cross}. See
 ##' \code{read.cross} for details.
-##' @param Y matrix of multiple traits with n rows.
+##' @param Y Matrix of multiple traits with n rows.
 ##' @param chr Optional vector indicating the chromosomes for which
 ##' LOD scores should be calculated.  This should be a vector of
 ##' character strings referring to chromosomes by name; numeric values
@@ -22,7 +22,7 @@
 ##' @seealso qtl::scanone
 ##' @export
 ##' @examples
-##'set.seed(92950640)
+##' set.seed(92950640)
 ##' data(listeria)
 ##' listeria <- calc.genoprob(listeria,step=1)
 ##' n <- nind(listeria)
