@@ -39,7 +39,7 @@ summary.testpleio.1vsp <- function(object, ...){
   return(result)
 }
 
-##' ##' @export
+##' @export
 print.testpleio.1vsp <- function(x, ...){
   print.summary.testpleio.1vsp(x, ...)  
 }
