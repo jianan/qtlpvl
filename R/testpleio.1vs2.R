@@ -7,19 +7,20 @@
 ##' distribution of test statistic.
 ##'
 ##' @inheritParams scanone.mvn
-##' @param region.l left bound
-##' @param region.r right bound
+##' @param region.l Left bound
+##' @param region.r Right bound
 ##' @param int.method "bayes" or "1.5lod" method to calculated the
 ##' interval of interest if \code{region.l} and \code{region.r} is not
 ##' specified.
-##' @param search searching method for two-QTL model, "fast" or "complete". 
+##' @param search.method Searching method for two-QTL model, "fast" or
+##' "complete".
 ##' @param RandomStart use random starting point for the two-QTL model
 ##' or not. default is \code{TRUE}.
-##' @param RandomCut use random cutting or not when there are traits
-##' mapped to the same location. default is "FALSE".
-##' @param simu "parametric" or "permutation" method for
-##' simulations. default is "parametric".
-##' @param n.simu number of simulations for p-value.
+##' @param RandomCut Wse random cutting or not when there are traits
+##' mapped to the same location. Default is \code{FALSE}.
+##' @param simu.method "parametric" or "permutation" method for
+##' simulations. Default is "parametric".
+##' @param n.simu Number of simulations for p-value.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
 ##' @return a list.
@@ -55,10 +56,14 @@
 ##' plot(obj)
 
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
-                           region.l=NA, region.r=NA, int.method="bayes", 
-                           search="fast", RandomStart=TRUE, RandomCut=FALSE,
-                           simu="parametric", n.simu=1000, tol=1e-7){
+                           region.l=NA, region.r=NA, int.method=c("bayes", "1.5lod"), 
+                           search.method=c("fast", "complete"), RandomStart=TRUE, RandomCut=FALSE,
+                           simu.method=c("parametric", "permutation"), n.simu=1000, tol=1e-7){
 
+  int.method <- match.arg(int.method)
+  search.method <- match.arg(search.method)
+  simu.method <- match.arg(simu.method)
+  
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y); p <- ncol(Y)
   if(int.method!="bayes" && int.method!="1.5lod")
@@ -113,7 +118,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   
   x <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o], genoprob=genoprob, ngeno=ngeno,
                             addcovar=addcovar, intcovar=intcovar, 
-                            search=search, RandomStart=RandomStart,
+                            search.method=search.method, RandomStart=RandomStart,
                             RandomCut=RandomCut, tol=tol, in.simu=FALSE)
   LOD1 <- x$LOD1
   LOD2 <- x$LOD2
@@ -136,7 +141,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                    maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                    map.marker=map.marker,
                    LODdiff.trace=LODdiff.trace)
-  }else if(simu=="parametric"){    ## simulation: parametric bootstrap.
+  }else if(simu.method=="parametric"){    ## simulation: parametric bootstrap.
     if(n.simu < 0) stop("n.simu should be a positive integer.")
     
     Y.fit <- Y - E.marker
@@ -157,7 +162,8 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y.simu[, o], maxPOS=maxPOSind[o],
                                                    genoprob=genoprob, ngeno=ngeno,
                                                    addcovar=addcovar, intcovar=intcovar, 
-                                                   search=search, RandomStart=RandomStart,
+                                                   search.method=search.method,
+                                                   RandomStart=RandomStart,
                                                    RandomCut=RandomCut, tol=tol,in.simu=TRUE)
     }
     pvalue <- mean(LODdiff.simu > LODdiff - tol)
@@ -166,7 +172,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                    LODdiff.trace=LODdiff.trace,
                    map.marker=map.marker, n.simu=n.simu, 
                    pvalue=pvalue)
-  } else if(simu=="permutation"){
+  } else if(simu.method=="permutation"){
     ## find strat
     ind <- which.max(LOD1)
     strat <- numeric(n)
@@ -200,7 +206,8 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o],
                                                    genoprob=genoprob.simu, ngeno=ngeno,
                                                    addcovar=addcovar, intcovar=intcovar, 
-                                                   search=search, RandomStart=RandomStart,
+                                                   search.method=search.method,
+                                                   RandomStart=RandomStart,
                                                    RandomCut=RandomCut, tol=tol,in.simu=TRUE)
     }
     pvalue <- mean(LODdiff.simu > LODdiff - tol)
@@ -211,6 +218,12 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                    pvalue=pvalue)
   }
   class(result) <- c("testpleio.1vs2", "list")
+  attr(result, "parameters") <- list(region.l=region.l, region.r=region.r,
+                                     int.method=int.method,
+                                     search.method=search.method,
+                                     RandomStart=RandomStart,
+                                     RandomCut=RandomCut,
+                                     simu.method=simu.method)
   return(result)
 }
 

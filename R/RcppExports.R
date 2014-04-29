@@ -3,25 +3,12 @@
 
 #' Calculate the residual of lm(Y ~ X)
 #'
-#' @param X matrix
-#' @param Y matrix
-#' @return The residual matrix
-lm_resid_llt <- function(X, Y) {
-    .Call('qtlpvl_lm_resid_llt', PACKAGE = 'qtlpvl', X, Y)
-}
-
-lm_resid_qr <- function(X, Y) {
-    .Call('qtlpvl_lm_resid_qr', PACKAGE = 'qtlpvl', X, Y)
-}
-
-#' Residual of lm(Y ~ X)
-#'
 #' An implementation for calculate residual of linear
 #' regression. It's ' not as fast as lm_resid_llt (about 50% slower),
 #' but is rank revealing, so should be safe for linear correlated X.
 #'
-#' @param X matrix
-#' @param Y matrix
+#' @param X A model matrix
+#' @param Y The response matrix
 #' @param threshold Eigen decomposition is used in calculation. An
 #' eigen value smaller than threshold * largest eigen value is
 #' considered zero.
@@ -30,18 +17,39 @@ lm_resid_svd <- function(X, Y, threshold = 1e-7) {
     .Call('qtlpvl_lm_resid_svd', PACKAGE = 'qtlpvl', X, Y, threshold)
 }
 
+#' Calculate the residual of lm(Y ~ X)
+#' @inheritParams lm_resid_svd
+#' @return The residual matrix
+lm_resid_llt <- function(X, Y) {
+    .Call('qtlpvl_lm_resid_llt', PACKAGE = 'qtlpvl', X, Y)
+}
+
+#' Calculate the residual of lm(Y ~ X)
+#' @inheritParams lm_resid_svd
+#' @return The residual matrix
+lm_resid_qr <- function(X, Y) {
+    .Call('qtlpvl_lm_resid_qr', PACKAGE = 'qtlpvl', X, Y)
+}
+
+#' Calculate the residual of lm(Y ~ X)
+#' @inheritParams lm_resid_svd
+#' @return The residual matrix
 lm_resid_symmEigen <- function(X, Y, threshold = 1e-7) {
     .Call('qtlpvl_lm_resid_symmEigen', PACKAGE = 'qtlpvl', X, Y, threshold)
 }
 
-#' Sample covarance matrix of residual for linear model
-#'
+#' Sample covariance matrix of residual for linear model
+#' @inheritParams lm_resid_svd
+#' @return The residual covariance matrix
 lm_resid_cov <- function(X, Y, threshold = 1e-7) {
     .Call('qtlpvl_lm_resid_cov', PACKAGE = 'qtlpvl', X, Y, threshold)
 }
 
-#' Determinant of residual for linear model
-#'
+#' Determinant of covariance matrix of residual for linear model
+#' @inheritParams lm_resid_svd
+#' @param logarithm A bool value indicating whether determinant or
+#' log determinate should be returned.
+#' @return The log determinant of residual covariance matrix
 lm_resid_cov_det <- function(X, Y, logarithm = TRUE, threshold = 1e-7) {
     .Call('qtlpvl_lm_resid_cov_det', PACKAGE = 'qtlpvl', X, Y, logarithm, threshold)
 }

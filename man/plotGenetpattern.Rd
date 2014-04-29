@@ -9,7 +9,7 @@ plotGenetpattern(Y, genotype = NULL, cross, chr, addcovar = NULL,
 \arguments{
 \item{genotype}{QTL genotype for the common QTL.}
 
-\item{Y}{matrix of multiple traits with n rows.}
+\item{Y}{Matrix of multiple traits with n rows.}
 
 \item{cross}{An object of class \code{cross}. See
 \code{read.cross} for details.}

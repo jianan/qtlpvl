@@ -16,12 +16,9 @@ Rd:
 	R -e 'roxygen2::roxygenise(); devtools::document()'
 # build package documentation and vignettes
 
-
 vig:
 	cd vignettes; R -e 'devtools::install("../"); knitr::knit2html("qtlpvl.Rmd")'
 # generate vignette html
 
 clean:
 	rm -rf $(TARGET_RCPP_ATTRIBUTE) man/*.Rd NAMESPACE
-
-

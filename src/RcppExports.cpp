@@ -7,6 +7,23 @@
 
 using namespace Rcpp;
 
+// lm_resid_svd
+MatrixXd lm_resid_svd(const MapMatd& X, const MapMatd& Y, const double threshold = 1e-7);
+RcppExport SEXP qtlpvl_lm_resid_svd(SEXP XSEXP, SEXP YSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< const MapMatd& >::type X(XSEXP );
+        Rcpp::traits::input_parameter< const MapMatd& >::type Y(YSEXP );
+        Rcpp::traits::input_parameter< const double >::type threshold(thresholdSEXP );
+        MatrixXd __result = lm_resid_svd(X, Y, threshold);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // lm_resid_llt
 MatrixXd lm_resid_llt(const MapMatd& X, const MapMatd& Y);
 RcppExport SEXP qtlpvl_lm_resid_llt(SEXP XSEXP, SEXP YSEXP) {
@@ -33,23 +50,6 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< const MapMatd& >::type X(XSEXP );
         Rcpp::traits::input_parameter< const MapMatd& >::type Y(YSEXP );
         MatrixXd __result = lm_resid_qr(X, Y);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// lm_resid_svd
-MatrixXd lm_resid_svd(const MapMatd& X, const MapMatd& Y, const double threshold = 1e-7);
-RcppExport SEXP qtlpvl_lm_resid_svd(SEXP XSEXP, SEXP YSEXP, SEXP thresholdSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< const MapMatd& >::type X(XSEXP );
-        Rcpp::traits::input_parameter< const MapMatd& >::type Y(YSEXP );
-        Rcpp::traits::input_parameter< const double >::type threshold(thresholdSEXP );
-        MatrixXd __result = lm_resid_svd(X, Y, threshold);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

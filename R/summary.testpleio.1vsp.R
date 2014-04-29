@@ -38,3 +38,8 @@ summary.testpleio.1vsp <- function(object, ...){
   class(result) <- "summary.testpleio.1vsp"
   return(result)
 }
+
+##' @export
+print.testpleio.1vsp <- function(x, ...){
+  print.summary.testpleio.1vsp(x, ...)  
+}

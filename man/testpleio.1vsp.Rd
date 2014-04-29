@@ -10,7 +10,7 @@ testpleio.1vsp(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
 \item{cross}{An object of class \code{cross}. See
 \code{read.cross} for details.}
 
-\item{Y}{matrix of multiple traits with n rows.}
+\item{Y}{Matrix of multiple traits with n rows.}
 
 \item{chr}{Optional vector indicating the chromosomes for which
 LOD scores should be calculated.  This should be a vector of
@@ -21,7 +21,7 @@ are converted to strings.}
 
 \item{intcovar}{Interactive covariates.}
 
-\item{n.simu}{number of simulations for p-value.}
+\item{n.simu}{Number of simulations for p-value.}
 
 \item{tol}{Tolerance value for the \code{qr} decomposition in
 \code{lm} fitting.}

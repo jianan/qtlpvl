@@ -17,32 +17,12 @@ inline ArrayXd Dplus(const ArrayXd& d, const double threshold) {
 
 //' Calculate the residual of lm(Y ~ X)
 //'
-//' @param X matrix
-//' @param Y matrix
-//' @return The residual matrix
-// [[Rcpp::export]]
-MatrixXd lm_resid_llt(const MapMatd& X,
-                     const MapMatd& Y){
-  const LLT<MatrixXd> llt(AtA(X));
-  return Y - X * llt.solve(X.adjoint() * Y);
-}
-
-
-// [[Rcpp::export]]
-MatrixXd lm_resid_qr(const MapMatd& X,
-		    const MapMatd& Y){
-  Eigen::HouseholderQR<MatrixXd> QR(X);
-  return Y - X * QR.solve(Y);
-}
-
-//' Residual of lm(Y ~ X)
-//'
 //' An implementation for calculate residual of linear
 //' regression. It's ' not as fast as lm_resid_llt (about 50% slower),
 //' but is rank revealing, so should be safe for linear correlated X.
 //'
-//' @param X matrix
-//' @param Y matrix
+//' @param X A model matrix
+//' @param Y The response matrix
 //' @param threshold Eigen decomposition is used in calculation. An
 //' eigen value smaller than threshold * largest eigen value is
 //' considered zero.
@@ -57,6 +37,31 @@ MatrixXd lm_resid_svd(const MapMatd& X,
   return Y - X * VDi * UDV.matrixU().adjoint() * Y;
 }
 
+//' Calculate the residual of lm(Y ~ X)
+//' @inheritParams lm_resid_svd
+//' @return The residual matrix
+// [[Rcpp::export]]
+MatrixXd lm_resid_llt(const MapMatd& X,
+                     const MapMatd& Y){
+  const LLT<MatrixXd> llt(AtA(X));
+  return Y - X * llt.solve(X.adjoint() * Y);
+}
+
+
+//' Calculate the residual of lm(Y ~ X)
+//' @inheritParams lm_resid_svd
+//' @return The residual matrix
+// [[Rcpp::export]]
+MatrixXd lm_resid_qr(const MapMatd& X,
+		    const MapMatd& Y){
+  Eigen::HouseholderQR<MatrixXd> QR(X);
+  return Y - X * QR.solve(Y);
+}
+
+
+//' Calculate the residual of lm(Y ~ X)
+//' @inheritParams lm_resid_svd
+//' @return The residual matrix
 // [[Rcpp::export]]
 MatrixXd lm_resid_symmEigen(const MapMatd& X,
 			   const MapMatd& Y,
@@ -80,15 +85,16 @@ inline double det_selfadjoint(const Eigen::SelfAdjointView< MatrixType, UpLo >& 
   }
 }
 
-// It's the caller's resposibility to ensure X is self adjoint matrix
+// It's the caller's responsibility to ensure X is self adjoint matrix
 inline double det_selfadjoint(const MatrixXd& X, bool logarithm = true){
   return det_selfadjoint(X.selfadjointView<Lower>(),
 			 logarithm);
 }
 
 
-//' Sample covarance matrix of residual for linear model
-//'
+//' Sample covariance matrix of residual for linear model
+//' @inheritParams lm_resid_svd
+//' @return The residual covariance matrix
 // [[Rcpp::export]]
 MatrixXd lm_resid_cov(const MapMatd& X,
                      const MapMatd& Y,
@@ -103,8 +109,11 @@ MatrixXd lm_resid_cov(const MapMatd& X,
     .rankUpdate(fitsqrt.adjoint(), -1.0);
 }
 
-//' Determinant of residual for linear model
-//'
+//' Determinant of covariance matrix of residual for linear model
+//' @inheritParams lm_resid_svd
+//' @param logarithm A bool value indicating whether determinant or
+//' log determinate should be returned.
+//' @return The log determinant of residual covariance matrix
 // [[Rcpp::export]]
 double lm_resid_cov_det(const MapMatd& X,
 		       const MapMatd& Y,

@@ -4,31 +4,33 @@
 \title{Test of one pleiotrophic QTL vs two close linked QTLs.}
 \usage{
 testpleio.1vs2(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
-  region.l = NA, region.r = NA, int.method = "bayes", search = "fast",
-  RandomStart = TRUE, RandomCut = FALSE, simu = "parametric",
+  region.l = NA, region.r = NA, int.method = c("bayes", "1.5lod"),
+  search.method = c("fast", "complete"), RandomStart = TRUE,
+  RandomCut = FALSE, simu.method = c("parametric", "permutation"),
   n.simu = 1000, tol = 1e-07)
 }
 \arguments{
-\item{region.l}{left bound}
+\item{region.l}{Left bound}
 
-\item{region.r}{right bound}
+\item{region.r}{Right bound}
 
 \item{int.method}{"bayes" or "1.5lod" method to calculated the
 interval of interest if \code{region.l} and \code{region.r} is not
 specified.}
 
-\item{search}{searching method for two-QTL model, "fast" or "complete".}
+\item{search.method}{Searching method for two-QTL model, "fast" or
+"complete".}
 
 \item{RandomStart}{use random starting point for the two-QTL model
 or not. default is \code{TRUE}.}
 
-\item{RandomCut}{use random cutting or not when there are traits
-mapped to the same location. default is "FALSE".}
+\item{RandomCut}{Wse random cutting or not when there are traits
+mapped to the same location. Default is \code{FALSE}.}
 
-\item{simu}{"parametric" or "permutation" method for
-simulations. default is "parametric".}
+\item{simu.method}{"parametric" or "permutation" method for
+simulations. Default is "parametric".}
 
-\item{n.simu}{number of simulations for p-value.}
+\item{n.simu}{Number of simulations for p-value.}
 
 \item{tol}{Tolerance value for the \code{qr} decomposition in
 \code{lm} fitting.}
@@ -36,7 +38,7 @@ simulations. default is "parametric".}
 \item{cross}{An object of class \code{cross}. See
 \code{read.cross} for details.}
 
-\item{Y}{matrix of multiple traits with n rows.}
+\item{Y}{Matrix of multiple traits with n rows.}
 
 \item{chr}{Optional vector indicating the chromosomes for which
 LOD scores should be calculated.  This should be a vector of
