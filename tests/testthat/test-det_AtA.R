@@ -5,7 +5,7 @@ test_that("tests of det",{
   n <- 500
   p <- 50
 
-  X <- matrix(rnorm(n*2), n, 2)
+  X <- matrix(rnorm(n*p), n, p)
   
   det.r <- determinant(crossprod(X))$modulus
   det.c <- det_AtA(X)
