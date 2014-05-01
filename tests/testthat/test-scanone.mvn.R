@@ -1,4 +1,3 @@
-
 library(qtl)
 data(hyper)
 hyper <- calc.genoprob(hyper,step=2)
@@ -35,5 +34,3 @@ test_that("tests for chr ",{
   out.chr <- as.character(out.chr)
   expect_identical(out.chr, chr)
 })
-
-

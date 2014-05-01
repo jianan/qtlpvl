@@ -8,7 +8,7 @@
 ##' @param LOD.threshold threshold for QTL to be displayed.
 ##' @param ... Optional graphics arguments
 ##' @return a plot the signed LOD score versus QTL position for multiple traits.
-##' @export
+##'
 ##' @examples
 ##' set.seed(92950640)
 ##' data(listeria)
@@ -27,7 +27,8 @@
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' Y <- Y + G
 ##' plotLODsign(listeria, Y, chr)
-
+##'
+##' @export
 plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   
   n <- nrow(Y)
@@ -85,5 +86,3 @@ plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
   rect(u[1], u[3], u[2], u[4], border=TRUE)  
 
 }
-
-

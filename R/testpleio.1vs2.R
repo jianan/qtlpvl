@@ -32,7 +32,7 @@
 ##' \item{pvalue}{P-value from parametric bootstrap simulations.}
 ##' \item{Group}{Indicating which traits are influenced by which QTL
 ##' under alternative.}
-##' @export
+##'
 ##' @examples
 ##' set.seed(92950640)
 ##' data(listeria)
@@ -54,7 +54,8 @@
 ##'                       region.l=60, region.r=90)
 ##' summary(obj)
 ##' plot(obj)
-
+##'
+##' @export
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                            region.l=NA, region.r=NA, int.method=c("bayes", "1.5lod"), 
                            search.method=c("fast", "complete"), RandomStart=TRUE, RandomCut=FALSE,
@@ -226,4 +227,3 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                                      simu.method=simu.method)
   return(result)
 }
-

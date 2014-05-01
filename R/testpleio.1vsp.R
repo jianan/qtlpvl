@@ -15,8 +15,7 @@
 ##' \item{LODdiff}{Difference of best one QTL model and best p QTL model,
 ##'                LODdiff = max(LODp) - max(LOD1)}
 ##' \item{pvalue}{P-value from parametric bootstrap simulations.}
-##' 
-##' @export
+##'
 ##' @examples
 ##' set.seed(92950640)
 ##' data(listeria)
@@ -37,7 +36,8 @@
 ##' obj <- testpleio.1vsp(listeria, Y, chr, n.simu=100)
 ##' summary(obj)
 ##' plot(obj)
-
+##' 
+##' @export
 testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.simu=1000, tol=1e-7){
 
   if(length(chr) > 1) stop("Please specify only one chromosome. ")

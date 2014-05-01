@@ -7,7 +7,7 @@
 ##' @inheritParams plotLODsign
 ##' @param genotype QTL genotype for the common QTL.
 ##' @return a plot of QTL dominance effect versus QTL additive effect.
-##' @export
+##'
 ##' @examples
 ##' set.seed(92950640)
 ##' data(listeria)
@@ -27,8 +27,8 @@
 ##' Y <- Y + G
 ##' plotGenetpattern(Y, genotype=genotype1)
 ##' plotGenetpattern(Y, cross=listeria, chr=chr)
-
-
+##'
+##' @export
 plotGenetpattern <- function(Y, genotype=NULL, cross, chr,
                              addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   
@@ -92,4 +92,3 @@ plotGenetpattern <- function(Y, genotype=NULL, cross, chr,
   abline(a=0, b=-1)
 
 }
-

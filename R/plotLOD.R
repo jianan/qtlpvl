@@ -7,7 +7,7 @@
 ##' @param LOD.threshold threshold for QTL to be displayed.
 ##' @param ... Optional graphics arguments
 ##' @return A plot LOD score versus QTL position for multiple traits.
-##' @export
+##'
 ##' @examples
 ##' set.seed(92950640)
 ##' data(listeria)
@@ -26,6 +26,8 @@
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' Y <- Y + G
 ##' plotLOD(listeria, Y, chr)
+##'
+##' @export
 plotLOD <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   
   n <- nrow(Y)
@@ -66,5 +68,3 @@ plotLOD <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3
   map <- map[map>xlim[1] & map<xlim[2]]
   rug(map, ticksize=0.01)
 }
-
-
