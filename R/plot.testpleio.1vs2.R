@@ -17,9 +17,22 @@ plot.testpleio.1vs2 <- function(x, ...){
   map.marker <- object$map.marker
   rg <- range(map)
 
-  plot(y=LOD1, x=map, type="l",
-       ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
-       xaxt="n", xlab="cM position", ylab="LOD")
+  if ("ylab" %in% names(dots)) {
+    if ("xlab" %in% names(dots)) {
+      plot(y=LOD1, x=map, type="l",
+           ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
+           xaxt="n", ...)
+    } else {
+      plot(y=LOD1, x=map, type="l",
+           ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
+           xaxt="n", xlab="Map position (cM)", ...)
+    }
+  } else{
+    plot(y=LOD1, x=map, type="l",
+         ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
+         xaxt="n", xlab="Map position (cM)", ylab="LOD", ...)
+  }
+
   rug(map.marker, ticksize=-0.01)
   axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker))
   points(maxPOS, maxLOD, col=c("blue","red")[Group], pch=20) ## single trait result.
