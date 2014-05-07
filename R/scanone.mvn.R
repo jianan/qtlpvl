@@ -20,7 +20,7 @@
 ##' the LOD scores.
 ##' @keywords QTL
 ##' @seealso qtl::scanone
-##' @export
+##'
 ##' @examples
 ##' set.seed(92950640)
 ##' data(listeria)
@@ -41,7 +41,8 @@
 ##' out <- scanone.mvn(listeria, Y, chr)
 ##' summary(out)
 ##' plot(out)
-
+##'
+##' @export
 scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e-7){
 
   ## checking inputs...
@@ -110,4 +111,3 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   ## attr(out, "model") <- model
   return(out)
 }
-
