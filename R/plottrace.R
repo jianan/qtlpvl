@@ -4,8 +4,9 @@
 ##' changes as the search goes.
 ##'
 ##' @param x object to plot
+##' @param ... parameters to be passed through to plotting functions.
 ##' @export
-plottrace <- function(x)
+plottrace <- function(x, ...)
     UseMethod("plottrace")
 
 ##' plot trace
