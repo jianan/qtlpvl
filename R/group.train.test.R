@@ -6,7 +6,7 @@
 ##' @param chr which chromosome is under invest.
 ##' @param region.l left bound of region under invest.
 ##' @param region.r right bound of region under invest.
-##' @details ...
+##' @return a list of data.train, data.test, geno.train, geno.test, map.
 ##' @export
 group.train.test <- function(cross, Y, chr, region.l, region.r){
 

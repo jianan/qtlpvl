@@ -17,10 +17,10 @@ group.train.test(cross, Y, chr, region.l, region.r)
 
 \item{region.r}{right bound of region under invest.}
 }
+\value{
+a list of data.train, data.test, geno.train, geno.test, map.
+}
 \description{
 find the training and tesing set from genotypes in a given chr region.
-}
-\details{
-...
 }
 
