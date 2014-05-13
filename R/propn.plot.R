@@ -1,7 +1,7 @@
 ##' propotion plot.
 ##'
 ##' Compare pred.test to the genotype of each marker, calculate and
-##' plot thr propotion of matches at each marker position and inside
+##' plot the propotion of matches at each marker position and inside
 ##' each marker interval, could be used to estimate interval for the
 ##' common eQTL in a transband.
 ##' 
@@ -50,5 +50,4 @@ propn.plot <- function(genotype, map, pred.test, pred.score, main="", weighted =
   }
 
   points(map.ins, propn, type="p", pch=20, col="red")
-
 } 

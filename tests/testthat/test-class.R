@@ -14,8 +14,13 @@ test_that("tests of lda",{
   Y <- matrix(rnorm(n*p),n,p)
   Y <- Y + G
   colnames(Y) <- paste0("pheno", 1:p)
+  
+  cross <- listeria
+  chr <- 1
+  region.l <- 75
+  region.r <- 95
 
-  group <- group.train.test(listeria, Y, chr=1, region.l=75, region.r=95)
+  group <- group.train.test(cross, Y, chr, region.l, region.r)
   data.train <- group$data.train
   data.test <- group$data.test
   class.train <- group$geno.train
@@ -42,5 +47,8 @@ test_that("tests of lda",{
                       .Names = c("16", "18", "20", "24", "27", "31", "32", "35", "36", "42",
                           "44", "48", "50", "63", "64", "68", "86", "88", "90", "91", "92",
                           "93", "95", "97", "102", "103", "111", "112", "116", "117", "120")))
+  
+  obj <- interval(cross, Y, chr, region.l, region.r, do.plot=FALSE, main="", weighted=FALSE, thr=0.9)
+  expect_true(!is.null(obj$int))
 
 })
