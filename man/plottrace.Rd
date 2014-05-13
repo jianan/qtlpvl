@@ -3,10 +3,12 @@
 \alias{plottrace}
 \title{plot trace}
 \usage{
-plottrace(x)
+plottrace(x, ...)
 }
 \arguments{
 \item{x}{object to plot}
+
+\item{...}{parameters to be passed through to plotting functions.}
 }
 \description{
 plot trace of a searching method to see how the object function

@@ -15,7 +15,7 @@ test_that("tests of lda",{
   Y <- Y + G
   colnames(Y) <- paste0("pheno", 1:p)
 
-  group <- group.train.test(listeria, chr=1, region.l=75, region.r=95, Y)
+  group <- group.train.test(listeria, Y, chr=1, region.l=75, region.r=95)
   data.train <- group$data.train
   data.test <- group$data.test
   class.train <- group$geno.train
