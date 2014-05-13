@@ -3,10 +3,12 @@
 \alias{plottrace.testpleio.1vs2}
 \title{plot trace}
 \usage{
-\method{plottrace}{testpleio.1vs2}(x)
+\method{plottrace}{testpleio.1vs2}(x, ...)
 }
 \arguments{
 \item{x}{object of class "testpleio.1vs2"}
+
+\item{...}{parameters to be passed through to plotting functions.}
 }
 \description{
 plot trace of \code{testpleio.1vs2} to see how \code{LODdiff}
