@@ -150,7 +150,8 @@ for the single QTL and best two QTL model, as well as test statistics
 LODdiff=LOD2-LOD1 and its P-value.
 
 ```{r}
-obj <- testpleio.1vs2(listeria, Y, chr, n.simu=100, region.l=60, region.r=90)
+obj <- testpleio.1vs2(listeria, Y, chr, n.simu=100, region.l=60, region.r=90,
+                      search.method="complete")
 summary(obj)
 plot(obj)
 ```
