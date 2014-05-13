@@ -20,11 +20,11 @@ plottrace.testpleio.1vs2 <- function(x){
   object <- x
   if (!any(class(object) == "testpleio.1vs2")) 
       stop("Input should have class \"testpleio.1vs2\".")
-
-  plot(x=1:(length(object$Group)-1), y=object$LODdiff.trace,
-       xlab="i.cut", ylab="LODdiff", type="b")
-  n.max <- which.max(object$LODdiff.trace)
-  v.max <- max(object$LODdiff.trace, na.rm=TRUE)
+  t <- object$LODdiff.trace
+  t[t<0] <- 0
+  plot(t, xlab="i.cut", ylab="LODdiff", type="b")
+  n.max <- which.max(t)
+  v.max <- max(t, na.rm=TRUE)
   u <- par()$usr
-  segments(x0=n.max, y0=u[3], x1=n.max, y1=v.max, lty=3, col="red")
+  segments(x0=n.max, y0=u[3], x1=n.max, y1=v.max, lty=2, col="red")
 }
