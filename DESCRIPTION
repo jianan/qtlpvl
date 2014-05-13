@@ -14,7 +14,10 @@ Depends:
     RcppEigen (>= 0.3.2.0.2)
 Suggests:
     knitr,
-    testthat
+    testthat,
+    MASS,
+    class,
+    e1071
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppEigen
 License: GPL-3

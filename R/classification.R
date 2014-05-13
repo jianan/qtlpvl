@@ -10,7 +10,7 @@
 ##' vector "sca" that could be used to generate the Linear
 ##' Discriminants.
 ##' @export
-classification <- function(data.train, data.test, class.trian, 
+classification <- function(data.train, data.test, class.train, 
                            method=c("LDA", "KNN", "SVM"), K=50){
   
   method <- match.arg(method)

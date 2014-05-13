@@ -11,8 +11,8 @@
 ##' @param sca scalling factor for ld1 and ld2
 ##' @return plot of ld2 vs ld1
 ##' @export
-plot.lda <- function(data.train, data.test, class.train,
-                     pred.test, error.train, sca, main=""){
+plotlda <- function(data.train, data.test, class.train,
+                    pred.test, error.train, sca, main=""){
 
   n.train <- nrow(data.train)
   n.test <- nrow(data.test)
@@ -25,7 +25,7 @@ plot.lda <- function(data.train, data.test, class.train,
   plot(disc.test, col=c(2, 3, 4)[pred.test], pch=c("1", "2", "3")[pred.test], 
        cex=0.7, xlim=xlim, ylim=ylim, main=main, xlab="LD1", ylab="LD2")
   text <- paste0("non-recomb=", n.train, ", recomb=", n.test, ## sample size
-                 ", error.train=", round(error.train, digit=3))
+                 ", error.train=", round(error.train, digits=3))
   mtext(text, side=3, line=0)
   points(disc.train, col="grey", pch=c("1", "2", "3")[class.train], cex=0.7)
   
