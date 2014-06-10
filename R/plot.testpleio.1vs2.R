@@ -16,20 +16,21 @@ plot.testpleio.1vs2 <- function(x, ...){
   map <- object$map
   map.marker <- object$map.marker
   rg <- range(map)
+  ylim <- c(0, max(maxLOD, LOD1, LOD2, na.rm=TRUE))
 
   if ("ylab" %in% names(dots)) {
     if ("xlab" %in% names(dots)) {
       plot(y=LOD1, x=map, type="l",
-           ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
+           ylim=ylim, xlim=rg,
            xaxt="n", ...)
     } else {
       plot(y=LOD1, x=map, type="l",
-           ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
+           ylim=ylim, xlim=rg,
            xaxt="n", xlab="Map position (cM)", ...)
     }
   } else{
     plot(y=LOD1, x=map, type="l",
-         ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
+         ylim=ylim, xlim=rg,
          xaxt="n", xlab="Map position (cM)", ylab="LOD", ...)
   }
 
