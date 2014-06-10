@@ -57,10 +57,13 @@
 ##'
 ##' @export
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
-                           region.l=NA, region.r=NA, int.method=c("bayes", "1.5lod"), 
+                           region.l=NA, region.r=NA,
+                           method=c("maxlikelihood", "pillaitrace"),
+                           int.method=c("bayes", "1.5lod"), 
                            search.method=c("fast", "complete"), RandomStart=TRUE, RandomCut=FALSE,
                            simu.method=c("parametric", "permutation"), n.simu=1000, tol=1e-7){
-
+  
+  method <- match.arg(method)
   int.method <- match.arg(int.method)
   search.method <- match.arg(search.method)
   simu.method <- match.arg(simu.method)
@@ -118,7 +121,8 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   o <- order(maxPOSind)
   
   x <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o], genoprob=genoprob, ngeno=ngeno,
-                            addcovar=addcovar, intcovar=intcovar, 
+                            addcovar=addcovar, intcovar=intcovar,
+                            method=method, 
                             search.method=search.method, RandomStart=RandomStart,
                             RandomCut=RandomCut, tol=tol, in.simu=FALSE)
   LOD1 <- x$LOD1
@@ -143,7 +147,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                    map.marker=map.marker,
                    LODdiff.trace=LODdiff.trace)
   }else if(simu.method=="parametric"){    ## simulation: parametric bootstrap.
-    if(n.simu < 0) stop("n.simu should be a positive integer.")
+    if(n.simu <= 0) stop("n.simu should be a positive integer.")
     
     Y.fit <- Y - E.marker
     Sigma <- cov(E.marker)
@@ -162,7 +166,8 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       o <- order(maxPOSind)
       LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y.simu[, o], maxPOS=maxPOSind[o],
                                                    genoprob=genoprob, ngeno=ngeno,
-                                                   addcovar=addcovar, intcovar=intcovar, 
+                                                   addcovar=addcovar, intcovar=intcovar,
+                                                   method=method, 
                                                    search.method=search.method,
                                                    RandomStart=RandomStart,
                                                    RandomCut=RandomCut, tol=tol,in.simu=TRUE)
@@ -207,6 +212,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o],
                                                    genoprob=genoprob.simu, ngeno=ngeno,
                                                    addcovar=addcovar, intcovar=intcovar, 
+                                                   method=method,
                                                    search.method=search.method,
                                                    RandomStart=RandomStart,
                                                    RandomCut=RandomCut, tol=tol,in.simu=TRUE)
@@ -220,6 +226,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   }
   class(result) <- c("testpleio.1vs2", "list")
   attr(result, "parameters") <- list(region.l=region.l, region.r=region.r,
+                                     method=method, 
                                      int.method=int.method,
                                      search.method=search.method,
                                      RandomStart=RandomStart,
