@@ -9,7 +9,6 @@
 ##' @inheritParams scanone.mvn
 ##' @param region.l Left bound
 ##' @param region.r Right bound
-##' @param method "maxlikelihood" or "pillaitrace" for LOD score.
 ##' @param int.method "bayes" or "1.5lod" method to calculated the
 ##' interval of interest if \code{region.l} and \code{region.r} is not
 ##' specified.

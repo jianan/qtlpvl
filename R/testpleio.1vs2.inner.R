@@ -14,7 +14,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
   X <- cbind(rep(1,n), addcovar, intcovar)
   if(method == "maxlikelihood"){
     L0 <- det_AtA(lm.resid(X, Y))
-  }else if(method== "pillaitrace"){
+  }else if(method == "pillaitrace"){
     L0 <- 0
     S0 <- crossprod(lm.resid(X, Y))
     S0inv <- solve(S0)
@@ -34,9 +34,17 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
     E[,,i] <- Ei <- lm.resid(X, Y)
     if(method == "maxlikelihood"){
       L1[i] <- det_AtA(Ei)
-    }else if(method== "pillaitrace"){
+    }else if(method == "pillaitrace"){
       L1[i] <- pillai(crossprod(Ei), S0inv)
     }
+  }
+  
+  if(method == "pillaitrace"){
+    i <- which.min(L1)
+    if(is.na(i)) stop("i is na") else print(i)
+    Ei <- E[, , i]
+    S1 <- crossprod(Ei)
+    S1inv <- solve(S1)
   }
 
   if(!in.simu & !RandomCut & length(unique(maxPOS))==1){    ## all QTLs mapped into same position...
@@ -47,7 +55,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
     rownames(E.marker) <- rownames(Y)
     if(method == "maxlikelihood"){
       LOD1 <- n/2*log10(exp(1))*(L0 - L1) ## scanone.mvn
-    }else if(method== "pillaitrace"){
+    }else if(method == "pillaitrace"){
       LOD1 <- L1
     }
     LOD2 <- matrix(NA, n.marker, n.marker)
@@ -72,8 +80,8 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
           E2 <- E[,(i.cut+1):p,j]
           if(method == "maxlikelihood"){
             L2[i,j] <- det_AtA(cbind(E1,E2))
-          }else if(method== "pillaitrace"){
-            L2[i, j] <- pillai(crossprod(cbind(E1, E2)), S0inv)
+          }else if(method == "pillaitrace"){
+            L2[i, j] <- - pillai(crossprod(cbind(E1, E2)), S1inv)
           }
         }
       }
@@ -104,8 +112,8 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
           E2 <- E[,(i.cut+1):p,j]
           if(method == "maxlikelihood"){
             L2[i,j] <- det_AtA(cbind(E1,E2))
-          }else if(method== "pillaitrace"){
-            L2[i, j] <- pillai(crossprod(cbind(E1, E2)), S0inv)
+          }else if(method == "pillaitrace"){
+            L2[i, j] <- - pillai(crossprod(cbind(E1, E2)), S1inv)
           }
         }
         i <- which.min(L2[,j])
@@ -115,8 +123,8 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
           E2 <- E[,(i.cut+1):p,j]
           if(method == "maxlikelihood"){
             L2[i,j] <- det_AtA(cbind(E1,E2))
-          }else if(method== "pillaitrace"){
-            L2[i, j] <- pillai(crossprod(cbind(E1, E2)), S0inv)
+          }else if(method == "pillaitrace"){
+            L2[i, j] <- - pillai(crossprod(cbind(E1, E2)), S1inv)
           }
         }
         j <- which.min(L2[i,])
@@ -138,10 +146,10 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
       LOD1 <- n/2*log10(exp(1))*(L0 - L1) ## scanone.mvn
       LOD2 <- n/2*log10(exp(1))*(L0 - L2.save)
       LODdiff.trace <- -n/2*log10(exp(1))*(L2mins - min(L1)) ## LOD2-LOD1 for each cutting point.
-    }else if(method== "pillaitrace"){
-      LOD1 <- L1
-      LOD2 <- L2.save
-      LODdiff.trace <- - L2mins + min(L1)
+    }else if(method == "pillaitrace"){
+      LOD1 <- (L1 - p/2)/p * n/2 
+      LOD2 <- - (L2.save - p/2)/p * n/2
+      LODdiff.trace <- - (L2mins - p/2)/p  * n/2
     }
     result <- list(E.marker=E.marker, 
                    LODdiff.trace=LODdiff.trace,
@@ -150,8 +158,8 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
   } else{ ## in simulation, only need LODdiff.
     if(method == "maxlikelihood"){
       LODdiff <- -n/2*log10(exp(1))*(min(L2mins) - min(L1)) 
-    }else if(method== "pillaitrace"){
-      LODdiff <- - min(L2mins) + min(L1)
+    }else if(method == "pillaitrace"){
+      LODdiff <- - (min(L2mins) - p/2)/p * n/2
     }
     return(LODdiff)
   }
