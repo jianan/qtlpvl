@@ -56,7 +56,7 @@ testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar,
     if(method == "maxlikelihood"){
       LOD1 <- n/2*log10(exp(1))*(L0 - L1) ## scanone.mvn
     }else if(method == "pillaitrace"){
-      LOD1 <- L1
+      LOD1 <- (L1-p/2)/p * n/2
     }
     LOD2 <- matrix(NA, n.marker, n.marker)
     result <- list(E.marker=E.marker, 
