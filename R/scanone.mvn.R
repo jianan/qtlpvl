@@ -13,6 +13,7 @@
 ##' are converted to strings.
 ##' @param addcovar Additive covariates.
 ##' @param intcovar Interactive covariates.
+##' @param method "maxlikelihood" or "pillaitrace" for LOD score.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
 ##' @return A data.frame whose first column contains the chromosome
@@ -43,8 +44,11 @@
 ##' plot(out)
 ##'
 ##' @export
-scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e-7){
-
+scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
+                        method=c("maxlikelihood", "pillaitrace"),
+                        tol=1e-7){
+  
+  method <- match.arg(method)
   ## checking inputs...
   if(class(cross)[2] != "cross") stop("cross need to be of class cross")
   n <- nrow(cross$pheno)
@@ -79,9 +83,14 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   E <- matrix(NA, n, p)
   X <- cbind(rep(1, n), addcovar, intcovar)
   E <- lm.resid(X, Y)
-  Sigma <- crossprod(E)
-  L0 <- determinant(Sigma)$modulus
-  
+  if(method == "maxlikelihood"){
+    L0 <- det_AtA(E)
+  }else if(method == "pillaitrace"){
+    L0 <- 0
+    Sigma <- crossprod(E)
+    S0inv <- solve(Sigma)
+  }
+
   L1 <- numeric(m)
   for(i in 1:m){
     if(ngeno == 3){
@@ -92,10 +101,17 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
     E <- lm.resid(X, Y)
-    Sigma <- crossprod(E)
-    L1[i] <- determinant(Sigma)$modulus
+    if(method == "maxlikelihood"){
+      L1[i] <- det_AtA(E)
+    }else if(method == "pillaitrace"){
+      L1[i] <- pillai(crossprod(E), S0inv)
+    }
   }
-  LOD <- n/2 * log10(exp(1)) * (L0 - L1)
+  if(method == "maxlikelihood"){
+    LOD <- n/2 * log10(exp(1)) * (L0 - L1)
+  }else if(method == "pillaitrace"){
+    LOD <- (L1 - p/2)/p
+  }
 
   out <- NULL
   for(i in chr){
