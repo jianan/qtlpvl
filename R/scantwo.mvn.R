@@ -6,8 +6,11 @@
 ##'
 ##' @inheritParams scanone.mvn
 ##' @export
-scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e-7){
+scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, 
+                        method=c("maxlikelihood", "pillaitrace"),
+                        tol=1e-7){
 
+  method <- match.arg(method)
   ## checking inputs...
   if(class(cross)[2] != "cross") stop("cross need to be of class cross")
   n <- nrow(cross$pheno)
@@ -36,13 +39,22 @@ scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   m <- ncol(genoprob)/(ngeno-1)
   
   X0 <- cbind(rep(1, n), addcovar, intcovar)
-  L0 <- det_AtA(lm.resid(X0, Y))
-  
+  if(method == "maxlikelihood"){
+    L0 <- det_AtA(lm.resid(X0, Y))
+  }else if(method == "pillaitrace"){
+    Sigma <- crossprod(lm.resid(X0, Y))
+    S0inv <- solve(Sigma)
+  }
+
   L1 <- matrix(NA, m, m)
   for(i in 1:m){
     if(ngeno==3) X1 <- genoprob[, 2*(i-1)+1:2] else X1 <- genoprob[, i]
     X <- cbind(rep(1, n), addcovar, intcovar, X1, interact(intcovar, X1))
-    L1[i, i] <- det_AtA(lm.resid(X, Y))
+    if(method == "maxlikelihood"){
+      L1[i, i] <- det_AtA(lm.resid(X, Y))
+    }else if(method == "pillaitrace"){
+      L1[i, i] <- pillai(crossprod(lm.resid(X, Y)), S0inv)
+    }
   }
   for(i in 1:(m-1)){
     if(ngeno==3) X1 <- genoprob[, 2*(i-1)+1:2] else X1 <- genoprob[, i]
@@ -52,13 +64,22 @@ scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
                   interact(intcovar, X1), interact(intcovar, X2))
       Xi <- interact(X1, X2)
       Xf <- cbind(Xa, Xi, interact(intcovar, Xi))
-      L1[i, j] <- det_AtA(lm.resid(Xa, Y)) ## upper tri, add model
-      L1[j, i] <- det_AtA(lm.resid(Xf, Y)) ## lower tri, full model
+      if(method == "maxlikelihood"){
+        L1[i, j] <- det_AtA(lm.resid(Xa, Y)) ## upper tri, add model
+        L1[j, i] <- det_AtA(lm.resid(Xf, Y)) ## lower tri, full model
+      }else if(method == "pillaitrace"){
+        L1[i, j] <- pillai(crossprod(lm.resid(Xa, Y)), S0inv)
+        L1[j, i] <- pillai(crossprod(lm.resid(Xf, Y)), S0inv)
+      }
     }
   }
   
-  LOD <- n/2 * log10(exp(1)) * (L0 - L1)
-
+  if(method == "maxlikelihood"){
+    LOD <- n/2 * log10(exp(1)) * (L0 - L1)
+  }else if(method == "pillaitrace"){
+    LOD <- (L1 - p/2)/p
+  }
+  
   ## out <- NULL
   ## for(i in chr){
   ##   map <- attr(cross[[c("geno", i, "prob")]], "map")

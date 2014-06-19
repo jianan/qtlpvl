@@ -1,8 +1,8 @@
 ##' @export
-plot.testpleio.1vsp <- function(x, ...){
+plot.testpleio.1vsp <- function(x, xlab="Map position (cM)", ylab="LOD", ...){
+  
   if (!any(class(x) == "testpleio.1vsp")) 
       stop("Input should have class \"testpleio.1vsp\".")
-  dots <- list(...)
   
   LODdiff <- x$LODdiff
   LOD1 <- x$LOD1
@@ -11,10 +11,11 @@ plot.testpleio.1vsp <- function(x, ...){
   maxLOD <- x$maxLOD
   maxPOS <- x$maxPOS
   rg <- range(map)
+  ylim <- c(min(0, min(maxLOD, LOD1, na.rm=TRUE)),
+            max(maxLOD, LOD1, na.rm=TRUE))
   
   plot(y=LOD1, x=map, type="l",
-       ylim=c(0,max(LOD1,na.rm=TRUE)), xlim=rg,
-       xaxt="n", xlab="cM position", ylab="LOD")
+       ylim=ylim, xlim=rg, xaxt="n", ylab=ylab, xlab=xlab, ...)
   rug(map.marker, ticksize=-0.01)
   axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker))
   points(maxPOS, maxLOD, pch=20) ## single trait result.

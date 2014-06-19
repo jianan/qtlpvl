@@ -28,12 +28,13 @@ print.summary.testpleio.1vs2 <- function(x, ...){
   cat(sprintf("%.2f",x$LODdiff))
   cat("\n")
 
-  cat("P-value is: ")
-  cat(x$pvalue)
-  cat(" (from", x$n.simu ,"simulations)")
-  cat("\n")
+  if(!is.null(x$n.simu)){
+    cat("P-value is: ")
+    cat(x$pvalue)
+    cat(" (from", x$n.simu ,"simulations)")
+    cat("\n")
+  }
 }
-
 
 ##' @export
 summary.testpleio.1vs2 <- function(object, ...){

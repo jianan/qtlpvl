@@ -1,37 +1,24 @@
 ##' @export
-plot.testpleio.1vs2 <- function(x, ...){
+plot.testpleio.1vs2 <- function(x, xlab="Map position (cM)", ylab="LOD", ...){
   
-  object <- x
-  if (!any(class(object) == "testpleio.1vs2")) 
+  if (!any(class(x) == "testpleio.1vs2")) 
       stop("Input should have class \"testpleio.1vs2\".")
-  dots <- list(...)
 
-  LOD1 <- object$LOD1 ## LOD of joint mapping 
-  LOD2 <- object$LOD2 ## 2 QTL, LOD score matrix.
-  LODdiff <- object$LODdiff
-  maxPOS <- object$maxPOS ## single trait mapped pos
-  maxLOD <- object$maxLOD ## single trait LOD
-  Group <- object$Group
-  pvalue <- object$pvalue
-  map <- object$map
-  map.marker <- object$map.marker
+  LOD1 <- x$LOD1 ## LOD of joint mapping 
+  LOD2 <- x$LOD2 ## 2 QTL, LOD score matrix.
+  LODdiff <- x$LODdiff
+  maxPOS <- x$maxPOS ## single trait mapped pos
+  maxLOD <- x$maxLOD ## single trait LOD
+  Group <- x$Group
+  pvalue <- x$pvalue
+  map <- x$map
+  map.marker <- x$map.marker
   rg <- range(map)
+  ylim <- c(min(0, min(maxLOD, LOD1, LOD2, na.rm=TRUE)),
+            max(maxLOD, LOD1, LOD2, na.rm=TRUE))
 
-  if ("ylab" %in% names(dots)) {
-    if ("xlab" %in% names(dots)) {
-      plot(y=LOD1, x=map, type="l",
-           ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
-           xaxt="n", ...)
-    } else {
-      plot(y=LOD1, x=map, type="l",
-           ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
-           xaxt="n", xlab="Map position (cM)", ...)
-    }
-  } else{
-    plot(y=LOD1, x=map, type="l",
-         ylim=c(0,max(LOD2,na.rm=TRUE)), xlim=rg,
-         xaxt="n", xlab="Map position (cM)", ylab="LOD", ...)
-  }
+  plot(y=LOD1, x=map, type="l",
+       ylim=ylim, xlim=rg, xaxt="n", xlab=xlab, ylab=ylab, ...)
 
   rug(map.marker, ticksize=-0.01)
   axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker))
@@ -41,6 +28,7 @@ plot.testpleio.1vs2 <- function(x, ...){
   points(y=c(0,0), x=attr(LODdiff, "LOD2pos"),
          col=c("blue","red"), pch=2)  ## plot the best two QTLs
 
+  ## add LOD profile for the two QTLs.
   ind <- arrayInd(which.max(LOD2), .dim=dim(LOD2))
   points(map,LOD2[, ind[2]],type="l",col="blue")
   points(map,LOD2[ind[1], ],type="l",col="red")

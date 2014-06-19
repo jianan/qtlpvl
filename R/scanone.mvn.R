@@ -13,6 +13,9 @@
 ##' are converted to strings.
 ##' @param addcovar Additive covariates.
 ##' @param intcovar Interactive covariates.
+##' @param method "ML", "Pillai", "Wilks", "Hotelling-Lawley", or
+##' "Roy" , "ML" is for maximum likelihood method for LOD score, the
+##' other four are MANOVA methods.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
 ##' @return A data.frame whose first column contains the chromosome
@@ -43,8 +46,11 @@
 ##' plot(out)
 ##'
 ##' @export
-scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e-7){
-
+scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
+                        method = c("ML", "Pillai", "Wilks", "Hotelling-Lawley", "Roy"), 
+                        tol=1e-7){
+  
+  method <- match.arg(method)
   ## checking inputs...
   if(class(cross)[2] != "cross") stop("cross need to be of class cross")
   n <- nrow(cross$pheno)
@@ -76,27 +82,34 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   }
   m <- ncol(genoprob)/ngeno
   
-  E <- matrix(NA, n, p)
   X <- cbind(rep(1, n), addcovar, intcovar)
   E <- lm.resid(X, Y)
-  Sigma <- crossprod(E)
-  L0 <- determinant(Sigma)$modulus
-  
+  L0 <- det_AtA(E)
+  S0 <- crossprod(E)
+  S0inv <- solve(S0)
+
   L1 <- numeric(m)
   for(i in 1:m){
     if(ngeno == 3){
+      q <- 2 * p
       prob <- genoprob[,3*i-2:1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob[,1], intcovar*prob[,2])
     }else{
+      q <- 1 * p
       prob <- genoprob[,2*i-1]
       X <- cbind(rep(1,n), addcovar, intcovar, prob, intcovar*prob)
     }
+    df.res <- n-q-1
     E <- lm.resid(X, Y)
-    Sigma <- crossprod(E)
-    L1[i] <- determinant(Sigma)$modulus
+    L1[i] <- calc.L(E, S0inv, q, df.res, method)
   }
-  LOD <- n/2 * log10(exp(1)) * (L0 - L1)
 
+  if(method=="ML"){
+    LOD <- n/2 * log10(exp(1)) * (L0 - L1)
+  }else{
+    LOD <- - L1
+  }
+  
   out <- NULL
   for(i in chr){
     map <- attr(cross[[c("geno",i,"prob")]], "map")
@@ -106,8 +119,6 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, tol=1e
   }
   out$lod <- LOD
   class(out) <- c("scanone", "data.frame")
-  ## attr(out, "method") <- method
-  ## attr(out, "type") <- type
-  ## attr(out, "model") <- model
+  attr(out, "method") <- method
   return(out)
 }
