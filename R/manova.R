@@ -64,17 +64,3 @@ calc.L <- function(E, S0inv, q, df.res, method){
                 Roy = - Roy(eig, q, df.res)[1])
   res
 }
-
-    if(method != "ML"){
-      S1 <- crossprod(E)
-      A <- crossprod(S1, S0inv)
-      d <- Re(eigen(A, symmetric = FALSE)$values)
-      eig <- 1/d - 1
-    }
-    
-    L1[i] <- switch(method,
-                    ML = det_AtA(E),
-                    Pillai = Pillai(eig, q, df.res)[1], 
-                    Wilks = 1 - Wilks(eig, q, df.res)[1], 
-                    `Hotelling-Lawley` = HL(eig, q, df.res)[1], 
-                    Roy = Roy(eig, q, df.res)[1])
