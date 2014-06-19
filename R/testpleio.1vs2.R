@@ -58,7 +58,7 @@
 ##' @export
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                            region.l=NA, region.r=NA,
-                           method=c("maxlikelihood", "pillaitrace"),
+                           method = c("ML", "Pillai", "Wilks", "Hotelling-Lawley", "Roy"),
                            int.method=c("bayes", "1.5lod"), 
                            search.method=c("fast", "complete"), RandomStart=TRUE, RandomCut=FALSE,
                            simu.method=c("parametric", "permutation"), n.simu=1000, tol=1e-7){
@@ -67,6 +67,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   int.method <- match.arg(int.method)
   search.method <- match.arg(search.method)
   simu.method <- match.arg(simu.method)
+  if(n.simu < 0) stop("n.simu should be a positive integer.")
   
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y); p <- ncol(Y)
@@ -141,88 +142,90 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   maxPOS <- out$pos[apply(out[,-(1:2)],2,which.max)]  ## QTL position
   maxLOD <- apply(out[,-(1:2)],2,max)
 
-  if(is.na(n.simu)){
+  if(n.simu == 0){
     result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
                    maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                    map.marker=map.marker,
                    LODdiff.trace=LODdiff.trace)
-  }else if(simu.method=="parametric"){    ## simulation: parametric bootstrap.
-    if(n.simu <= 0) stop("n.simu should be a positive integer.")
+  }else{
     
-    Y.fit <- Y - E.marker
-    Sigma <- cov(E.marker)
-    Sigma.half <- chol(Sigma)
-    
-    LODdiff.simu <- numeric(n.simu)
-    for(i.simu in 1:n.simu){
-      mat <- matrix(rnorm(p*n),p,n)      ## p*n
-      mat <- crossprod(mat,Sigma.half)   ## n*p
-      Y.simu <- Y.fit + mat
-      cross.simu <- cross
-      cross.simu$pheno[, p1+(1:p)] <- Y.simu
-      out <- scanone(cross.simu, pheno.col=p1+(1:p), method="hk", chr=chr,
-                     addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
-      maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
-      o <- order(maxPOSind)
-      LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y.simu[, o], maxPOS=maxPOSind[o],
-                                                   genoprob=genoprob, ngeno=ngeno,
-                                                   addcovar=addcovar, intcovar=intcovar,
-                                                   method=method, 
-                                                   search.method=search.method,
-                                                   RandomStart=RandomStart,
-                                                   RandomCut=RandomCut, tol=tol,in.simu=TRUE)
-    }
-    pvalue <- mean(LODdiff.simu > LODdiff - tol)
-    result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
-                   maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
-                   LODdiff.trace=LODdiff.trace,
-                   map.marker=map.marker, n.simu=n.simu, 
-                   pvalue=pvalue)
-  } else if(simu.method=="permutation"){
-    ## find strat
-    ind <- which.max(LOD1)
-    strat <- numeric(n)
-    if(ngeno == 3){
-      prob <- genoprob[,(1:2)+3*(ind-1)]
-      strat[prob[,1] > 0.5] <- 1
-      strat[prob[,2] > 0.5] <- 2
-      strat[1-prob[,1]-prob[,2] > 0.5] <- 3
-    }else{
-      prob <- genoprob[,2*ind-1]
-      strat[prob > 0.5] <- 1
-    }
+    if(simu.method=="parametric"){    ## simulation: parametric bootstrap.
+      
+      Y.fit <- Y - E.marker
+      Sigma <- cov(E.marker)
+      Sigma.half <- chol(Sigma)
+      
+      LODdiff.simu <- numeric(n.simu)
+      for(i.simu in 1:n.simu){
+        mat <- matrix(rnorm(p*n),p,n)      ## p*n
+        mat <- crossprod(mat,Sigma.half)   ## n*p
+        Y.simu <- Y.fit + mat
+        cross.simu <- cross
+        cross.simu$pheno[, p1+(1:p)] <- Y.simu
+        out <- scanone(cross.simu, pheno.col=p1+(1:p), method="hk", chr=chr,
+                       addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
+        maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
+        o <- order(maxPOSind)
+        LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y.simu[, o], maxPOS=maxPOSind[o],
+                                                     genoprob=genoprob, ngeno=ngeno,
+                                                     addcovar=addcovar, intcovar=intcovar,
+                                                     method=method, 
+                                                     search.method=search.method,
+                                                     RandomStart=RandomStart,
+                                                     RandomCut=RandomCut, tol=tol,in.simu=TRUE)
+      }
+      pvalue <- mean(LODdiff.simu > LODdiff - tol)
+      result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
+                     maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
+                     LODdiff.trace=LODdiff.trace,
+                     map.marker=map.marker, n.simu=n.simu, 
+                     pvalue=pvalue)
+    }else{ ##  simu.method=="permutation"
+      ## find strat
+      ind <- which.max(LOD1)
+      strat <- numeric(n)
+      if(ngeno == 3){
+        prob <- genoprob[,(1:2)+3*(ind-1)]
+        strat[prob[,1] > 0.5] <- 1
+        strat[prob[,2] > 0.5] <- 2
+        strat[1-prob[,1]-prob[,2] > 0.5] <- 3
+      }else{
+        prob <- genoprob[,2*ind-1]
+        strat[prob > 0.5] <- 1
+      }
 
-    perm <- function(strat){
-      n <- length(strat)
-      o <- 1:n
-      for(i in unique(strat)) o[strat==i] <- sample(o[strat==i],)
-      o
-    }
+      perm <- function(strat){
+        n <- length(strat)
+        o <- 1:n
+        for(i in unique(strat)) o[strat==i] <- sample(o[strat==i],)
+        o
+      }
 
-    LODdiff.simu <- numeric(n.simu)
-    for(i.simu in 1:n.simu){
-      os <- perm(strat)
-      cross.simu <- cross[, os]
-      genoprob.simu <- genoprob[os, ]
-      cross.simu$pheno[, p1+(1:p)] <- Y
-      out <- scanone(cross.simu, pheno.col=p1+(1:p), method="hk", chr=chr,
-                     addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
-      maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
-      o <- order(maxPOSind)
-      LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o],
-                                                   genoprob=genoprob.simu, ngeno=ngeno,
-                                                   addcovar=addcovar, intcovar=intcovar, 
-                                                   method=method,
-                                                   search.method=search.method,
-                                                   RandomStart=RandomStart,
-                                                   RandomCut=RandomCut, tol=tol,in.simu=TRUE)
+      LODdiff.simu <- numeric(n.simu)
+      for(i.simu in 1:n.simu){
+        os <- perm(strat)
+        cross.simu <- cross[, os]
+        genoprob.simu <- genoprob[os, ]
+        cross.simu$pheno[, p1+(1:p)] <- Y
+        out <- scanone(cross.simu, pheno.col=p1+(1:p), method="hk", chr=chr,
+                       addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
+        maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
+        o <- order(maxPOSind)
+        LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o],
+                                                     genoprob=genoprob.simu, ngeno=ngeno,
+                                                     addcovar=addcovar, intcovar=intcovar, 
+                                                     method=method,
+                                                     search.method=search.method,
+                                                     RandomStart=RandomStart,
+                                                     RandomCut=RandomCut, tol=tol,in.simu=TRUE)
+      }
+      pvalue <- mean(LODdiff.simu > LODdiff - tol)
+      result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
+                     maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
+                     LODdiff.trace=LODdiff.trace,
+                     map.marker=map.marker, n.simu=n.simu, 
+                     pvalue=pvalue)
     }
-    pvalue <- mean(LODdiff.simu > LODdiff - tol)
-    result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
-                   maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
-                   LODdiff.trace=LODdiff.trace,
-                   map.marker=map.marker, n.simu=n.simu, 
-                   pvalue=pvalue)
   }
   class(result) <- c("testpleio.1vs2", "list")
   attr(result, "parameters") <- list(region.l=region.l, region.r=region.r,
