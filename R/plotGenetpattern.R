@@ -87,7 +87,7 @@ plotGenetpattern <- function(Y, genotype=NULL, cross, chr,
   plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, 
        xlab="additive effect: a=(RR-BB)/2",
        ylab= "dominance effect: d=BR-(BB+RR)/2", 
-       mgp=c(1.6, 0.2, 0))
+       mgp=c(1.6, 0.2, 0), ...)
   abline(v=0, h=0, a=0, b=1)
   abline(a=0, b=-1)
 

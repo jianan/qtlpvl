@@ -26,10 +26,10 @@
 ##' G <- cbind(G1, G2*(-2))
 ##' Y <- matrix(rnorm(n*p),n,p)
 ##' Y <- Y + G
-##' plotLODsign(listeria, Y, chr)
+##' plotLODsign(Y, listeria, chr)
 ##'
 ##' @export
-plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
+plotLODsign <- function(Y, cross, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
   
   n <- nrow(Y)
   p <- ncol(Y)
@@ -73,7 +73,7 @@ plotLODsign <- function(cross, Y, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
   mgp <- c(1.6, 0.2, 0) 
   plot(0, 0, type="n", mgp=mgp,
        xlim=xlim, ylim=ylim, ylab="", xlab="QTL pos (cM)", 
-       yaxt="n", xaxt="n", xaxs="i")
+       yaxt="n", xaxt="n", xaxs="i", ...)
   bgcolor <- "gray80"
   u <- par("usr")
   rect(u[1], u[3], u[2], u[4], border=NA, col=bgcolor)
