@@ -59,7 +59,8 @@ calc.L <- function(E, S0inv, q, df.res, method){
   res <- switch(method,
                 ML = det_AtA(E),
                 Pillai = - Pillai(eig, q, df.res)[1], 
-                Wilks = - 1 + Wilks(eig, q, df.res)[1], 
+                ## Wilks = - 1 + Wilks(eig, q, df.res)[1],
+                Wilks = log10( Wilks(eig, q, df.res)[1]), 
                 `Hotelling-Lawley` = - HL(eig, q, df.res)[1], 
                 Roy = - Roy(eig, q, df.res)[1])
   res
