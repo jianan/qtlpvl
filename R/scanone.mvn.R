@@ -68,6 +68,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
 
   if(missing(chr)){
     chr <- names(cross$geno)
+    chr <- chr[chr!="X"] ## not deal with X chr for now.
   }else{
     cross <- subset(cross, chr)
   }
