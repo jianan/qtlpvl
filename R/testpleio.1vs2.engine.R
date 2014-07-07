@@ -1,6 +1,6 @@
-testpleio.1vs2.inner <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar, 
-                                 method, search.method, RandomStart, RandomCut, tol,
-                                 in.simu=TRUE){
+testpleio.1vs2.engine <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar, 
+                                  method, search.method, RandomStart, RandomCut, tol,
+                                  in.simu=TRUE){
 
   if(in.simu & !RandomCut & length(unique(maxPOS))==1){    ## all QTLs mapped into same position...
     LODdiff <- 0

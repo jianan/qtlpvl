@@ -121,11 +121,11 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
   o <- order(maxPOSind)
   
-  x <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o], genoprob=genoprob, ngeno=ngeno,
-                            addcovar=addcovar, intcovar=intcovar,
-                            method=method, 
-                            search.method=search.method, RandomStart=RandomStart,
-                            RandomCut=RandomCut, tol=tol, in.simu=FALSE)
+  x <- testpleio.1vs2.engine(Y=Y[, o], maxPOS=maxPOSind[o], genoprob=genoprob, ngeno=ngeno,
+                             addcovar=addcovar, intcovar=intcovar,
+                             method=method, 
+                             search.method=search.method, RandomStart=RandomStart,
+                             RandomCut=RandomCut, tol=tol, in.simu=FALSE)
   LOD1 <- x$LOD1
   LOD2 <- x$LOD2
   LODdiff.trace <- x$LODdiff.trace
@@ -166,13 +166,13 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                        addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
         maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
         o <- order(maxPOSind)
-        LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y.simu[, o], maxPOS=maxPOSind[o],
-                                                     genoprob=genoprob, ngeno=ngeno,
-                                                     addcovar=addcovar, intcovar=intcovar,
-                                                     method=method, 
-                                                     search.method=search.method,
-                                                     RandomStart=RandomStart,
-                                                     RandomCut=RandomCut, tol=tol,in.simu=TRUE)
+        LODdiff.simu[i.simu] <- testpleio.1vs2.engine(Y=Y.simu[, o], maxPOS=maxPOSind[o],
+                                                      genoprob=genoprob, ngeno=ngeno,
+                                                      addcovar=addcovar, intcovar=intcovar,
+                                                      method=method, 
+                                                      search.method=search.method,
+                                                      RandomStart=RandomStart,
+                                                      RandomCut=RandomCut, tol=tol,in.simu=TRUE)
       }
       pvalue <- mean(LODdiff.simu > LODdiff - tol)
       result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
@@ -211,13 +211,13 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                        addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
         maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
         o <- order(maxPOSind)
-        LODdiff.simu[i.simu] <- testpleio.1vs2.inner(Y=Y[, o], maxPOS=maxPOSind[o],
-                                                     genoprob=genoprob.simu, ngeno=ngeno,
-                                                     addcovar=addcovar, intcovar=intcovar, 
-                                                     method=method,
-                                                     search.method=search.method,
-                                                     RandomStart=RandomStart,
-                                                     RandomCut=RandomCut, tol=tol,in.simu=TRUE)
+        LODdiff.simu[i.simu] <- testpleio.1vs2.engine(Y=Y[, o], maxPOS=maxPOSind[o],
+                                                      genoprob=genoprob.simu, ngeno=ngeno,
+                                                      addcovar=addcovar, intcovar=intcovar, 
+                                                      method=method,
+                                                      search.method=search.method,
+                                                      RandomStart=RandomStart,
+                                                      RandomCut=RandomCut, tol=tol,in.simu=TRUE)
       }
       pvalue <- mean(LODdiff.simu > LODdiff - tol)
       result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
