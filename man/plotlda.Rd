@@ -7,20 +7,20 @@ plotlda(data.train, data.test, class.train, pred.test, error.train, sca,
   main = "")
 }
 \arguments{
-\item{error.train}{LDA traning error}
-
-\item{sca}{scalling factor for ld1 and ld2}
-
-\item{pred.test}{vector of length n, predicted class (1, 2 or 3)
-for each sample.}
-
-\item{main}{main titile of the plot.}
-
 \item{data.train}{traing data that is used to build the classifier.}
 
 \item{data.test}{testing data that need to be classified.}
 
 \item{class.train}{Label of training data.}
+
+\item{pred.test}{vector of length n, predicted class (1, 2 or 3)
+for each sample.}
+
+\item{error.train}{LDA traning error}
+
+\item{sca}{scalling factor for ld1 and ld2}
+
+\item{main}{main titile of the plot.}
 }
 \value{
 plot of ld2 vs ld1

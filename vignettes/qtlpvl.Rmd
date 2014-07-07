@@ -66,9 +66,8 @@ trait, we plot its LOD score versus QTL position when the LOD is
 bigger than a threshold (default value is 3).
 
 ```{r}
-plotLOD(listeria, Y, chr)
+plotLOD(Y=Y, cross=listeria, chr=chr)
 ```
-
 
 ## joint mapping: `scanone.mvn`
 
@@ -83,7 +82,7 @@ The result of joint mapping is a data frame with class `scanone`, we
 could apply (S3) method `summary` and `plot` to look at the result.
 
 ```{r}
-out <- scanone.mvn(listeria, Y, chr)
+out <- scanone.mvn(cross=listeria, Y=Y, chr=chr)
 summary(out)
 plot(out)
 ```
@@ -150,8 +149,8 @@ for the single QTL and best two QTL model, as well as test statistics
 LODdiff=LOD2-LOD1 and its P-value.
 
 ```{r}
-obj <- testpleio.1vs2(listeria, Y, chr, n.simu=100, region.l=60, region.r=90,
-                      search.method="complete")
+obj <- testpleio.1vs2(cross=listeria, Y=Y, chr=chr, n.simu=100,
+                      region.l=60, region.r=90, search.method="complete")
 summary(obj)
 plot(obj)
 ```
@@ -198,7 +197,7 @@ and p QTL model, as well as test statistics LODdiff=LODp-LOD1 and its
 P-value.
 
 ```{r}
-obj2 <- testpleio.1vsp(listeria, Y, chr, n.simu=100)
+obj2 <- testpleio.1vsp(cross=listeria, Y=Y, chr=chr, n.simu=100)
 summary(obj2)
 plot(obj2)
 ```
@@ -231,12 +230,12 @@ Function `plotGenetpattern` takes two kinds of input parameters:
   
 QTL additive effect is defined as a=(RR-BB)/2, QTL dominant effect is
 defined as d=BR-(BB+RR)/2, when plotted against each other, traits
-with pure additive effects are near the x-axis and traits with
-dominant effects are along the diagonals, $y=x$ and $y=-x$.
+with pure additive effects are near the x-axis($d=0$) and traits with
+dominant effects are along the diagonals, $d=a$(BR=RR) and $d=-a$(BR=BB).
 
 ```{r}
-plotGenetpattern(Y, genotype=genotype1)
-plotGenetpattern(Y, cross=listeria, chr=chr)
+plotGenetpattern(Y=Y, genotype=genotype1)
+plotGenetpattern(Y=Y, cross=listeria, chr=chr)
 ```
 
 We can tell from both plots the there are two different genetic
@@ -258,7 +257,7 @@ direction positive when the mean of the first group is bigger than the
 mean of the third group, and negative while not.
 
 ```{r}
-plotLODsign(listeria, Y, chr)
+plotLODsign(Y=Y, cross=listeria, chr=chr)
 ```
 
 ## Session Info

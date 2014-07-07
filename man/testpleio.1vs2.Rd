@@ -11,9 +11,27 @@ testpleio.1vs2(cross, Y, chr = "6", addcovar = NULL, intcovar = NULL,
   n.simu = 1000, tol = 1e-07)
 }
 \arguments{
+\item{cross}{An object of class \code{cross}. See
+\code{read.cross} for details.}
+
+\item{Y}{Matrix of multiple traits with n rows.}
+
+\item{chr}{Optional vector indicating the chromosomes for which
+LOD scores should be calculated.  This should be a vector of
+character strings referring to chromosomes by name; numeric values
+are converted to strings.}
+
+\item{addcovar}{Additive covariates.}
+
+\item{intcovar}{Interactive covariates.}
+
 \item{region.l}{Left bound}
 
 \item{region.r}{Right bound}
+
+\item{method}{"ML", "Pillai", "Wilks", "Hotelling-Lawley", or
+"Roy" , "ML" is for maximum likelihood method for LOD score, the
+other four are MANOVA methods.}
 
 \item{int.method}{"bayes" or "1.5lod" method to calculated the
 interval of interest if \code{region.l} and \code{region.r} is not
@@ -35,24 +53,6 @@ simulations. Default is "parametric".}
 
 \item{tol}{Tolerance value for the \code{qr} decomposition in
 \code{lm} fitting.}
-
-\item{cross}{An object of class \code{cross}. See
-\code{read.cross} for details.}
-
-\item{Y}{Matrix of multiple traits with n rows.}
-
-\item{chr}{Optional vector indicating the chromosomes for which
-LOD scores should be calculated.  This should be a vector of
-character strings referring to chromosomes by name; numeric values
-are converted to strings.}
-
-\item{addcovar}{Additive covariates.}
-
-\item{intcovar}{Interactive covariates.}
-
-\item{method}{"ML", "Pillai", "Wilks", "Hotelling-Lawley", or
-"Roy" , "ML" is for maximum likelihood method for LOD score, the
-other four are MANOVA methods.}
 }
 \value{
 a list.

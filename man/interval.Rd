@@ -7,8 +7,6 @@ interval(cross, Y, chr, region.l, region.r, do.plot = TRUE, main = "",
   weighted = FALSE, thr = 0.9)
 }
 \arguments{
-\item{do.plot}{logical, plot results? default is \code{TRUE}}
-
 \item{cross}{An object of class \code{cross}. See
 \code{read.cross} for details.}
 
@@ -19,6 +17,8 @@ interval(cross, Y, chr, region.l, region.r, do.plot = TRUE, main = "",
 \item{region.l}{left bound of region under invest.}
 
 \item{region.r}{right bound of region under invest.}
+
+\item{do.plot}{logical, plot results? default is \code{TRUE}}
 
 \item{main}{main titile of the plot.}
 

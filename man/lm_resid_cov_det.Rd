@@ -6,12 +6,12 @@
 lm_resid_cov_det(X, Y, logarithm = TRUE, threshold = 1e-07)
 }
 \arguments{
-\item{logarithm}{A bool value indicating whether determinant or
-log determinate should be returned.}
-
 \item{X}{A model matrix}
 
 \item{Y}{The response matrix}
+
+\item{logarithm}{A bool value indicating whether determinant or
+log determinate should be returned.}
 
 \item{threshold}{Eigen decomposition is used in calculation. An
 eigen value smaller than threshold * largest eigen value is

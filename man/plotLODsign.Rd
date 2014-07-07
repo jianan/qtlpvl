@@ -3,15 +3,11 @@
 \alias{plotLODsign}
 \title{Plot the signed LOD score versus QTL position.}
 \usage{
-plotLODsign(cross, Y, chr, addcovar = NULL, intcovar = NULL,
+plotLODsign(Y, cross, chr, addcovar = NULL, intcovar = NULL,
   LOD.threshold = 3, ...)
 }
 \arguments{
 \item{Y}{matrix, columns are quantitative traits maps to the same position.}
-
-\item{LOD.threshold}{threshold for QTL to be displayed.}
-
-\item{...}{Optional graphics arguments}
 
 \item{cross}{An object of class \code{cross}. See
 \code{read.cross} for details.}
@@ -24,6 +20,10 @@ are converted to strings.}
 \item{addcovar}{Additive covariates.}
 
 \item{intcovar}{Interactive covariates.}
+
+\item{LOD.threshold}{threshold for QTL to be displayed.}
+
+\item{...}{Optional graphics arguments}
 }
 \value{
 a plot the signed LOD score versus QTL position for multiple traits.
@@ -49,6 +49,6 @@ G2[G2==3] <- 2
 G <- cbind(G1, G2*(-2))
 Y <- matrix(rnorm(n*p),n,p)
 Y <- Y + G
-plotLODsign(listeria, Y, chr)
+plotLODsign(Y, listeria, chr)
 }
 

@@ -6,8 +6,6 @@
 propn.int(genotype, map, pred.test, pred.score, weighted = FALSE, thr = 0.9)
 }
 \arguments{
-\item{thr}{cutoff for the interval. default is 0.9}
-
 \item{genotype}{genotype matrix, rows are samples, columns are markers.}
 
 \item{map}{genetic map for markers.}
@@ -19,6 +17,8 @@ for each sample.}
 weighted = TRUE, this score is used to order the samples.}
 
 \item{weighted}{use pred.score as weights? default is \code{FALSE}.}
+
+\item{thr}{cutoff for the interval. default is 0.9}
 }
 \value{
 infered interval.
