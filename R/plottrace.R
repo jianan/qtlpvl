@@ -24,7 +24,8 @@ plottrace.testpleio.1vs2 <- function(x, ...){
       stop("Input should have class \"testpleio.1vs2\".")
   t <- object$LODdiff.trace
   t[t<0] <- 0
-  plot(1:length(t), t, xlab="i.cut", ylab="LODdiff", type="b", ...)
+  ylim <- c(0, max(t, na.rm=TRUE))
+  plot(1:length(t), t, xlab="i.cut", ylab="LODdiff", type="b", ylim=ylim, ...)
   n.max <- which.max(t)
   v.max <- max(t, na.rm=TRUE)
   u <- par()$usr
