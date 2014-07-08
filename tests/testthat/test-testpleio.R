@@ -89,4 +89,5 @@ test_that("tests of LOD profile",{
   expect_equal(L1.true, L1)
   expect_equal(L2.true, L2)
 
-}
+})
+
