@@ -131,8 +131,8 @@ Function `testpleio.1vs2` is used to do this test. input parameters:
   not specified.
 * search.method: searching method for two-QTL model, can have value of
   `fast` or `complete`, default is `fast`.
-* RandomStart: use random starting point for the two-QTL model or not,
-  default is `TRUE`.
+* RandomStart: when search.method is `fast`, use random starting point
+  for the two-QTL model or not, default is `TRUE`.
 * RandomCut: use random cutting or not when there are traits mapped to
   the same location. default is `FALSE`.
 * simu.method: `parametric` or `permutation` method for
