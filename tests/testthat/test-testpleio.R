@@ -60,3 +60,34 @@ test_that("tests of testpleio",{
   expect_equal(obj$maxPOS, obj.1vsp$maxPOS, check.attributes=FALSE)
   expect_true(obj.1vsp$pvalue >= 0)
 })
+
+
+test_that("tests of LOD profile",{
+
+  Y <- matrix(rnorm(n*p),n,p)
+  
+  n.simu <- 0
+  region.l <- 60
+  region.r <- 90
+  RandomCut <- TRUE
+  RandomStart <- TRUE
+  int.method <- "bayes"
+  search.method <- "complete"
+  simu.method <- "permutation"
+  obj <- testpleio.1vs2(listeria, Y, chr, n.simu=n.simu,
+                        region.l=region.l, region.r=region.r, 
+                        search.method=search.method,
+                        RandomCut=RandomCut,
+                        RandomStart=RandomStart,
+                        simu.method=simu.method)
+  
+  x <- arrayInd(which.max(obj$LOD2), .dim=dim(obj$LOD2))
+  L1 <- obj$LOD2[x[1], ]
+  L2 <- obj$LOD2[, x[2]]
+  L1.true <- apply(obj$LOD2, 2, max)
+  L2.true <- apply(obj$LOD2, 1, max)
+  expect_equal(L1.true, L1)
+  expect_equal(L2.true, L2)
+
+})
+
