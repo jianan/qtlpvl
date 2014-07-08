@@ -125,6 +125,20 @@ testpleio.1vs2.engine <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar
     E.marker <- E[,,which.min(L1)]    ## residual matrix for the fitted model
     colnames(E.marker) <- colnames(Y)
     rownames(E.marker) <- rownames(Y)
+
+    ## ## for the best seperation, calc exhaustive LOD2 once.
+    ## i.cut <- which.min(L2mins)
+    ## L2 <- matrix(NA,nrow=n.marker,ncol=n.marker)
+    ## for(i in 1:n.marker){
+    ##   E1 <- E[,1:i.cut,i]
+    ##   for(j in 1:n.marker){
+    ##     E2 <- E[,(i.cut+1):p,j]
+    ##     E0 <- cbind(E1, E2)
+    ##     L2[i, j] <- calc.L(E0, S0inv, q, df.res, method)
+    ##   }
+    ## }
+    ## L2.save <- L2
+
     if(method == "ML"){
       LOD1 <- n/2*log10(exp(1))*(L0 - L1) ## scanone.mvn
       LOD2 <- n/2*log10(exp(1))*(L0 - L2.save)
@@ -132,7 +146,6 @@ testpleio.1vs2.engine <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar
     }else{
       LOD1 <- - L1
       LOD2 <- - L2.save
-      ## LODdiff.trace <- - L2mins
       LODdiff.trace <- - L2mins + min(L1)
     }
     result <- list(E.marker=E.marker, 
@@ -143,7 +156,6 @@ testpleio.1vs2.engine <- function(Y, maxPOS, genoprob, ngeno, addcovar, intcovar
     if(method == "ML"){
       LODdiff <- -n/2*log10(exp(1))*(min(L2mins) - min(L1)) 
     }else{
-      ## LODdiff <- - min(L2mins)
       LODdiff <- - min(L2mins) + min(L1)
     }
     return(LODdiff)

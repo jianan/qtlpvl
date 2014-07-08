@@ -79,9 +79,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
                  addcovar=cbind(addcovar,intcovar), intcovar=intcovar)
 
-  region.l.input <- region.l
-  region.r.input <- region.r
-  if(is.na(region.l)){
+  if(missing(region.l)|is.na(region.l)){
     int <- matrix(NA,p,3)
     if(int.method=="1.5lod"){
       for(i in 1:p){
