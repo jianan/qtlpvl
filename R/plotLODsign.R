@@ -83,6 +83,10 @@ plotLODsign <- function(Y, cross, chr, addcovar=NULL, intcovar=NULL, LOD.thresho
   title(ylab="signed LOD score", mgp=c(2.1, 0, 0))
   points(x=x, y=y, col=c("red", "blue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)
   abline(h=0)
-  rect(u[1], u[3], u[2], u[4], border=TRUE)  
+  rect(u[1], u[3], u[2], u[4], border=TRUE)
+  
+  map <- pull.map(cross, chr=chr)[[1]]
+  map <- map[map > xlim[1] & map < xlim[2]]
+  rug(map, ticksize=0.01)
 
 }
