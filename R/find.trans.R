@@ -72,7 +72,7 @@ find.trans <- function(out1, probepos, chr, marker.info,
     trans.info$count[i] <- nrow(out.trans)
     attr(trans.pheno[[i]], "info") <- list(chr=chr, trans.l=trans.l, trans.r=trans.r,
                                            peak=peak, count=nrow(out.trans))
-    attr(trans.pheno[[i]], "out") <- out.trans
+    attr(trans.pheno[[i]], "out") <- out.trans[, c("pheno", "chr", "pos", "lod1")]
   }
   rownames(trans.info) <- names(trans.pheno) <-
       paste0("chr", trans.info$chr, ".", as.integer(trans.info$peak))
