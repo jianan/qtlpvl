@@ -12,7 +12,8 @@ Depends:
     qtl,
     Rcpp (>= 0.11.0),
     RcppEigen (>= 0.3.2.0.2),
-    plyr
+    plyr,
+    broman
 Suggests:
     knitr,
     testthat,
