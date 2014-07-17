@@ -75,7 +75,7 @@ find.trans <- function(out1, probepos, chr, marker.info,
     attr(trans.pheno[[i]], "out") <- out.trans
   }
   rownames(trans.info) <- names(trans.pheno) <-
-      paste0("chr", trans.info$chr, "@", as.integer(trans.info$peak))
+      paste0("chr", trans.info$chr, ".", as.integer(trans.info$peak))
   attr(trans.pheno, "trans.info") <- trans.info
   return(trans.pheno)
 }
