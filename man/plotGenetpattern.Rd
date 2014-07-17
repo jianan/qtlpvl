@@ -3,7 +3,7 @@
 \alias{plotGenetpattern}
 \title{Plot the QTL dominance effect versus QTL additive effect.}
 \usage{
-plotGenetpattern(Y, genotype = NULL, cross, chr, addcovar = NULL,
+plotGenetpattern(Y, genotype = NULL, cross, chr, a, d, addcovar = NULL,
   intcovar = NULL, LOD.threshold = 3, ...)
 }
 \arguments{

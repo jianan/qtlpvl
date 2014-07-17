@@ -3,8 +3,8 @@
 \alias{plotLODsign}
 \title{Plot the signed LOD score versus QTL position.}
 \usage{
-plotLODsign(Y, cross, chr, addcovar = NULL, intcovar = NULL,
-  LOD.threshold = 3, ...)
+plotLODsign(Y, cross, chr, LODsign, maxPOS, addcovar = NULL,
+  intcovar = NULL, LOD.threshold = 3, ...)
 }
 \arguments{
 \item{Y}{matrix, columns are quantitative traits maps to the same position.}
