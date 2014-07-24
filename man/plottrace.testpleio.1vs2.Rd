@@ -3,7 +3,8 @@
 \alias{plottrace.testpleio.1vs2}
 \title{plot trace}
 \usage{
-\method{plottrace}{testpleio.1vs2}(x, ...)
+\method{plottrace}{testpleio.1vs2}(x, xlab = "i.cut", ylab = "LODdiff",
+  mgp = c(1.6, 0.2, 0), ...)
 }
 \arguments{
 \item{x}{object of class "testpleio.1vs2"}

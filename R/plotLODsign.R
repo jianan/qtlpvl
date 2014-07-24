@@ -29,8 +29,11 @@
 ##' plotLODsign(Y, listeria, chr)
 ##'
 ##' @export
-plotLODsign <- function(Y, cross, chr, LODsign, maxPOS, 
-                        addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
+plotLODsign <- function(Y, cross, chr, LODsign, maxPOS, map,
+                        addcovar=NULL, intcovar=NULL, LOD.threshold=3,
+                        xlab="QTL pos (cM)", ylab="signed LOD score",
+                        mgp=c(1.6, 0.2, 0), bgcolor="gray80", 
+                        ...){
   
   if(missing(LODsign) | missing(maxPOS)){
     n <- nrow(Y)
@@ -75,24 +78,23 @@ plotLODsign <- function(Y, cross, chr, LODsign, maxPOS,
   xp <- pretty(xlim, 10)
   yp <- pretty(ylim, 10)
   
-  mgp <- c(1.6, 0.2, 0) 
   plot(0, 0, type="n", mgp=mgp,
-       xlim=xlim, ylim=ylim, ylab="", xlab="QTL pos (cM)", 
+       xlim=xlim, ylim=ylim, ylab="", xlab=xlab, 
        yaxt="n", xaxt="n", xaxs="i", ...)
-  bgcolor <- "gray80"
   u <- par("usr")
-  rect(u[1], u[3], u[2], u[4], border=NA, col=bgcolor)
+  rect(u[1], u[3], u[2], u[4], border="black", col=bgcolor)
   abline(h=yp, v=xp, col="white")
   axis(2, at=yp, mgp=mgp, tick=FALSE)
   axis(1, at=xp, mgp=mgp, tick=FALSE)
-  title(ylab="signed LOD score", mgp=c(2.1, 0, 0))
+  title(ylab=ylab, mgp=c(2.1, 0, 0))
   points(x=x, y=y, col=c("red", "blue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)
   abline(h=0)
-  rect(u[1], u[3], u[2], u[4], border=TRUE)
+  box()
   
-  if(!missing(cross) & !missing(chr)){
+  if(missing(map) & !missing(cross) & !missing(chr)){
     map <- pull.map(cross, chr=chr)[[1]]
-    map <- map[map > xlim[1] & map < xlim[2]]
-    rug(map, ticksize=0.01)
   }
+  map <- map[map > xlim[1] & map < xlim[2]]
+  rug(map, ticksize=0.01)
+
 }

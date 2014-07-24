@@ -4,7 +4,9 @@
 \title{Plot the QTL dominance effect versus QTL additive effect.}
 \usage{
 plotGenetpattern(Y, genotype = NULL, cross, chr, a, d, addcovar = NULL,
-  intcovar = NULL, LOD.threshold = 3, ...)
+  intcovar = NULL, LOD.threshold = 3,
+  xlab = "additive effect: a=(RR-BB)/2",
+  ylab = "dominance effect: d=BR-(BB+RR)/2", mgp = c(1.6, 0.2, 0), ...)
 }
 \arguments{
 \item{Y}{Matrix of multiple traits with n rows.}
