@@ -13,12 +13,12 @@ plottrans.PCA <- function(Y, geno, nonrecomb, max.p=100, ...){
 
   PC <- predict(princomp(Y))[, 1:2]
   
+  blue <- rgb(123, 104, 238, maxColorValue = 256)
   orange <- rgb(230, 159, 0, maxColorValue = 256)
   green <- rgb(27, 159, 120, maxColorValue = 256)
-  blue <- rgb(123, 104, 238, maxColorValue = 256)
   yellow <- rgb(255, 255, 0, maxColorValue = 256)
-  genecolor <- c(blue,orange,green, yellow)
-
+  genecolor <- c(blue, orange, green, yellow)
+  
   Class <- geno
   Class[-nonrecomb] <- 4
   xlim <- range(PC[, 1])
@@ -31,7 +31,7 @@ plottrans.PCA <- function(Y, geno, nonrecomb, max.p=100, ...){
            xaxt="n", yaxt="n",
            xaxs="r", yaxs="r",
            xlim=xlim, ylim=ylim,
-           xlab="Principal component 1", ylab="Principal component 2",
+           xlab="Principal Component 1", ylab="Principal Component 2",
            mgp=c(1.6,0,0), cex=0.8, ...)
 
   u <- par("usr")

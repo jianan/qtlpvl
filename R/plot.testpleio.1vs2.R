@@ -1,5 +1,7 @@
 ##' @export
-plot.testpleio.1vs2 <- function(x, xlab="Map position (cM)", ylab="LOD", ...){
+plot.testpleio.1vs2 <- function(x, xlab="Map position (cM)", ylab="LOD",
+                                mgp=c(1.6, 0.2, 0),
+                                ...){
   
   if (!any(class(x) == "testpleio.1vs2")) 
       stop("Input should have class \"testpleio.1vs2\".")
@@ -18,10 +20,11 @@ plot.testpleio.1vs2 <- function(x, xlab="Map position (cM)", ylab="LOD", ...){
             max(maxLOD, LOD1, LOD2, na.rm=TRUE))
 
   plot(y=LOD1, x=map, type="l",
-       ylim=ylim, xlim=rg, xaxt="n", xlab=xlab, ylab=ylab, ...)
+       ylim=ylim, xlim=rg, xaxt="n", xlab=xlab, ylab=ylab,
+       mgp=mgp, ...)
 
   rug(map.marker, ticksize=-0.01)
-  axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker))
+  axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker), mgp=mgp)
   points(maxPOS, maxLOD, col=c("blue","red")[Group], pch=20) ## single trait result.
   points(x=attr(LODdiff, "LOD1pos"), y=attr(LODdiff, "LOD1lod"),
          col="black", pch=17) ## plot the best one QTL

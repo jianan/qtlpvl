@@ -17,7 +17,9 @@ plottrace <- function(x, ...)
 ##' @param x object of class "testpleio.1vs2"
 ##' @param ... parameters to be passed through to plotting functions.
 ##' @export
-plottrace.testpleio.1vs2 <- function(x, ...){
+plottrace.testpleio.1vs2 <- function(x, xlab="i.cut", ylab="LODdiff", 
+                        mgp=c(1.6, 0.2, 0),
+                        ...){
   
   object <- x
   if (!any(class(object) == "testpleio.1vs2")) 
@@ -25,7 +27,7 @@ plottrace.testpleio.1vs2 <- function(x, ...){
   t <- object$LODdiff.trace
   t[t<0] <- 0
   ylim <- c(0, max(t, na.rm=TRUE))
-  plot(1:length(t), t, xlab="i.cut", ylab="LODdiff", type="b", ylim=ylim, ...)
+  plot(1:length(t), t, type="b", xlab=xlab, ylab=ylab, ylim=ylim, mgp=mgp, ...)
   n.max <- which.max(t)
   v.max <- max(t, na.rm=TRUE)
   u <- par()$usr

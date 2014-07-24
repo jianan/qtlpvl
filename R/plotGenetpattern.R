@@ -30,7 +30,11 @@
 ##'
 ##' @export
 plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d, 
-                             addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
+                             addcovar=NULL, intcovar=NULL, LOD.threshold=3,
+                             xlab="additive effect: a=(RR-BB)/2",
+                             ylab= "dominance effect: d=BR-(BB+RR)/2",
+                             mgp=c(1.6, 0.2, 0), 
+                             ...){
 
   if(missing(a) | missing(d)){
     if(!is.matrix(Y)) stop("Y need to be a matrix of quantitative traits")
@@ -86,10 +90,7 @@ plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d,
   lim <- max(abs(c(a,d)), na.rm=TRUE)
   if(lim == -Inf) lim <- 1
   xlim <- ylim <- c(-lim, lim)*1.1
-  plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, 
-       xlab="additive effect: a=(RR-BB)/2",
-       ylab= "dominance effect: d=BR-(BB+RR)/2", 
-       mgp=c(1.6, 0.2, 0), ...)
+  plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, mgp=mgp, ...)
   abline(v=0, h=0, a=0, b=1)
   abline(a=0, b=-1)
 
