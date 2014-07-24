@@ -11,7 +11,7 @@
 ##' @param add start a new plot or add to an existed one.
 ##' @param col color of dots
 ##' @export
-plot.eqtl <- function(marker.info, probepos, phenonames,
+ploteQTL <- function(marker.info, probepos, phenonames,
                       markers, chr1, pos1,
                       main="",
                       plot.chr=c(1:19, "X"), add=FALSE, col="black"){
