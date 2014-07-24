@@ -1,3 +1,15 @@
+##' eQTL plot
+##'
+##' @param marker.info information of markers
+##' @param probepos probe position
+##' @param phenonames names of probes to be ploted
+##' @param markers marker names of eQTL
+##' @param chr1 chr of eQTLs
+##' @param pos1 pos of eQTLs
+##' @param main main title of plot
+##' @param plot.chr chrs where probes from to be ploted
+##' @param add start a new plot or add to an existed one.
+##' @param col color of dots
 ##' @export
 plot.eqtl <- function(marker.info, probepos, phenonames,
                       markers, chr1, pos1,
