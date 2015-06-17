@@ -14,9 +14,9 @@ plot.testpleio.1vsp <- function(x, xlab="Map position (cM)", ylab="LOD",
   rg <- range(map)
 
   ylim <- c(0, max(maxLOD, LOD1, na.rm = TRUE)*1.05)
-  grayplot(y = LOD1, x = map, type = "l", ylim = ylim, xlim = rg,
-           xaxt = "n", xlab = xlab, ylab = ylab, mgp = mgp, lwd=2,
-           yat=pretty(ylim), yaxs="i", ...)
+  broman::grayplot(y = LOD1, x = map, type = "l", ylim = ylim, xlim = rg,
+                   xaxt = "n", xlab = xlab, ylab = ylab, mgp = mgp, lwd=2,
+                   yat=pretty(ylim), yaxs="i", ...)
   rug(map.marker, ticksize = -0.01)
   points(maxPOS, maxLOD, pch = 20) ## single trait result.
   points(x=map[which.max(LOD1)], y=max(LOD1),

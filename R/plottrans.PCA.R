@@ -25,14 +25,14 @@ plottrans.PCA <- function(Y, geno, nonrecomb, max.p=100, ...){
   ylim <- range(PC[, 2])
   px <- pretty(xlim)
   py <- pretty(ylim)
-  grayplot(x=PC[,1],y=PC[,2],
-           pch=21,xat=px,yat=py,col="black",bg=genecolor[Class],
-           hlines=py, vlines=px,
-           xaxt="n", yaxt="n",
-           xaxs="r", yaxs="r",
-           xlim=xlim, ylim=ylim,
-           xlab="Principal Component 1", ylab="Principal Component 2",
-           mgp=c(1.6,0.2,0), cex=0.8, ...)
+  broman::grayplot(x=PC[,1],y=PC[,2],
+                   pch=21,xat=px,yat=py,col="black",bg=genecolor[Class],
+                   hlines=py, vlines=px,
+                   xaxt="n", yaxt="n",
+                   xaxs="r", yaxs="r",
+                   xlim=xlim, ylim=ylim,
+                   xlab="Principal Component 1", ylab="Principal Component 2",
+                   mgp=c(1.6,0.2,0), cex=0.8, las=1, ...)
 
   u <- par("usr")
   x <- u[1] + diff(u[1:2])*((2:5)*0.1+0.05)

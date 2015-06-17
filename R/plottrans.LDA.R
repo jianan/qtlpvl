@@ -8,7 +8,7 @@ plottrans.LDA <- function(Y, geno, nonrecomb, max.p=100, ...){
   ## use the first 100.
   Y <- Y[, 1:min(max.p, ncol(Y))]
 
-  fit <- lda(Y[nonrecomb, ], grouping=geno[nonrecomb])
+  fit <- MASS::lda(Y[nonrecomb, ], grouping=geno[nonrecomb])
   pred <- predict(fit, Y[-nonrecomb, ])
   sca <- fit$scaling
   y.lda <- Y %*% sca
@@ -25,14 +25,14 @@ plottrans.LDA <- function(Y, geno, nonrecomb, max.p=100, ...){
   ylim <- range(y.lda[, 2])
   px <- pretty(xlim)
   py <- pretty(ylim)
-  grayplot(x=y.lda[,1],y=y.lda[,2],
-           pch=21,xat=px,yat=py,col="black",bg=genecolor[Class],
-           hlines=py, vlines=px,
-           xaxt="n", yaxt="n",
-           xaxs="r", yaxs="r",
-           xlim=xlim, ylim=ylim,
-           xlab="Linear Discriminant 1", ylab="Linear Discriminant 2",
-           mgp=c(1.6,0.2,0), cex=0.8, ...)
+  broman::grayplot(x=y.lda[,1],y=y.lda[,2],
+                   pch=21,xat=px,yat=py,col="black",bg=genecolor[Class],
+                   hlines=py, vlines=px,
+                   xaxt="n", yaxt="n",
+                   xaxs="r", yaxs="r",
+                   xlim=xlim, ylim=ylim,
+                   xlab="Linear Discriminant 1", ylab="Linear Discriminant 2",
+                   mgp=c(1.6,0.2,0), cex=0.8, las=1, ...)
 
   u <- par("usr")
   x <- u[1] + diff(u[1:2])*((2:5)*0.1+0.05)

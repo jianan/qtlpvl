@@ -1,12 +1,12 @@
 ##' Multivariate normal genome 2d scan.
-##' 
+##'
 ##' Genome scan with two QTL model, with allowance for possible
 ##' covariates, using multivariate normal model for the multiple
 ##' traits.
 ##'
 ##' @inheritParams scanone.mvn
 ##' @export
-scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL, 
+scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
                         method=c("maxlikelihood", "pillaitrace"),
                         tol=1e-7){
 
@@ -20,7 +20,7 @@ scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
   p <- ncol(Y)
   if(p < 1) stop("Y should be a matrix with more than one columns")
   checkcov(intcovar, addcovar, n)
-  
+
   if (!("prob" %in% names(cross[[c("geno", 1)]]))){
     warning("First running calc.genoprob.")
     cross <- calc.genoprob(cross)
@@ -37,7 +37,7 @@ scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
   genoprob <- pull.genoprob(cross, chr=chr, omit.first.prob=TRUE)
   ngeno <- ifelse(attr(cross, "class")[1] == "bc", 2, 3)
   m <- ncol(genoprob)/(ngeno-1)
-  
+
   X0 <- cbind(rep(1, n), addcovar, intcovar)
   if(method == "maxlikelihood"){
     L0 <- det_AtA(lm.resid(X0, Y))
@@ -73,13 +73,13 @@ scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
       }
     }
   }
-  
+
   if(method == "maxlikelihood"){
     LOD <- n/2 * log10(exp(1)) * (L0 - L1)
   }else if(method == "pillaitrace"){
     LOD <- (L1 - p/2)/p
   }
-  
+
   ## out <- NULL
   ## for(i in chr){
   ##   map <- attr(cross[[c("geno", i, "prob")]], "map")

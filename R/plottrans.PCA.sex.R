@@ -22,14 +22,14 @@ plottrans.PCA.sex <- function(Y, sex, max.p=100, ...){
   yellow <- rgb(255, 255, 0, maxColorValue = 256)
   color <- c(blue, orange, green, yellow)
 
-  grayplot(x=PC[,1],y=PC[,2],
-           pch=21,xat=px,yat=py,col="black",bg=color[Class],
-           hlines=py, vlines=px,
-           xaxt="n", yaxt="n",
-           xaxs="r", yaxs="r",
-           xlim=xlim, ylim=ylim,
-           xlab="Principal Component 1", ylab="Principal Component 2",
-           mgp=c(1.6,0.2,0), cex=0.8, ...)
+  broman::grayplot(x=PC[,1],y=PC[,2],
+                   pch=21,xat=px,yat=py,col="black",bg=color[Class],
+                   hlines=py, vlines=px,
+                   xaxt="n", yaxt="n",
+                   xaxs="r", yaxs="r",
+                   xlim=xlim, ylim=ylim,
+                   xlab="Principal Component 1", ylab="Principal Component 2",
+                   mgp=c(1.6,0.2,0), cex=0.8, ...)
 
   u <- par("usr")
   x <- u[1] + diff(u[1:2])*c(0.4, 0.6)

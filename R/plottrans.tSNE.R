@@ -4,7 +4,7 @@
 ##' @export
 plottrans.tSNE <- function(Y, geno, nonrecomb, ...){
   suppressMessages(require(Rtsne))|| stop("the required package 'Rtsne' is not installed. ")
-  SNE <- Rtsne(Y)$Y # Run TSNE
+  SNE <- Rtsne::Rtsne(Y)$Y # Run TSNE
 
   blue <- rgb(123, 104, 238, maxColorValue = 256)
   orange <- rgb(230, 159, 0, maxColorValue = 256)
@@ -18,14 +18,14 @@ plottrans.tSNE <- function(Y, geno, nonrecomb, ...){
   ylim <- range(SNE[, 2])
   px <- pretty(xlim)
   py <- pretty(ylim)
-  grayplot(x=SNE[,1],y=SNE[,2],
-           pch=21,xat=px,yat=py,col="black",bg=genecolor[Class],
-           hlines=py, vlines=px,
-           xaxt="n", yaxt="n",
-           xaxs="r", yaxs="r",
-           xlim=xlim, ylim=ylim,
-           xlab="tSNE-x", ylab="tSNE-y",
-           mgp=c(1.6,0.2,0), cex=0.8, ...)
+  broman::grayplot(x=SNE[,1],y=SNE[,2],
+                   pch=21,xat=px,yat=py,col="black",bg=genecolor[Class],
+                   hlines=py, vlines=px,
+                   xaxt="n", yaxt="n",
+                   xaxs="r", yaxs="r",
+                   xlim=xlim, ylim=ylim,
+                   xlab="tSNE-x", ylab="tSNE-y",
+                   mgp=c(1.6,0.2,0), cex=0.8, ...)
 
   u <- par("usr")
   x <- u[1] + diff(u[1:2])*((2:5)*0.1+0.05)

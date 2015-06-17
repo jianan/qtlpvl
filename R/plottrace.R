@@ -18,8 +18,7 @@ plottrace <- function(x, ...)
 ##' @param ... parameters to be passed through to plotting functions.
 ##' @export
 plottrace.testpleio.1vs2 <- function(x, xlab="i.cut", ylab="LODdiff",
-                        mgp=c(1.6, 0.2, 0),
-                        ...){
+                        mgp=c(1.6, 0.2, 0), ...){
 
   object <- x
   if (!any(class(object) == "testpleio.1vs2"))
@@ -29,7 +28,7 @@ plottrace.testpleio.1vs2 <- function(x, xlab="i.cut", ylab="LODdiff",
   ylim <- c(0, max(t, na.rm = TRUE)*1.05)
   grayplot(1:length(t), t, type = "n", xlab = xlab, ylab = ylab,
            ylim = ylim, yaxs="i", mgp = mgp,
-           xlim=c(0.5, length(t)+0.5), xaxs="i",  ...)
+           xlim=c(0.5, length(t)+0.5), xaxs="i", las=1, ...)
   n.max <- which.max(t)
   v.max <- max(t, na.rm=TRUE)
   u <- par()$usr

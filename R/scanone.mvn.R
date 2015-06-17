@@ -68,7 +68,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
     Y <- Y[id, ]
     cross <- subset(cross, ind=id)
     addcovar <- addcovar[id, ]
-    intcovar <- intcover[id, ]
+    intcovar <- intcovar[id, ]
     n <- nrow(Y)
   }
 

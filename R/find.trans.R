@@ -1,29 +1,29 @@
 ##' From a scan1 result, first count how many trans-eQTL are there in
 ##' every bin across the chromosomes, then find phenos inside each
 ##' transband.
-##' 
+##'
 ##' @inheritParams count.trans
 ##' @param trans.count.thr threshold used to define a region as
 ##' transband.
 ##' @return a list of transband.
 ##' @export
-find.trans <- function(out1, probepos, chr, marker.info, 
+find.trans <- function(out1, probepos, chr, marker.info,
                        lod.thr=5, trans.cM=5, kernal.width=1, window.cM=10,
                        trans.count.thr=300){
-  
+
   stopifnot(c("pheno", "chr", "pos", "lod1") %in% colnames(out1))
   stopifnot(c("chr", "cM") %in% colnames(probepos))
   marker.info <- marker.info[marker.info$chr %in% chr, ]
-  
+
   if(!"is.trans" %in% colnames(out1)){
     out1 <- get.trans.info(out1, probepos, chr, marker.info,
                            lod.thr=lod.thr, trans.cM=trans.cM)
   }
   out1 <- subset(out1, is.trans)
   if(nrow(out1) == 0) return()
-  
+
   ## find trans.info, chr, left and right bound of each transband.
-  out <- count.trans(out1, probepos, chr, marker.info, 
+  out <- count.trans(out1, probepos, chr, marker.info,
                      lod.thr=lod.thr, trans.cM=trans.cM,
                      kernal.width=kernal.width, window.cM=window.cM)
   out <- out[out$count.sum > trans.count.thr, ]
@@ -32,13 +32,13 @@ find.trans <- function(out1, probepos, chr, marker.info,
   ##                 count=0)
   ## x$count <- sample(1:100, size=nrow(x))
 
-  trans.info <- ddply(out, .(chr), function(x) {
+  trans.info <- plyr::ddply(out, .(chr), function(x) {
     ## if two peaks are near each other(<5cM), combine them;
-    ## otherwise treat them as different transband. 
+    ## otherwise treat them as different transband.
     if(all(diff(x$pos) < trans.cM)) {
       res <- matrix(c(range(x$pos), x$pos[which.max(x$count)]), 1,3)
       return(res)
-    }else{ 
+    }else{
       z <- which(diff(x$pos) >= trans.cM)
       z <- c(0, z, length(x$pos))
       nz <- length(z)

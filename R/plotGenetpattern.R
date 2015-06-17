@@ -91,7 +91,7 @@ plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d,
   if(lim == -Inf) lim <- 1
   xlim <- ylim <- c(-lim, lim)*1.1
   plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab,
-       mgp=mgp, tick=FALSE, ...)
+       mgp=mgp, las=1, ...)
   u <- par("usr")
   rect(u[1], u[3], u[2], u[4], col="gray80")
   abline(v = 0, h = 0, col="white")
