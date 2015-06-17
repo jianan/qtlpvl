@@ -1,9 +1,10 @@
 ##' @export
-plot.testpleio.1vsp <- function(x, xlab="Map position (cM)", ylab="LOD", ...){
-  
-  if (!any(class(x) == "testpleio.1vsp")) 
+plot.testpleio.1vsp <- function(x, xlab="Map position (cM)", ylab="LOD",
+                                mgp=c(1.6, 0.2, 0), ...){
+
+  if (!any(class(x) == "testpleio.1vsp"))
       stop("Input should have class \"testpleio.1vsp\".")
-  
+
   LODdiff <- x$LODdiff
   LOD1 <- x$LOD1
   map <- x$map
@@ -11,14 +12,13 @@ plot.testpleio.1vsp <- function(x, xlab="Map position (cM)", ylab="LOD", ...){
   maxLOD <- x$maxLOD
   maxPOS <- x$maxPOS
   rg <- range(map)
-  ylim <- c(min(0, min(maxLOD, LOD1, na.rm=TRUE)),
-            max(maxLOD, LOD1, na.rm=TRUE))
-  
-  plot(y=LOD1, x=map, type="l",
-       ylim=ylim, xlim=rg, xaxt="n", ylab=ylab, xlab=xlab, ...)
-  rug(map.marker, ticksize=-0.01)
-  axis(side=1, at=map.marker, labels=sprintf("%.1f",map.marker))
-  points(maxPOS, maxLOD, pch=20) ## single trait result.
+
+  ylim <- c(0, max(maxLOD, LOD1, na.rm = TRUE)*1.05)
+  grayplot(y = LOD1, x = map, type = "l", ylim = ylim, xlim = rg,
+           xaxt = "n", xlab = xlab, ylab = ylab, mgp = mgp, lwd=2,
+           yat=pretty(ylim), yaxs="i", ...)
+  rug(map.marker, ticksize = -0.01)
+  points(maxPOS, maxLOD, pch = 20) ## single trait result.
   points(x=map[which.max(LOD1)], y=max(LOD1),
-         col="blue", pch=17) ## plot the best one QTL
+         col="slateblue", pch=17) ## plot the best one QTL
 }

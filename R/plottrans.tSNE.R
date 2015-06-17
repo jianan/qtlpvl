@@ -1,17 +1,10 @@
-##' PCA plot for a transband.
+##' tsne plot for a transband.
 ##'
-##' @param Y matrix of traits in the transband
-##' @param geno genotype at the peak marker of scanone.mvn.
-##' @param nonrecomb index for non-recombnent(in a 10cM region) individuals.
-##' @param max.p max number of traits used for PCA analysis. This is
-##' used to avoid rank deficiency.
+##' @inheritParams plottrans.PCA
 ##' @export
-plottrans.PCA <- function(Y, geno, nonrecomb, max.p=100, ...){
-
-  ## use the first 100.
-  Y <- Y[, 1:min(max.p, ncol(Y))]
-
-  PC <- predict(princomp(Y))[, 1:2]
+plottrans.tSNE <- function(Y, geno, nonrecomb, ...){
+  suppressMessages(require(Rtsne))|| stop("the required package 'Rtsne' is not installed. ")
+  SNE <- Rtsne(Y)$Y # Run TSNE
 
   blue <- rgb(123, 104, 238, maxColorValue = 256)
   orange <- rgb(230, 159, 0, maxColorValue = 256)
@@ -21,17 +14,17 @@ plottrans.PCA <- function(Y, geno, nonrecomb, max.p=100, ...){
 
   Class <- geno
   Class[-nonrecomb] <- 4
-  xlim <- range(PC[, 1])
-  ylim <- range(PC[, 2])
+  xlim <- range(SNE[, 1])
+  ylim <- range(SNE[, 2])
   px <- pretty(xlim)
   py <- pretty(ylim)
-  grayplot(x=PC[,1],y=PC[,2],
+  grayplot(x=SNE[,1],y=SNE[,2],
            pch=21,xat=px,yat=py,col="black",bg=genecolor[Class],
            hlines=py, vlines=px,
            xaxt="n", yaxt="n",
            xaxs="r", yaxs="r",
            xlim=xlim, ylim=ylim,
-           xlab="Principal Component 1", ylab="Principal Component 2",
+           xlab="tSNE-x", ylab="tSNE-y",
            mgp=c(1.6,0.2,0), cex=0.8, ...)
 
   u <- par("usr")

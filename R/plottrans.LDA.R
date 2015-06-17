@@ -32,7 +32,7 @@ plottrans.LDA <- function(Y, geno, nonrecomb, max.p=100, ...){
            xaxs="r", yaxs="r",
            xlim=xlim, ylim=ylim,
            xlab="Linear Discriminant 1", ylab="Linear Discriminant 2",
-           mgp=c(1.6,0,0), cex=0.8, ...)
+           mgp=c(1.6,0.2,0), cex=0.8, ...)
 
   u <- par("usr")
   x <- u[1] + diff(u[1:2])*((2:5)*0.1+0.05)

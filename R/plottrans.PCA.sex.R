@@ -1,5 +1,5 @@
 ##' PCA plot for a transband, color by sex.
-##' 
+##'
 ##' @param sex Female =1, Male=2
 ##' @inheritParams plottrans.PCA
 ##' @export
@@ -29,7 +29,7 @@ plottrans.PCA.sex <- function(Y, sex, max.p=100, ...){
            xaxs="r", yaxs="r",
            xlim=xlim, ylim=ylim,
            xlab="Principal Component 1", ylab="Principal Component 2",
-           mgp=c(1.6,0,0), cex=0.8)
+           mgp=c(1.6,0.2,0), cex=0.8, ...)
 
   u <- par("usr")
   x <- u[1] + diff(u[1:2])*c(0.4, 0.6)
