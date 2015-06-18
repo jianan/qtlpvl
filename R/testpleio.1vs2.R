@@ -59,21 +59,21 @@
 testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                            region.l=NA, region.r=NA,
                            method = c("ML", "Pillai", "Wilks", "Hotelling-Lawley", "Roy"),
-                           int.method=c("bayes", "1.5lod"), 
+                           int.method=c("bayes", "1.5lod"),
                            search.method=c("fast", "complete"), RandomStart=TRUE, RandomCut=FALSE,
                            simu.method=c("parametric", "permutation"), n.simu=1000, tol=1e-7){
-  
+
   method <- match.arg(method)
   int.method <- match.arg(int.method)
   search.method <- match.arg(search.method)
   simu.method <- match.arg(simu.method)
   if(n.simu < 0) stop("n.simu should be a positive integer.")
-  
+
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y); p <- ncol(Y)
   if(int.method!="bayes" && int.method!="1.5lod")
       stop("int.method need to be 'bayes' or '1.5lod'. ")
-  
+
   p1 <- ncol(cross$pheno)
   cross$pheno <- data.frame(cross$pheno, Y)
   out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
@@ -93,7 +93,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
     region.l <- min(int)
     region.r <- max(int)
   }
-  
+
   map.marker <- unlist(pull.map(cross, chr))
   map.marker <- map.marker[map.marker > region.l & map.marker < region.r]
   map.chr <- out$pos[out$chr==chr]
@@ -105,7 +105,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
     stop("confidence interval is too small.")
   }
   map.chr <- map.chr[marker.l:marker.r]
-  
+
   ## ---- scan.mvn ----
   genoprob <- pull.genoprob(cross, chr=chr)
   if(attr(cross,"class")[1] == "bc"){
@@ -118,10 +118,10 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
 
   maxPOSind <- apply(out[,-(1:2)],2,which.max) ## QTL position index
   o <- order(maxPOSind)
-  
+
   x <- testpleio.1vs2.engine(Y=Y[, o], maxPOS=maxPOSind[o], genoprob=genoprob, ngeno=ngeno,
                              addcovar=addcovar, intcovar=intcovar,
-                             method=method, 
+                             method=method,
                              search.method=search.method, RandomStart=RandomStart,
                              RandomCut=RandomCut, tol=tol, in.simu=FALSE)
   LOD1 <- x$LOD1
@@ -136,7 +136,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
   attr(LODdiff,"LOD1pos") <- map.chr[which.max(LOD1)]  ## pos for the common QTL
   attr(LODdiff,"LOD2lod") <- max(LOD2,na.rm=TRUE) ## lod for QTL1 and QTL2
   attr(LODdiff,"LOD2pos") <- map.chr[arrayInd(which.max(LOD2), .dim=dim(LOD2))] ## pos for QTL1 and QTL2
-  
+
   maxPOS <- out$pos[apply(out[,-(1:2)],2,which.max)]  ## QTL position
   maxLOD <- apply(out[,-(1:2)],2,max)
 
@@ -146,13 +146,13 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
                    map.marker=map.marker,
                    LODdiff.trace=LODdiff.trace)
   }else{
-    
+
     if(simu.method=="parametric"){    ## simulation: parametric bootstrap.
-      
+
       Y.fit <- Y - E.marker
       Sigma <- cov(E.marker)
       Sigma.half <- chol(Sigma)
-      
+
       LODdiff.simu <- numeric(n.simu)
       for(i.simu in 1:n.simu){
         mat <- matrix(rnorm(p*n),p,n)      ## p*n
@@ -167,7 +167,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
         LODdiff.simu[i.simu] <- testpleio.1vs2.engine(Y=Y.simu[, o], maxPOS=maxPOSind[o],
                                                       genoprob=genoprob, ngeno=ngeno,
                                                       addcovar=addcovar, intcovar=intcovar,
-                                                      method=method, 
+                                                      method=method,
                                                       search.method=search.method,
                                                       RandomStart=RandomStart,
                                                       RandomCut=RandomCut, tol=tol,in.simu=TRUE)
@@ -176,7 +176,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
                      maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                      LODdiff.trace=LODdiff.trace,
-                     map.marker=map.marker, n.simu=n.simu, 
+                     map.marker=map.marker, n.simu=n.simu,
                      pvalue=pvalue)
     }else{ ##  simu.method=="permutation"
       ## find strat
@@ -211,7 +211,7 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
         o <- order(maxPOSind)
         LODdiff.simu[i.simu] <- testpleio.1vs2.engine(Y=Y[, o], maxPOS=maxPOSind[o],
                                                       genoprob=genoprob.simu, ngeno=ngeno,
-                                                      addcovar=addcovar, intcovar=intcovar, 
+                                                      addcovar=addcovar, intcovar=intcovar,
                                                       method=method,
                                                       search.method=search.method,
                                                       RandomStart=RandomStart,
@@ -221,13 +221,13 @@ testpleio.1vs2 <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL,
       result <- list(LODdiff=LODdiff, Group=Group, chr=chr, map=map.chr,
                      maxPOS=maxPOS, maxLOD=maxLOD, LOD1=LOD1, LOD2=LOD2,
                      LODdiff.trace=LODdiff.trace,
-                     map.marker=map.marker, n.simu=n.simu, 
+                     map.marker=map.marker, n.simu=n.simu,
                      pvalue=pvalue)
     }
   }
   class(result) <- c("testpleio.1vs2", "list")
   attr(result, "parameters") <- list(region.l=region.l, region.r=region.r,
-                                     method=method, 
+                                     method=method,
                                      int.method=int.method,
                                      search.method=search.method,
                                      RandomStart=RandomStart,

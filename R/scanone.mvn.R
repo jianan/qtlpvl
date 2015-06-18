@@ -1,21 +1,22 @@
 ##' Multivariate normal genome scan with a single QTL model.
-##' 
+##'
 ##' Genome scan with a single QTL model, with allowance for possible
 ##' covariates, using multivariate normal model for the multiple
 ##' traits.
 ##'
 ##' @param cross An object of class \code{cross}. See
 ##' \code{read.cross} for details.
-##' @param Y Matrix of multiple traits with n rows.
+##' @param Y Matrix of multiple traits, with samples in the row,
+##' traits in the column.
 ##' @param chr Optional vector indicating the chromosomes for which
-##' LOD scores should be calculated.  This should be a vector of
+##' LOD scores should be calculated. This should be a vector of
 ##' character strings referring to chromosomes by name; numeric values
 ##' are converted to strings.
-##' @param addcovar Additive covariates.
-##' @param intcovar Interactive covariates.
-##' @param method "ML", "Pillai", "Wilks", "Hotelling-Lawley", or
-##' "Roy" , "ML" is for maximum likelihood method for LOD score, the
-##' other four are MANOVA methods.
+##' @param addcovar Additive covariates, samples in the row.
+##' @param intcovar Interactive covariates (interact with QTL genotype).
+##' @param method choose from "ML" for maximum likelihood method for
+##' LOD score, "Pillai", "Wilks", "Hotelling-Lawley", or "Roy" for the
+##' corresponding MANOVA methods.
 ##' @param tol Tolerance value for the \code{qr} decomposition in
 ##' \code{lm} fitting.
 ##' @return A data.frame whose first column contains the chromosome
@@ -47,9 +48,9 @@
 ##'
 ##' @export
 scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
-                        method = c("ML", "Pillai", "Wilks", "Hotelling-Lawley", "Roy"), 
+                        method = c("ML", "Pillai", "Wilks", "Hotelling-Lawley", "Roy"),
                         tol=1e-7){
-  
+
   method <- match.arg(method)
   ## checking inputs...
   if(class(cross)[2] != "cross") stop("cross need to be of class cross")
@@ -60,7 +61,17 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
   p <- ncol(Y)
   if(p < 1) stop("Y should be a matrix with more than one columns")
   checkcov(intcovar,addcovar,n)
-  
+
+  ## if there is missing value in Y, remove thoes individuals.
+  if(any(is.na(Y))){
+    id <- which(!apply(is.na(Y), 1, any))
+    Y <- Y[id, ]
+    cross <- subset(cross, ind=id)
+    addcovar <- addcovar[id, ]
+    intcovar <- intcovar[id, ]
+    n <- nrow(Y)
+  }
+
   if (!("prob" %in% names(cross[[c("geno",1)]]))){
     warning("First running calc.genoprob.")
     cross <- calc.genoprob(cross)
@@ -69,9 +80,8 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
   if(missing(chr)){
     chr <- names(cross$geno)
     chr <- chr[chr!="X"] ## not deal with X chr for now.
-  }else{
-    cross <- subset(cross, chr)
   }
+  cross <- subset(cross, chr=chr)
 
   ## todo-need to deal with X-chr
   chrclass <- sapply(cross$geno,class)
@@ -82,7 +92,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
     ngeno <- 3
   }
   m <- ncol(genoprob)/ngeno
-  
+
   X <- cbind(rep(1, n), addcovar, intcovar)
   E <- lm.resid(X, Y)
   L0 <- det_AtA(E)
@@ -110,7 +120,7 @@ scanone.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
   }else{
     LOD <- - L1
   }
-  
+
   out <- NULL
   for(i in chr){
     map <- attr(cross[[c("geno",i,"prob")]], "map")

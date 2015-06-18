@@ -6,7 +6,7 @@
 ##' @return list of chr and interval and plots if \code{do.plot=TRUE}.
 ##' @export
 interval <- function(cross, Y, chr, region.l, region.r, do.plot=TRUE, main="", weighted=FALSE, thr=0.9){
-  
+
   group <- group.train.test(cross, Y, chr, region.l, region.r)
   data.train <- group$data.train
   data.test <- group$data.test
@@ -27,7 +27,7 @@ interval <- function(cross, Y, chr, region.l, region.r, do.plot=TRUE, main="", w
     propn.plot(genotype, map, pred.test, pred.score, weighted = weighted)
     plotlda(data.train, data.test, class.train, pred.test, error.train, sca)
   }
-  
+
   result <- list(chr=chr, int=int, map=map)
   return(result)
 }
