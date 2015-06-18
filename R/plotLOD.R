@@ -2,7 +2,7 @@
 ##'
 ##' For each trait, plot its LOD score versus QTL position when the
 ##' LOD is bigger than a threshold.
-##' 
+##'
 ##' @inheritParams scanone.mvn
 ##' @param LOD.threshold threshold for QTL to be displayed.
 ##' @param ... Optional graphics arguments
@@ -29,17 +29,17 @@
 ##'
 ##' @export
 plotLOD <- function(Y, cross, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
-  
+
   n <- nrow(Y)
   p <- ncol(Y)
   p1 <- ncol(cross$pheno)
   cross$pheno <- data.frame(cross$pheno, Y)
   if(!is.null(colnames(Y))) names(cross$pheno)[p1+(1:p)] <- colnames(Y)
-  out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr, 
+  out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
                  addcovar=addcovar, intcovar=intcovar)
   maxPOS <- out$pos[apply(out[, -(1:2)], 2, which.max)]
   maxLOD <- apply(out[, -(1:2)], 2, max)
-  
+
   x <- maxPOS
   y <- maxLOD
   isQTL <- maxLOD > LOD.threshold
@@ -49,15 +49,15 @@ plotLOD <- function(Y, cross, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3
   xlim <- range(x) * c(0.9, 1.1)
   ylim <- c(0, max(maxLOD)) * 1.1
 
-  mgp <- c(1.6, 0.2, 0) 
+  mgp <- c(1.6, 0.2, 0)
   plot(0, 0, type="n", mgp=mgp,
-       xlim=xlim, ylim=ylim, ylab="", xlab="QTL pos (cM)", 
-       yaxt="n", xaxt="n", xaxs="i", ...)
+       xlim=xlim, ylim=ylim, ylab="", xlab="QTL pos (cM)",
+       yaxt="n", xaxt="n", xaxs="i", las=1, tck=0, ...)
   bgcolor <- "gray80"
   u <- par("usr")
   rect(u[1], u[3], u[2], u[4], border=NA, col=bgcolor)
   abline(h=pretty(ylim, 10), v=pretty(xlim),col="white")
-  axis(2, at=pretty(ylim,10),mgp=mgp,tick=FALSE)
+  axis(2, at=pretty(ylim,10),mgp=mgp,tick=FALSE,las=1)
   axis(1, at=pretty(xlim),mgp=mgp,tick=FALSE)
   title(ylab="LOD score", mgp=c(2.1, 0, 0))
   points(x=x, y=y, col=c("red", "blue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)

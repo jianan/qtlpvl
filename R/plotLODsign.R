@@ -84,10 +84,10 @@ plotLODsign <- function(Y, cross, chr, LODsign, maxPOS, map,
   u <- par("usr")
   rect(u[1], u[3], u[2], u[4], border="black", col=bgcolor)
   abline(h=yp, v=xp, col="white")
-  axis(2, at=yp, mgp=mgp, tick=FALSE)
+  axis(2, at=yp, mgp=mgp, tick=FALSE, las=1)
   axis(1, at=xp, mgp=mgp, tick=FALSE)
   title(ylab=ylab, mgp=c(2.1, 0, 0))
-  points(x=x, y=y, col=c("red", "blue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)
+  points(x=x, y=y, col=c("violetred", "slateblue")[ifelse(y>0, 1, 2)], pch=20, cex=0.7)
   abline(h=0)
   box()
 
