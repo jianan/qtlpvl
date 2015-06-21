@@ -4,7 +4,7 @@
 \alias{plottrace.testpleio.1vs2}
 \title{plot trace}
 \usage{
-\method{plottrace}{testpleio.1vs2}(x, xlab = "i.cut", ylab = "LODdiff",
+\method{plottrace}{testpleio.1vs2}(x, xlab = "cut point", ylab = "LODdiff",
   mgp = c(1.6, 0.2, 0), ...)
 }
 \arguments{

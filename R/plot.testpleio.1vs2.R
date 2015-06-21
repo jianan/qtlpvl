@@ -1,5 +1,5 @@
 ##' @export
-plot.testpleio.1vs2 <- function(x, xlab="Map position (cM)", ylab="LOD",
+plot.testpleio.1vs2 <- function(x, xlab="Map position (cM)", ylab="LOD score",
                                 mgp=c(1.6, 0.2, 0), ...){
 
   if (!any(class(x) == "testpleio.1vs2"))
