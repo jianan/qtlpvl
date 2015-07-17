@@ -14,10 +14,11 @@
 ##' specified.
 ##' @param search.method Searching method for two-QTL model, "fast" or
 ##' "complete".
-##' @param RandomStart use random starting point for the two-QTL model
+##' @param RandomStart Use random starting point for the two-QTL model
 ##' or not. default is \code{TRUE}.
-##' @param RandomCut Wse random cutting or not when there are traits
-##' mapped to the same location. Default is \code{FALSE}.
+##' @param RandomCut Use random cutting or not when there are traits
+##' mapped to the same location. Default is \code{FALSE}, triats
+##' mapped to the same location will be bound together.
 ##' @param simu.method "parametric" or "permutation" method for
 ##' simulations. Default is "parametric".
 ##' @param n.simu Number of simulations for p-value.
