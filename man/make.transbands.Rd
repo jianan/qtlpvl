@@ -36,6 +36,8 @@ kernal function to sum over each bin/window.}
 
 \item{trans.count.thr}{threshold used to define a region as
 transband.}
+
+\item{regn.cM}{disctance in cM form QTL for defining non-recombinanct mice.}
 }
 \value{
 a list of transband.

@@ -14,8 +14,10 @@ knitr::opts_chunk$set(
 # Introduction to qtlpvl
 
 This package is focusing on QTL mapping with multiple traits and
-testing of pleiotrophy vs. close linkage.
-
+testing of pleiotrophy vs. close linkage when multiple traits mapped
+near each other, with the case of trans-eQTL hotspot in mind
+particularly. We provide both exploration plot functions and formal
+statistical tests aimning at dissecting trans-eQTL hotspots.
 
 ## Data
 
@@ -57,9 +59,9 @@ together to have the same shift in mean.  The first 5 traits are
 controlled by the first QTL and the other 5 trait of the total 10 are
 controlled by the second QTL with negative effect.  We use matrix G to
 save the QTL effects and the second QTL group, `G2` is multiply by -2
-to have a negative QTL effect.  The 10 phenotypes are generated with
-these QTL effect matrix G plus independent noise generated from
-standard normal distribution.
+to have a negative and bigger QTL effect.  The 10 phenotypes are
+generated with these QTL effect matrix G plus independent noise
+generated from standard normal distribution.
 
 We could first look at the single triat analysis result.  For each
 trait, we plot its LOD score versus QTL position when the LOD is
@@ -73,10 +75,13 @@ plotLOD(Y=Y, cross=listeria, chr=chr)
 
 Having the cross object `listeria` and phenotype trait matrix `Y`
 prepared, we can first run a joint mapping with `scanone.mvn`, which
-assumes multivariate normal model. chr is set to be "1", which
+assumes multivariate normal model. `chr` is set to be "1", which
 indicates the mapping is only on chromosome 1. Function `scanone.mvn`
 has two more parameters `addcovar` and `intcovar`, they could be used
-to control for additive and interactive covariates when needed.
+to control for additive and interactive covariates when
+needed. `intcovar` will also be used as additive covariates during
+mapping, and there is no need to manually add them into `addcovar` by
+the user.
 
 The result of joint mapping is a data frame with class `scanone`, we
 could apply (S3) method `summary` and `plot` to look at the result.
@@ -88,11 +93,13 @@ plot(out)
 ```
 
 We could see the QTL is at `r sprintf("%.2f",summary(out)$pos)` cM
-with LOD score `r sprintf("%.2f",summary(out)$lod)`.
+with LOD score `r sprintf("%.2f",summary(out)$lod)`. It is more
+towards the second QTL since the second QTL has a bigger effect than
+the first.
 
 ## test of 1 vs 2 QTL: `testpleio.1vs2`
 
-We test the hypothesis of: 
+We test the hypothesis of:
 * $H_0$: There is only one QTL affecting all the phenotypes;
 * $H_1$: There are two QTLs, each affecting one of the two phenotype
   groups.
@@ -107,7 +114,7 @@ group (contains the first several traits) is controlled by the right
 QTL and the second group (contains the rest traits) is controlled by
 the left QTL. The LOD score of this two-QTL model is then subtracted
 by the LOD score of the single-QTL model to arrived at the final test
-statistic.
+statistic, $\text{LOD}_{2v1}$.
 
 To get the null distribution of the statistics, we have two methods:
 * parametric bootstrap: generate data from the parameters estimated
@@ -119,9 +126,10 @@ we repeat the whole procedure on data from either method and save the
 test statistics. The P-value is calculated from this empirical
 distribution.
 
-Function `testpleio.1vs2` is used to do this test. input parameters:
-* cross: An object of class `cross`. 
-* Y: matrix of multiple traits with n rows.
+Function `testpleio.1vs2` is used to do this test. Input parameters:
+* cross: An object of class `cross`.
+* Y: matrix of multiple traits, with samples in the row, traits in the
+  column.
 * chr: One character strings referring to chromosome of interest by
   name.
 * region.l, region.r: left and right bound for the interval of
@@ -134,7 +142,8 @@ Function `testpleio.1vs2` is used to do this test. input parameters:
 * RandomStart: when search.method is `fast`, use random starting point
   for the two-QTL model or not, default is `TRUE`.
 * RandomCut: use random cutting or not when there are traits mapped to
-  the same location. default is `FALSE`.
+  the same location. default is `FALSE`, triats mapped to the same
+  location will be bound together.
 * simu.method: `parametric` or `permutation` method for
   simulations. default is `parametric`.
 * n.simu: number of simulations for p-value.
@@ -146,7 +155,7 @@ This function will return a list with class `testpleio.1vs2`, similar
 to `scanone`, we could apply (S3) method `summary` and `plot` to look
 at the result. In the summary, we could see the position and LOD score
 for the single QTL and best two QTL model, as well as test statistics
-LODdiff=LOD2-LOD1 and its P-value.
+$\text{LOD}_{2v1}$ and its P-value.
 
 ```{r}
 obj <- testpleio.1vs2(cross=listeria, Y=Y, chr=chr, n.simu=100,
@@ -166,15 +175,16 @@ for each of the two QTLs under $H_1$:
 Triangles indicate the position of the QTLs and solid points indicate
 QTL positions and LODs from single trait mapping.
 
-We could also use `plottrace` to see how LODdiff changes when we move
-the cut-point of the left versus right group. There are 7 possible QTL
-positions from the above plot (result of single trait mapping), thus
-we have 6 possible ways of grouping these positions into the left
-versus right group. The 6 open dot indict the cut and their LODdiff.
-Thus when the first 5 traits and the last 5 traits are grouped
-separately, the LODdiff is the biggest, it is our best two QTL model.
-This figure could be used as a diagnostic figure, to see if our best
-two QTL model is better than the rest of all the possible models.
+We could also use `plottrace` to see how $\text{LOD}_{2v1}$ changes
+when we move the cut-point of the left versus right group. There are 7
+possible QTL positions from the above plot (result of single trait
+mapping), thus we have 6 possible ways of grouping these positions
+into the left versus right group. The 6 open dot indict the cut and
+their $\text{LOD}_{2v1}$.  Thus when the first 5 traits and the last 5
+traits are grouped separately, the $\text{LOD}_{2v1}$ is the biggest,
+it is our best two QTL model.  This figure could be used as a
+diagnostic figure, to see if our best two QTL model is better than the
+rest of all the possible models.
 
 ```{r}
 plottrace(obj)
@@ -183,7 +193,7 @@ plottrace(obj)
 ## test of 1 vs p QTL: `testpleio.1vsp`
 
 We could also test the hypothesis of:
-* $H_0$: There is only one QTL affecting all the phenotypes; 
+* $H_0$: There is only one QTL affecting all the phenotypes;
 * $H_1$: There are p QTLs, each affecting one of the phenotypes, i.e.,
   each phenotype is allowed to has its own QTL.
 
@@ -193,7 +203,7 @@ same as before.  This function will return a list with class
 `testpleio.1vsp`, similar to `scanone` and `testpleio.1vs2`, we could
 apply (S3) method `summary` and `plot` to look at the result.  In the
 summary, we could see the position and LOD score for the single QTL
-and p QTL model, as well as test statistics LODdiff=LODp-LOD1 and its
+and p QTL model, as well as test statistics $\text{LOD}_{2v1}$ and its
 P-value.
 
 ```{r}
@@ -223,15 +233,16 @@ Y <- Y + G
 Function `plotGenetpattern` takes two kinds of input parameters:
 * a phenotype matrix `Y` and a genotype vector `genotype`, the later
   should be genotype of the common QTL in most suspicious.
-* a phenotype matrix `Y` and a cross object and chromosome
-  number. This is used when there is no certainty of a single QTL for
-  all traits and thus each trait is mapped separately and its own QTL
-  genotype is used.
-  
+* a phenotype matrix `Y` and a cross object `cross` and chromosome
+  number `chr`. This is used when there is no certainty of a single
+  QTL for all traits and thus each trait is mapped separately and its
+  own QTL genotype is used.
+
 QTL additive effect is defined as a=(RR-BB)/2, QTL dominant effect is
 defined as d=BR-(BB+RR)/2, when plotted against each other, traits
-with pure additive effects are near the x-axis($d=0$) and traits with
-dominant effects are along the diagonals, $d=a$(BR=RR) and $d=-a$(BR=BB).
+with pure additive effects are near the x-axis ($d=0$) and traits with
+dominant effects are along the diagonals, $d=a$ (BR=RR) and $d=-a$
+(BR=BB).
 
 ```{r}
 plotGenetpattern(Y=Y, genotype=genotype1)
@@ -242,7 +253,7 @@ We can tell from both plots the there are two different genetic
 patterns, thus possible two different QTLs, even if they are closely
 linked.
 
-## plot LOD score with sign: `plotLODsign` 
+## plot LOD score with sign: `plotLODsign`
 
 Using the same data, we could also display the direction of the QTL
 effect with `plotLODsign`.  Function `plotLODsign` takes input
@@ -254,11 +265,23 @@ LOD score. We first run single trait mapping for LOD scores and QTL
 positions, then we use `argmax.geno` to impute QTL genotypes and
 calculate mean for each of the 3 genotype group. We define the
 direction positive when the mean of the first group is bigger than the
-mean of the third group, and negative while not.
+mean of the third group, and negative if not. Only traits with LOD
+score bigger than a threshold will be displayed, the default value of
+the threshold `LOD.threshold` is set as 3.
 
 ```{r}
 plotLODsign(Y=Y, cross=listeria, chr=chr)
 ```
+
+We indicate the positions of all the genotyped markers with little
+ticks at the x-axis. We can pass these values to parameter `map` or
+let the function handle it by pulling this information from the
+`cross` object at a fixed `chr`.
+
+If we already have mapped the traits (which in most case is done
+previousely), we can pass the signed LOD scores and their mapped
+positions to `LODsign` and `maxPOS` respectively. This option speed up
+the procedure by skiping mapping the triats redundantly.
 
 ## Session Info
 ```{r}

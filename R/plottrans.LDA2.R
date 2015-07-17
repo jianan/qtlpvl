@@ -20,6 +20,11 @@ plottrans.LDA2 <- function(Y, geno, nonrecomb, max.p=100, geno2, addlegend=TRUE,
   blue <- rgb(123, 104, 238, maxColorValue = 256)
   yellow <- rgb(255, 255, 0, maxColorValue = 256)
   genecolor <- c(blue,orange,green, yellow)
+  red <- "#c0448f"
+  gray <- "gray65"
+  pink <- "#fb7efd"
+  lblue <- "#9aceeb"
+  brown <- "#dd9475"
 
   Class <- geno
   Class[-nonrecomb] <- 4
@@ -45,11 +50,10 @@ plottrans.LDA2 <- function(Y, geno, nonrecomb, max.p=100, geno2, addlegend=TRUE,
          col=c(genecolor[1:3],"black"), xpd=TRUE, cex=0.8, pos=4)
   }
 
-  orange2 <- rgb(256, 159, 0, maxColorValue = 256)
-  orange1 <- rgb(200, 159, 0, maxColorValue = 256)
-  cols <- c(blue, "blue", "darkblue",
-            orange1, orange, orange2,
-            "green", "darkgreen", green)
+  cols <- c(blue,    lblue,    gray,
+            yellow,  orange,   brown,
+            pink,    red,      green)
+
   ## add cols for the recombinant by the two QTL model
   y.lda <- y.lda[-nonrecomb, ]
   geno2 <- geno2[-nonrecomb, ]

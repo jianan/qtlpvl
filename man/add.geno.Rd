@@ -6,7 +6,11 @@
 \usage{
 add.geno(transbands, cross, regn.cM = 5, max.p = 100)
 }
+\arguments{
+\item{regn.cM}{disctance in cM form QTL for defining non-recombinanct mice.}
+}
 \description{
-find the peak of scanone.mvn and the QTL genotype.
+For a list of hotspots, find the single QTL genotype and the mice
+with no recombinant events in a 10cM region around the single QTL.
 }
 

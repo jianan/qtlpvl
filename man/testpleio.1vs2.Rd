@@ -42,11 +42,12 @@ specified.}
 \item{search.method}{Searching method for two-QTL model, "fast" or
 "complete".}
 
-\item{RandomStart}{use random starting point for the two-QTL model
+\item{RandomStart}{Use random starting point for the two-QTL model
 or not. default is \code{TRUE}.}
 
-\item{RandomCut}{Wse random cutting or not when there are traits
-mapped to the same location. Default is \code{FALSE}.}
+\item{RandomCut}{Use random cutting or not when there are traits
+mapped to the same location. Default is \code{FALSE}, triats
+mapped to the same location will be bound together.}
 
 \item{simu.method}{"parametric" or "permutation" method for
 simulations. Default is "parametric".}
