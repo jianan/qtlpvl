@@ -9,36 +9,28 @@
 ##' @return A plot LOD score versus QTL position for multiple traits.
 ##'
 ##' @examples
-##' set.seed(92950640)
-##' data(listeria)
-##' listeria <- calc.genoprob(listeria)
-##' n <- nind(listeria)
-##' chr <- "1"
-##' geno <- pull.geno(listeria, chr=chr)
-##' genotype1 <- geno[,7]
-##' genotype2 <- geno[,10]
-##' p <- 100
-##' p1 <- floor(p/2)
-##' G1 <- matrix(genotype1, n, p1)
-##' G2 <- -matrix(genotype2, n, p-p1)
-##' G2[G2==3] <- 2
-##' G <- cbind(G1, G2*(-2))
-##' Y <- matrix(rnorm(n*p),n,p)
-##' Y <- Y + G
+##' data(fake.phenos)
 ##' plotLOD(Y, listeria, chr)
 ##'
 ##' @export
-plotLOD <- function(Y, cross, chr, addcovar=NULL, intcovar=NULL, LOD.threshold=3,  ...){
+plotLOD <- function(Y, cross, chr, maxLOD, maxPOS, addcovar=NULL, intcovar=NULL,
+                    LOD.threshold=3,  ...){
 
-  n <- nrow(Y)
-  p <- ncol(Y)
-  p1 <- ncol(cross$pheno)
-  cross$pheno <- data.frame(cross$pheno, Y)
-  if(!is.null(colnames(Y))) names(cross$pheno)[p1+(1:p)] <- colnames(Y)
-  out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
-                 addcovar=addcovar, intcovar=intcovar)
-  maxPOS <- out$pos[apply(out[, -(1:2)], 2, which.max)]
-  maxLOD <- apply(out[, -(1:2)], 2, max)
+  stopifnot(length(chr)==1) ## only plot for single chromosome
+  if(missing(maxLOD) | missing(maxPOS)){
+    p1 <- ncol(cross$pheno)
+    p <- ncol(Y)
+    cross$pheno <- data.frame(cross$pheno, Y)
+    if(!is.null(colnames(Y))) names(cross$pheno)[p1+(1:p)] <- colnames(Y)
+    if (!("prob" %in% names(cross[[c("geno",1)]]))){
+      warning("First running calc.genoprob.")
+      cross <- calc.genoprob(cross)
+    }
+    out <- scanone(cross, pheno.col=p1+(1:p), method="hk", chr=chr,
+                   addcovar=addcovar, intcovar=intcovar)
+    maxPOS <- out$pos[apply(out[, -(1:2)], 2, which.max)]
+    maxLOD <- apply(out[, -(1:2)], 2, max)
+  }
 
   x <- maxPOS
   y <- maxLOD
