@@ -17,33 +17,18 @@
 ##' \item{pvalue}{P-value from parametric bootstrap simulations.}
 ##'
 ##' @examples
-##' set.seed(92950640)
-##' data(listeria)
-##' listeria <- calc.genoprob(listeria,step=1)
-##' n <- nind(listeria)
-##' chr <- "1"
-##' geno <- pull.geno(listeria, chr=chr)
-##' genotype1 <- geno[,7]
-##' genotype2 <- geno[,10]
-##' p <- 10
-##' p1 <- floor(p/2)
-##' G1 <- matrix(genotype1, n, p1)
-##' G2 <- matrix(genotype2, n, p-p1)
-##' G2[G2==3] <- 2
-##' G <- cbind(G1, G2*(-2))
-##' Y <- matrix(rnorm(n*p),n,p)
-##' Y <- Y + G
+##' data(fake.phenos)
 ##' obj <- testpleio.1vsp(listeria, Y, chr, n.simu=100)
 ##' summary(obj)
 ##' plot(obj)
-##' 
+##'
 ##' @export
 testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.simu=1000, tol=1e-7){
 
   if(length(chr) > 1) stop("Please specify only one chromosome. ")
   n <- nrow(Y)
   p <- ncol(Y)
-  
+
   genoprob <- pull.genoprob(cross, chr=chr)
   if(attr(cross,"class")[1] == "bc"){
     ngeno <- 2
@@ -55,7 +40,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
   out1 <- scanone.mvn(cross=cross, Y=Y, chr=chr, addcovar=addcovar, intcovar=intcovar)
   LOD1 <- out1$lod
   LOD1max <- max(out1$lod)
-  
+
   ## find best qtl for each trait.
   p1 <- ncol(cross$pheno)
   cross$pheno <- data.frame(cross$pheno, Y)
@@ -65,8 +50,8 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
   maxPOSind <- apply(out[,-(1:2)],2,which.max)
   maxPOS <- out$pos[apply(out[,-(1:2)],2,which.max)]
   maxLOD <- apply(out[,-(1:2)],2,max)
-  
-  ## p qtl model: use best qtl of each trait 
+
+  ## p qtl model: use best qtl of each trait
   E <- matrix(NA, n, p)
   X <- cbind(rep(1, n), addcovar, intcovar)
   E <- lm.resid(X, Y)
@@ -87,13 +72,13 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
   Sigma <- crossprod(E)
   L1 <- determinant(Sigma)$modulus
   LODp <- n/2 * log10(exp(1)) * (L0 - L1)
-  
+
   attributes(LODp) <-  NULL
   LODdiff <- LODp - LOD1max
 
   map <- out1$pos
   map.marker <- unlist(pull.map(cross, chr))
-  
+
   if(is.na(n.simu)){
     result <- list(LOD1=LOD1, LODp=LODp, LODdiff=LODdiff,
                    chr=chr, map=map, map.marker=map.marker,
@@ -113,7 +98,7 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
     Y.fit <- Y - E.marker
     Sigma <- cov(E.marker)
     Sigma.half <- chol(Sigma)
-    
+
     LODdiff.simu <- numeric(n.simu)
     for(i.simu in 1:n.simu){
       mat <- matrix(rnorm(p*n),p,n)      ## p*n
@@ -124,9 +109,9 @@ testpleio.1vsp <- function(cross, Y, chr="6", addcovar=NULL, intcovar=NULL, n.si
       LODdiff.simu[i.simu] <- result.i$LODdiff
     }
     pvalue <- mean(LODdiff.simu > LODdiff - tol)
-    result <- list(LOD1=LOD1, LODp=LODp, LODdiff=LODdiff, 
+    result <- list(LOD1=LOD1, LODp=LODp, LODdiff=LODdiff,
                    chr=chr, map=map, map.marker=map.marker,
-                   maxLOD=maxLOD, maxPOS=maxPOS, n.simu=n.simu, 
+                   maxLOD=maxLOD, maxPOS=maxPOS, n.simu=n.simu,
                    pvalue=pvalue, LODdiff.simu=LODdiff.simu)
   }
   class(result) <- c("testpleio.1vsp", "list")

@@ -1,5 +1,5 @@
 ##' Marker information.
-##' 
+##'
 ##' Pull out marker names positions and chromosomes as a data frame.
 ##'
 ##' @param cross An object of class \code{cross}. See
@@ -11,18 +11,16 @@
 ##' @return A data.frame whose first column contains the chromosome
 ##' IDs, second column contains cM positions, row names are
 ##' markernames.
-##' 
+##'
 ##' @examples
-##' set.seed(92950640)
-##' data(listeria)
-##' listeria <- calc.genoprob(listeria,step=1)
+##' data(fake.phenos)
 ##' marker <- get.marker.info(listeria)
 ##'
 ##' @export
 get.marker.info <- function(cross, chr){
-  if (!any(class(cross) == "cross")) 
+  if (!any(class(cross) == "cross"))
       stop("Input should have class \"cross\".")
-  if (!missing(chr)) 
+  if (!missing(chr))
       cross <- subset(cross, chr = chr)
   out <- NULL
   for(i.chr in names(cross$geno)){

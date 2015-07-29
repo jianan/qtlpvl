@@ -26,22 +26,7 @@
 ##' @seealso qtl::scanone
 ##'
 ##' @examples
-##' set.seed(92950640)
-##' data(listeria)
-##' listeria <- calc.genoprob(listeria,step=1)
-##' n <- nind(listeria)
-##' chr <- "1"
-##' geno <- pull.geno(listeria, chr=chr)
-##' genotype1 <- geno[,7]
-##' genotype2 <- geno[,10]
-##' p <- 10
-##' p1 <- floor(p/2)
-##' G1 <- matrix(genotype1, n, p1)
-##' G2 <- matrix(genotype2, n, p-p1)
-##' G2[G2==3] <- 2
-##' G <- cbind(G1, G2*(-2))
-##' Y <- matrix(rnorm(n*p),n,p)
-##' Y <- Y + G
+##' data(fake.phenos)
 ##' out <- scanone.mvn(listeria, Y, chr)
 ##' summary(out)
 ##' plot(out)

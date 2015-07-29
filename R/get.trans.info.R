@@ -12,7 +12,7 @@
 ##' "is.trans".
 ##' @export
 get.trans.info <- function(out1, probepos, chr=NULL, marker.info, lod.thr=5, trans.cM=10){
-  
+
   stopifnot(c("chr", "cM") %in% colnames(probepos))
   stopifnot(c("pheno", "chr", "pos", "lod1") %in% colnames(out1))
 
@@ -21,6 +21,6 @@ get.trans.info <- function(out1, probepos, chr=NULL, marker.info, lod.thr=5, tra
   out$pos0 <- probepos[out$pheno, "cM"]
   out$is.cis <- (out$lod1 > lod.thr) & (out$chr0 == out$chr) & abs(out$pos0 - out$pos) < trans.cM
   out$is.trans <- (out$lod1 > lod.thr) & !out$is.cis
-  
+
   return(out)
 }
