@@ -27,4 +27,4 @@ rownames(probepos) <- phenoname
 o <- order(probepos$chr, probepos$cM)
 probepos <- probepos[o, ]
 
-save(listeria, Y, n, p, chr, pos, probepos, file="../data/fake.phenos.RData")
+save(Y, probepos, file="../data/fake.phenos.RData")
