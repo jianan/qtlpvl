@@ -20,7 +20,7 @@ plotLODsign <- function(Y, cross, chr, LODsign, maxPOS, map,
                         mgp=c(1.6, 0.2, 0), bgcolor="gray80",
                         ...){
 
-  stopifnot(length(chr)==1) ## only plot for single chromosome
+  if(!missing(chr)) stopifnot(length(chr)==1) ## only plot for single chromosome
   if(missing(LODsign) | missing(maxPOS)){
     n <- nrow(Y)
     p <- ncol(Y)
