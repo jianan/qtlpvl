@@ -10,7 +10,7 @@
 ##' summary of scan1 result, max LOD score and its position for each
 ##' phenoname and chromosome combinantion.
 ##' @export
-convert.scan1 <- function(out, phenoname, chr=1:19){
+convert_scan1 <- function(out, phenoname, chr=1:19){
   CHR <- out[, "chr"]
   POS <- out[, "pos"]
 
