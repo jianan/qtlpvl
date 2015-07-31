@@ -21,60 +21,35 @@ statistical tests aimning at dissecting trans-eQTL hotspots.
 
 ## Data
 
-We use data `listeria` from `R\qtl` as an example. We will be only
-using the genotypes of this F$_2$ population and generate the
-phenotypes from normal distribution.
+We use data `listeria` from `R\qtl` as an example. We only used the
+genotypes of this F$_2$ population and generated the phenotypes from
+normal distribution. Assume the first QTL have additive effect only
+and the second QTL have dominant effect --individuals with genotype 2
+and 3 are grouped together to have the same shift in mean. The first 5
+traits are controlled by the first QTL and the other 5 trait of the
+total 10 are controlled by the second QTL with negative, bigger
+effect. The 10 phenotypes are generated with these QTL effects plus
+independent noise generated from standard normal distribution. Assume
+that these traits are measurements of gene expressions and we randomly
+generate fake positions for these genes. All data generated are stored
+in the package and we can load the data by:
 
 ```{r}
-set.seed(92950640)
-data(listeria)
-listeria <- calc.genoprob(listeria,step=1)
-n <- nind(listeria)
-chr <- "1"
-geno <- pull.geno(listeria, chr=chr)
-genotype1 <- geno[,7]
-genotype2 <- geno[,10]
-(pos <- unlist(pull.map(listeria, chr=chr))[c(7,10)])
-p <- 10
-p1 <- floor(p/2)
-G1 <- matrix(genotype1, n, p1)
-G2 <- matrix(genotype2, n, p-p1)
-G2[G2==3] <- 2
-G <- cbind(G1, G2*(-2))
-Y <- matrix(rnorm(n*p),n,p)
-Y <- Y + G
+data(fake.phenos)
 ```
-
-In the above code, after setting the random seed, we load the data
-`listeria` and pull out the genotype data from the cross object
-`listeria` on chromosome `r chr` as a data matrix `geno`, which is of
-size `r n` $\times$ `r ncol(geno)`. We pick the 7th and 10th marker as
-the two QTLs and save their genotypes in `genotype1` and
-`genotype2`. These two QTLs are at position `r sprintf("%.2f",pos[1])`
-cM and `r sprintf("%.2f",pos[2])` cM on chromosome `r chr`.
-
-Assume the first QTL have additive effect only and the second QTL have
-dominant effect --individuals with genotype 2 and 3 are grouped
-together to have the same shift in mean.  The first 5 traits are
-controlled by the first QTL and the other 5 trait of the total 10 are
-controlled by the second QTL with negative effect.  We use matrix G to
-save the QTL effects and the second QTL group, `G2` is multiply by -2
-to have a negative and bigger QTL effect.  The 10 phenotypes are
-generated with these QTL effect matrix G plus independent noise
-generated from standard normal distribution.
 
 We could first look at the single triat analysis result.  For each
 trait, we plot its LOD score versus QTL position when the LOD is
 bigger than a threshold (default value is 3).
 
-```{r}
+```{r,plotLOD}
 plotLOD(Y=Y, cross=listeria, chr=chr)
 ```
 
 ## joint mapping: `scanone.mvn`
 
 Having the cross object `listeria` and phenotype trait matrix `Y`
-prepared, we can first run a joint mapping with `scanone.mvn`, which
+loaded, we can first run a joint mapping with `scanone.mvn`, which
 assumes multivariate normal model. `chr` is set to be "1", which
 indicates the mapping is only on chromosome 1. Function `scanone.mvn`
 has two more parameters `addcovar` and `intcovar`, they could be used
@@ -97,7 +72,8 @@ with LOD score `r sprintf("%.2f",summary(out)$lod)`. It is more
 towards the second QTL since the second QTL has a bigger effect than
 the first.
 
-## test of 1 vs 2 QTL: `testpleio.1vs2`
+## Statistical Testing
+### test of 1 vs 2 QTL: `testpleio.1vs2`
 
 We test the hypothesis of:
 * $H_0$: There is only one QTL affecting all the phenotypes;
@@ -158,7 +134,7 @@ for the single QTL and best two QTL model, as well as test statistics
 $\text{LOD}_{2v1}$ and its P-value.
 
 ```{r}
-obj <- testpleio.1vs2(cross=listeria, Y=Y, chr=chr, n.simu=100,
+obj <- testpleio.1vs2(cross=listeria, Y=Y, chr=chr, n.simu=10,
                       region.l=60, region.r=90, search.method="complete")
 summary(obj)
 plot(obj)
@@ -190,7 +166,7 @@ rest of all the possible models.
 plottrace(obj)
 ```
 
-## test of 1 vs p QTL: `testpleio.1vsp`
+### test of 1 vs p QTL: `testpleio.1vsp`
 
 We could also test the hypothesis of:
 * $H_0$: There is only one QTL affecting all the phenotypes;
@@ -207,28 +183,13 @@ and p QTL model, as well as test statistics $\text{LOD}_{2v1}$ and its
 P-value.
 
 ```{r}
-obj2 <- testpleio.1vsp(cross=listeria, Y=Y, chr=chr, n.simu=100)
+obj2 <- testpleio.1vsp(cross=listeria, Y=Y, chr=chr, n.simu=10)
 summary(obj2)
 plot(obj2)
 ```
 
-## plot Genetic Pattern: `plotGenetpattern`
-
-To illustrate the use of exploration plots, we generate data with more
-number of traits, 100. Same as before, the first half of the traits
-are controlled by the first QTL and the rest are controlled by the
-second QTL.
-
-```{r}
-p <- 100
-p1 <- floor(p/2)
-G1 <- matrix(genotype1, n, p1)
-G2 <- matrix(genotype2, n, p-p1)
-G2[G2==3] <- 2
-G <- cbind(G1, G2*(-2))
-Y <- matrix(rnorm(n*p),n,p)
-Y <- Y + G
-```
+## Exploration plots
+### plot Genetic Pattern: `plotGenetpattern`
 
 Function `plotGenetpattern` takes two kinds of input parameters:
 * a phenotype matrix `Y` and a genotype vector `genotype`, the later
@@ -244,16 +205,22 @@ with pure additive effects are near the x-axis ($d=0$) and traits with
 dominant effects are along the diagonals, $d=a$ (BR=RR) and $d=-a$
 (BR=BB).
 
-```{r}
-plotGenetpattern(Y=Y, genotype=genotype1)
-plotGenetpattern(Y=Y, cross=listeria, chr=chr)
+```{r, fig.width=12, fig.height=6}
+par(mfrow=c(1,2))
+qtlpos <- max(out)$pos
+m <- find.pseudomarker(listeria, chr, qtlpos, "prob", addchr=FALSE)
+qtlgeno <- apply(listeria$geno[[chr]]$prob[,m,], 1, which.max)
+
+plotGenetpattern(Y=Y, genotype=qtlgeno, main="by common QTL genotype")
+plotGenetpattern(Y=Y, cross=listeria, chr=chr,
+                 main="by individual QTL genotype")
 ```
 
 We can tell from both plots the there are two different genetic
 patterns, thus possible two different QTLs, even if they are closely
 linked.
 
-## plot LOD score with sign: `plotLODsign`
+### plot LOD score with sign: `plotLODsign`
 
 Using the same data, we could also display the direction of the QTL
 effect with `plotLODsign`.  Function `plotLODsign` takes input
@@ -281,7 +248,96 @@ let the function handle it by pulling this information from the
 If we already have mapped the traits (which in most case is done
 previousely), we can pass the signed LOD scores and their mapped
 positions to `LODsign` and `maxPOS` respectively. This option speed up
-the procedure by skiping mapping the triats redundantly.
+the procedure by skiping mapping the triats redundantly. The use of
+this feature will be shown at the last section.
+
+### Linear discriminant plot: `plottrans.LDA`
+
+In this method we group individuals into two groups by whether there
+is a recombiantion event in the region. For individuals with no
+recombinantion events, we will know there eQTL genotype since they
+have the same genotype in the region, we then apply linear
+discriminant analysis to the traits with the eQTL genotype as `label`
+and plot the first 2 linear discriminants, shown as three distince
+clusters. We then calculate the linear discriminants for the other
+group with recombinantion event in the region by using the same
+coffecients, and add them to the plot. If the recombinant individuals
+fall within the clusters defined by the non-recombinants, this is
+consistent with there being a single eQTL. If, on the other hand, the
+recombinants look distinctly different from the non-recombinants, then
+there might be more than one eQTL.
+
+In the following code, we first find which inidviduals have no
+recombinant event, and then call the function `plottrans.LDA` with
+phenotype matrix `Y`, QTL genotype `qtlgeno` and nonrecombinant IDs
+`nonrecomb`.
+
+```{r}
+out <- out[out$chr==chr, ]
+m <- which(out$pos >= qtlpos-5 & out$pos <= qtlpos+5)
+g <- apply(listeria$geno[[chr]]$prob[,m,], 1:2, which.max)
+nonrecomb <- which(sapply(apply(g, 1, unique), length) == 1)
+names(nonrecomb) <- rownames(Y)[nonrecomb]
+
+plottrans.LDA(Y, qtlgeno, nonrecomb)
+```
+
+In the above plot each point is a individual colored by its QTL
+genotype if it is non-recombinant or yellow if it has recombiant.
+
+## Analysis as trans-eQTL hotspot with probepos
+
+Lastely, we will show the whole procedure recommended for analysis of
+expression data.  We start by mapping each phenotype individually,
+then count the number of eQTLs in windows of 10~cM, when there seems
+to be a trans-eQTL hotspot, we can build a object `transband` by
+`make.transbands`, the object contains basic information of the
+transband: chromosome and postion of the transband, number of eQTLs in
+the transband, and estimate of QTL position and LOD score under
+multivariate assumption; it also contians all the information needed
+for the exploration plots: QTL LOD scores and positions, additive and
+dominance effects, QTL geneotypes, and non-recombinant IDs. It is
+easier to extract these infomations from this object and run all the
+statistical test and exploration plots in a batch.
+
+```{r, fig.width=12, fig.height=8}
+library(qtlpvl)
+data(fake.phenos)
+phenoname <- colnames(Y)
+listeria$pheno <- data.frame(listeria$pheno, Y)
+out <- scanone(listeria, pheno.col=phenoname, chr=1:19)
+out1 <- convert_scan1(out, phenoname, chr=1:19)
+
+marker.info <- get.marker.info(listeria, chr)
+out.count <- count.trans(out1, probepos, chr, marker.info)
+
+par(mfrow=c(2,3))
+plot(out.count, main="Count of trans-eQTL")
+
+trans <- make.transbands(out1, probepos, cross=listeria, chr=1:19,
+                         mlratio = Y, lod.thr = 5,
+                         trans.cM = 5, kernal.width = 1,
+                         window.cM = 10, trans.count.thr = 0,
+                         regn.cM = 5)
+transband <- trans[[1]]
+
+Y <- attr(transband, "Y")
+geno <- attr(transband, "geno")
+nonrecomb <- attr(transband, "nonrecomb")
+out <- attr(transband, "out")
+map <- pull.map(listeria)
+obj <- testpleio.1vs2(cross=listeria, Y=Y, chr=chr, n.simu=10,
+                      region.l=60, region.r=90)
+
+plot(obj, main="LOD profile")
+plottrace(obj, main="Trace")
+plotLODsign(maxPOS=out$pos, LODsign=sign(out$eff.a)*out$lod1, map=map[[chr]],
+            main="Signed LOD")
+plotGenetpattern(a=out$eff.a, d=out$eff.d, main="Inheritance Pattern")
+plottrans.LDA(Y, geno, nonrecomb, main="LDA plot")
+
+```
+
 
 ## Session Info
 ```{r}
