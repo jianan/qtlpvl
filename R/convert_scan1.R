@@ -15,7 +15,7 @@ convert_scan1 <- function(out, phenoname, chr=1:19){
   POS <- out[, "pos"]
 
   out <- out[, phenoname]
-  maxLOD <- matrix(NA, p, length(chr))
+  maxLOD <- matrix(NA, length(phenoname), length(chr))
   colnames(maxLOD) <- chr
   rownames(maxLOD) <- phenoname
   maxPOS <- maxLOD
