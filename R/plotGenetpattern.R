@@ -9,23 +9,7 @@
 ##' @return a plot of QTL dominance effect versus QTL additive effect.
 ##'
 ##' @examples
-##' set.seed(92950640)
-##' data(listeria)
-##' listeria <- calc.genoprob(listeria)
-##' n <- nind(listeria)
-##' chr <- "1"
-##' geno <- pull.geno(listeria, chr=chr)
-##' genotype1 <- geno[,7]
-##' genotype2 <- geno[,10]
-##' p <- 100
-##' p1 <- floor(p/2)
-##' G1 <- matrix(genotype1, n, p1)
-##' G2 <- -matrix(genotype2, n, p-p1)
-##' G2[G2==3] <- 2
-##' G <- cbind(G1, G2*(-2))
-##' Y <- matrix(rnorm(n*p),n,p)
-##' Y <- Y + G
-##' plotGenetpattern(Y, genotype=genotype1)
+##' data(fake.phenos)
 ##' plotGenetpattern(Y, cross=listeria, chr=chr)
 ##'
 ##' @export

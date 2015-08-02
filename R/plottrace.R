@@ -17,9 +17,8 @@ plottrace <- function(x, ...)
 ##' @param x object of class "testpleio.1vs2"
 ##' @param ... parameters to be passed through to plotting functions.
 ##' @export
-plottrace.testpleio.1vs2 <- function(x, xlab="cut point", ylab="LODdiff",
+plottrace.testpleio.1vs2 <- function(x, xlab="cut point", ylab=expression(LOD["2v1"]),
                         mgp=c(1.6, 0.2, 0), ...){
-
   object <- x
   if (!any(class(object) == "testpleio.1vs2"))
       stop("Input should have class \"testpleio.1vs2\".")

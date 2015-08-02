@@ -4,8 +4,8 @@
 \alias{plottrace.testpleio.1vs2}
 \title{plot trace}
 \usage{
-\method{plottrace}{testpleio.1vs2}(x, xlab = "cut point", ylab = "LODdiff",
-  mgp = c(1.6, 0.2, 0), ...)
+\method{plottrace}{testpleio.1vs2}(x, xlab = "cut point",
+  ylab = expression(LOD["2v1"]), mgp = c(1.6, 0.2, 0), ...)
 }
 \arguments{
 \item{x}{object of class "testpleio.1vs2"}

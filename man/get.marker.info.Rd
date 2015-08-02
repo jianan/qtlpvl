@@ -24,9 +24,7 @@ markernames.
 Pull out marker names positions and chromosomes as a data frame.
 }
 \examples{
-set.seed(92950640)
-data(listeria)
-listeria <- calc.genoprob(listeria,step=1)
+data(fake.phenos)
 marker <- get.marker.info(listeria)
 }
 

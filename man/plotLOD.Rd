@@ -4,7 +4,7 @@
 \alias{plotLOD}
 \title{Plot LOD score versus QTL position for multiple traits.}
 \usage{
-plotLOD(Y, cross, chr, addcovar = NULL, intcovar = NULL,
+plotLOD(Y, cross, chr, maxLOD, maxPOS, addcovar = NULL, intcovar = NULL,
   LOD.threshold = 3, ...)
 }
 \arguments{
@@ -35,22 +35,7 @@ For each trait, plot its LOD score versus QTL position when the
 LOD is bigger than a threshold.
 }
 \examples{
-set.seed(92950640)
-data(listeria)
-listeria <- calc.genoprob(listeria)
-n <- nind(listeria)
-chr <- "1"
-geno <- pull.geno(listeria, chr=chr)
-genotype1 <- geno[,7]
-genotype2 <- geno[,10]
-p <- 100
-p1 <- floor(p/2)
-G1 <- matrix(genotype1, n, p1)
-G2 <- -matrix(genotype2, n, p-p1)
-G2[G2==3] <- 2
-G <- cbind(G1, G2*(-2))
-Y <- matrix(rnorm(n*p),n,p)
-Y <- Y + G
+data(fake.phenos)
 plotLOD(Y, listeria, chr)
 }
 
