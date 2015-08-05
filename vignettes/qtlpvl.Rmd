@@ -4,7 +4,6 @@
 -->
 
 ```{r, echo = FALSE, message = FALSE}
-library(qtlpvl)
 knitr::opts_chunk$set(
     fig.width=10, fig.height=6,
     comment = "#>",
@@ -14,41 +13,48 @@ knitr::opts_chunk$set(
 
 # Introduction to qtlpvl
 
-This package is focusing on QTL mapping with multiple traits and
-testing of pleiotrophy vs. close linkage when multiple traits mapped
-near each other, with the case of trans-eQTL hotspot in mind
-particularly. We provide both exploration plot functions and formal
-statistical tests aimning at dissecting trans-eQTL hotspots.
+This package focuses on QTL mapping with multiple traits and
+on testing of pleiotrophy vs. close linkage when multiple traits map
+near each other, particularly for the of a trans-eQTL hotspot.
+We provide both exploratory plots and formal
+statistical tests aimed at dissecting trans-eQTL hotspots.
 
 ## Data
 
-We used data `listeria` from `R\qtl` as an example. We used the
-genotypes of this F$_2$ population and simulated the phenotypes from
-normal distribution. First we picked two markers from chromosome 1 as QTL,
-assuming the first QTL have additive effect only and the second QTL have
-dominant effect --individuals with genotype 2 and 3 are grouped
-together to have the same shift in mean. Then we assumed the first 5
-traits to be controlled by the first QTL and the other 5 trait of the
-total 10 to be controlled by the second QTL with negative, bigger
-effect. The 10 phenotypes were generated with these QTL effects plus
-independent noise generated from standard normal distribution. Assume
-that these traits are measurements of gene expressions and we randomly
-assigned positions for these genes. The phenotype data is stored
-in matrix `Y` and their positions are stored in data.frame `probepos`,
-both are saved in the package and we can load them by:
+To illustrate the package, we use the genotype data from the
+`listeria` data set (an F$_2$ population) provided with [R/qtl](http://rqtl.org)
+along with a set of simulated phenotypes, included in qtlpvl as the
+data set `fake.phenos`. The phenotypes were simulated using
+two markers from chromosome 1 as QTL,
+with the first QTL having an additive allelic effect, and with one of
+the alleles at the second QTL being strictly dominant. There are 10
+phenotypes. The first 5
+are controlled by the first QTL, and the other 5 traits are controlled
+by the second QTL (and with a negative and larger effect).
+The 10 phenotypes were generated with these QTL effects plus
+independent, normally distributed residual variation.
+Treating these traits as gene expression measurements, we
+assigned genomic positions at random. The phenotype data is stored
+in matrix `Y` and their positions are stored in data frame `probepos`.
+
+We load the qtlpvl package, the simulated phenotype data, and the
+`listeria` data set as follows. (The R/qtl package is automatically
+loaded when qtlpvl is loaded.)
 
 ```{r}
+library(qtlpvl)
 data(fake.phenos)
+data(listeria)
 ```
 
-We will first look at the single triat analysis result. For each
-trait, we plot its LOD score versus QTL position when the LOD is
-bigger than a threshold (default value is 3). To do so we first
-calculate the genotype probabilities for `listeria` and then use
-function `plotLOD`.
+We will first perform single-trait analysis. For each
+trait, we plot its LOD score versus its QTL position, when the LOD is
+bigger than a threshold (the default value is 3). To do so we first
+calculate the QTL genotype probabilities for `listeria` and then use
+the function `plotLOD`. We will only scan chromosome 1, and we set the
+variable `chr=1` for use throughout.
 
 ```{r,plotLOD,fig.cap="LOD score and QTL positions for each of the simulated traits"}
-data(listeria)
 listeria <- calc.genoprob(listeria, step=1)
 chr <- 1
 plotLOD(Y=Y, cross=listeria, chr=chr)
@@ -57,17 +63,18 @@ plotLOD(Y=Y, cross=listeria, chr=chr)
 ## joint mapping: `scanone.mvn`
 
 Having the cross object `listeria` and phenotype trait matrix `Y`
-loaded, we can run a joint mapping with `scanone.mvn`, which
-assumes multivariate normal model. `chr` is set to be "1", which
+loaded, we can perform joint, multi-trait QTL mapping with the
+function `scanone.mvn`. This assumes
+a multivariate normal model. `chr` is set to be "1", which
 indicates the mapping is only on chromosome 1. Function `scanone.mvn`
-has two more parameters `addcovar` and `intcovar`, they could be used
-to control for additive and interactive covariates when
-needed. `intcovar` will also be used as additive covariates during
-mapping, and there is no need to manually add them into `addcovar` by
-the user.
+has two more parameters `addcovar` and `intcovar` that can be used
+to control for additive and interactive covariates.
+`intcovar` will also be used as additive covariates during
+mapping, and there is no need to manually add them into `addcovar`.
 
-The result of joint mapping is a data frame with class `scanone`, we
-could apply (S3) method `summary` and `plot` to look at the result.
+The result of joint mapping is a data frame with class `scanone` (that
+is, in the same form as returned by the R/qtl function `scanone`).
+We can then use `summary` and `plot` to look at the results.
 
 ```{r,scanonemvn, fig.cap="Joint mapping result under multivariate normal model for all the simulated triats"}
 out <- scanone.mvn(cross=listeria, Y=Y, chr=chr)
@@ -75,36 +82,39 @@ summary(out)
 plot(out)
 ```
 
-We could see the QTL is at `r sprintf("%.2f",summary(out)$pos)` cM
-with LOD score `r sprintf("%.2f",summary(out)$lod)`. It is more
-towards the second QTL since the second QTL has a bigger effect than
-the first in our simulation.
+With this single-QTL analysis, the QTL is estimated to be at
+`r myround(summary(out)$pos, 1)` cM,
+with LOD score `r myround(summary(out)$lod, 1)`. This is closer to the
+second QTL, as in our simulation, the second QTL had a larger effect than
+the first QTL.
 
 ## Statistical Testing
 ### test of 1 vs 2 QTL: `testpleio.1vs2`
 
-We test the hypothesis of:
+We now turn to the question of pleiotropy vs. close
+linkage. Specifically, we test the hypotheses:
 * $H_0$: There is only one QTL affecting all the phenotypes;
-* $H_1$: There are two QTLs, each affecting one of the two phenotype
-  groups.
+* $H_1$: There are two QTLs, with each phenotype affected by one or
+  the other QTL.
 
-We assume the traits follow multivariate normal distribution and
-perform joint mapping to locate the single-QTL under the null
-hypothesis that there is one pleiotrophic QTL affecting all the
-traits; we then run single trait analysis on each trait and find the
-trait-specific QTL, sort the traits by their QTL position and search
+We again assume that the residual variation in the traits follows
+a multivariate normal distribution. We
+perform joint, multivariate QTL mapping to locate the single QTL, under the null
+hypothesis that there is one pleiotropic QTL affecting all the
+traits. We then run single-trait analysis on each trait and find the
+trait-specific QTL, sort the traits by their estimated QTL position and search
 for the best separation of the traits into two groups, where the first
 group (contains the first several traits) is controlled by the right
 QTL and the second group (contains the rest traits) is controlled by
-the left QTL. The LOD score of this two-QTL model is then subtracted
-by the LOD score of the single-QTL model to arrived at the final test
+the left QTL. The LOD score for this two-QTL model is then subtracted
+by the LOD score for the single-QTL model, to give the final test
 statistic, $\text{LOD}_{2v1}$.
 
 To get the null distribution of the statistics, we have two methods:
 * parametric bootstrap: generate data from the parameters estimated
   under the null hypothesis
 * stratified permutation: randomly permute the genotype data versus
-  phenotype data with in each QTL genotype group,
+  phenotype data within each QTL genotype group,
 
 we repeat the whole procedure on data from either method and save the
 test statistics. The P-value is calculated from this empirical
