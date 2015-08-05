@@ -16,6 +16,7 @@ plottrace <- function(x, ...)
 ##'
 ##' @param x object of class "testpleio.1vs2"
 ##' @param ... parameters to be passed through to plotting functions.
+##' @param xlab,ylab,mgp same as in \code{plot}
 ##' @export
 plottrace.testpleio.1vs2 <- function(x, xlab="cut point", ylab=expression(LOD["2v1"]),
                         mgp=c(1.6, 0.2, 0), ...){

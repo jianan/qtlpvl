@@ -36,6 +36,9 @@
 ##'
 ##' @examples
 ##' data(fake.phenos)
+##' data(listeria)
+##' listeria <- calc.genoprob(listeria, step=1)
+##' chr <- 1
 ##' obj <- testpleio.1vs2(listeria, Y, chr, n.simu=100,
 ##'                       region.l=60, region.r=90)
 ##' summary(obj)

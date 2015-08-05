@@ -19,7 +19,8 @@ Suggests:
     testthat,
     MASS,
     class,
-    e1071
+    e1071,
+    Rtsne
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppEigen
 License: GPL-3

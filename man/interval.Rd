@@ -24,6 +24,8 @@ interval(cross, Y, chr, region.l, region.r, do.plot = TRUE, main = "",
 \item{main}{main titile of the plot.}
 
 \item{weighted}{use pred.score as weights? default is \code{FALSE}.}
+
+\item{thr}{cutoff for the interval. default is 0.9}
 }
 \value{
 list of chr and interval and plots if \code{do.plot=TRUE}.

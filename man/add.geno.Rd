@@ -7,7 +7,14 @@
 add.geno(transbands, cross, regn.cM = 5, max.p = 100)
 }
 \arguments{
+\item{transbands}{result from find.trans, a list of transband.}
+
+\item{cross}{An object of class \code{cross}. See
+\code{read.cross} for details.}
+
 \item{regn.cM}{disctance in cM form QTL for defining non-recombinanct mice.}
+
+\item{max.p}{max number of expression traits used.}
 }
 \description{
 For a list of hotspots, find the single QTL genotype and the mice

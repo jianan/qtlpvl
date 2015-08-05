@@ -23,6 +23,10 @@ LOD scores should be calculated. This should be a vector of
 character strings referring to chromosomes by name; numeric values
 are converted to strings.}
 
+\item{a}{vector of additive effect}
+
+\item{d}{vector of diminance effect}
+
 \item{addcovar}{Additive covariates, samples in the row.}
 
 \item{intcovar}{Interactive covariates (interact with QTL genotype).}
@@ -40,6 +44,9 @@ QTL dominant effect is defined as d=BR-(BB+RR)/2.
 }
 \examples{
 data(fake.phenos)
+data(listeria)
+listeria <- calc.genoprob(listeria, step=1)
+chr <- 1
 plotGenetpattern(Y, cross=listeria, chr=chr)
 }
 

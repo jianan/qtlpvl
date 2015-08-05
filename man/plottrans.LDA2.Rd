@@ -16,6 +16,12 @@ plottrans.LDA2(Y, geno, nonrecomb, max.p = 100, geno2, addlegend = TRUE,
 
 \item{max.p}{max number of traits used for PCA analysis. This is
 used to avoid rank deficiency.}
+
+\item{geno2}{2 QTL genotype}
+
+\item{addlegend}{logical value. whether or not add legend to the plot.}
+
+\item{...}{parameters to be passed through to plotting functions.}
 }
 \description{
 This version of plot color the recombinant mice by their 2 QTL genotype instead of all yellow.

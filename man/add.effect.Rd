@@ -6,6 +6,12 @@
 \usage{
 add.effect(transbands, cross)
 }
+\arguments{
+\item{transbands}{result from find.trans, a list of transband.}
+
+\item{cross}{An object of class \code{cross}. See
+\code{read.cross} for details.}
+}
 \description{
 find the QTL addtive and dominant effect for all traits in the transband.
 }

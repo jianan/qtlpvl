@@ -19,6 +19,10 @@ LOD scores should be calculated. This should be a vector of
 character strings referring to chromosomes by name; numeric values
 are converted to strings.}
 
+\item{maxLOD}{max LOD score for each trait}
+
+\item{maxPOS}{position of maxLOD for each trait}
+
 \item{addcovar}{Additive covariates, samples in the row.}
 
 \item{intcovar}{Interactive covariates (interact with QTL genotype).}
@@ -36,6 +40,9 @@ LOD is bigger than a threshold.
 }
 \examples{
 data(fake.phenos)
+data(listeria)
+listeria <- calc.genoprob(listeria, step=1)
+chr <- 1
 plotLOD(Y, listeria, chr)
 }
 

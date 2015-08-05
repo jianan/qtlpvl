@@ -23,6 +23,8 @@ make.transbands(out1, probepos, cross, chr, marker.info, mlratio, lod.thr = 5,
 \item{marker.info}{Data.frame of marker information, result of
 \code{get.marker.info}}
 
+\item{mlratio}{matrix of expression traits}
+
 \item{lod.thr}{LOD threshold}
 
 \item{trans.cM}{threshold of the distance between the qtl position
@@ -40,7 +42,8 @@ transband.}
 \item{regn.cM}{disctance in cM form QTL for defining non-recombinanct mice.}
 }
 \value{
-a list of transband.
+a list of transband, with each transband contains the
+infomations needed for exploration plots.
 }
 \description{
 From a scan1 result, first count how many trans-eQTL are there in

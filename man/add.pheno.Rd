@@ -6,6 +6,11 @@
 \usage{
 add.pheno(transbands, mlratio)
 }
+\arguments{
+\item{transbands}{result from find.trans, a list of transband.}
+
+\item{mlratio}{matrix of expression traits}
+}
 \description{
 for each transband, add the phenotypes "Y".
 }

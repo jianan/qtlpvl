@@ -13,13 +13,15 @@
 ##' markernames.
 ##'
 ##' @examples
-##' data(fake.phenos)
-##' marker <- get.marker.info(listeria)
+##' data(listeria)
+##' marker <- get.marker.info(listeria, chr=1:19)
 ##'
 ##' @export
 get.marker.info <- function(cross, chr){
   if (!any(class(cross) == "cross"))
       stop("Input should have class \"cross\".")
+  if (!("prob" %in% names(cross$geno[[1]])))
+      cross <- calc.genoprob(cross)
   if (!missing(chr))
       cross <- subset(cross, chr = chr)
   out <- NULL

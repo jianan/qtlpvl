@@ -43,6 +43,9 @@ traits.
 }
 \examples{
 data(fake.phenos)
+data(listeria)
+listeria <- calc.genoprob(listeria, step=1)
+chr <- 1
 out <- scanone.mvn(listeria, Y, chr)
 summary(out)
 plot(out)

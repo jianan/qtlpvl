@@ -10,6 +10,8 @@
 \arguments{
 \item{x}{object of class "testpleio.1vs2"}
 
+\item{xlab,ylab,mgp}{same as in \code{plot}}
+
 \item{...}{parameters to be passed through to plotting functions.}
 }
 \description{

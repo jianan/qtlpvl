@@ -24,7 +24,7 @@ markernames.
 Pull out marker names positions and chromosomes as a data frame.
 }
 \examples{
-data(fake.phenos)
-marker <- get.marker.info(listeria)
+data(listeria)
+marker <- get.marker.info(listeria, chr=1:19)
 }
 

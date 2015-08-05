@@ -3,6 +3,9 @@
 ##' This version of plot color the recombinant mice by their 2 QTL genotype instead of all yellow.
 ##'
 ##' @inheritParams plottrans.PCA
+##' @param geno2 2 QTL genotype
+##' @param addlegend logical value. whether or not add legend to the plot.
+##' @param ... parameters to be passed through to plotting functions.
 ##' @export
 plottrans.LDA2 <- function(Y, geno, nonrecomb, max.p=100, geno2, addlegend=TRUE, ...){
   suppressMessages(require(MASS))|| stop("the required package 'MASS' is not installed. ")

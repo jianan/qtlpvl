@@ -4,12 +4,17 @@
 ##' LOD is bigger than a threshold.
 ##'
 ##' @inheritParams scanone.mvn
+##' @param maxLOD max LOD score for each trait
+##' @param maxPOS position of maxLOD for each trait
 ##' @param LOD.threshold threshold for QTL to be displayed.
 ##' @param ... Optional graphics arguments
 ##' @return A plot LOD score versus QTL position for multiple traits.
 ##'
 ##' @examples
 ##' data(fake.phenos)
+##' data(listeria)
+##' listeria <- calc.genoprob(listeria, step=1)
+##' chr <- 1
 ##' plotLOD(Y, listeria, chr)
 ##'
 ##' @export

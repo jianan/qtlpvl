@@ -6,10 +6,15 @@
 ##' @inheritParams scanone.mvn
 ##' @inheritParams plotLODsign
 ##' @param genotype QTL genotype for the common QTL.
+##' @param a vector of additive effect
+##' @param d vector of diminance effect
 ##' @return a plot of QTL dominance effect versus QTL additive effect.
 ##'
 ##' @examples
 ##' data(fake.phenos)
+##' data(listeria)
+##' listeria <- calc.genoprob(listeria, step=1)
+##' chr <- 1
 ##' plotGenetpattern(Y, cross=listeria, chr=chr)
 ##'
 ##' @export
