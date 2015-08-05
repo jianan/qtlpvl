@@ -26,4 +26,4 @@ clean:
 
 cleanall:
 	rm -rf $(TARGET_RCPP_ATTRIBUTE) man/*.Rd NAMESPACE \
-           vignettes/figure vignettes/*.md vignettes/*.html 
+           vignettes/figure vignettes/*.md vignettes/*.html
