@@ -2,6 +2,7 @@
 ##'
 ##' @inheritParams group.train.test
 ##' @inheritParams mosaic.plot
+##' @inheritParams propn.int
 ##' @param do.plot logical, plot results? default is \code{TRUE}
 ##' @return list of chr and interval and plots if \code{do.plot=TRUE}.
 ##' @export

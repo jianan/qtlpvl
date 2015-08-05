@@ -3,7 +3,9 @@
 ##' For a list of hotspots, find the single QTL genotype and the mice
 ##' with no recombinant events in a 10cM region around the single QTL.
 ##'
+##' @inheritParams add.effect
 ##' @param regn.cM disctance in cM form QTL for defining non-recombinanct mice.
+##' @param max.p max number of expression traits used.
 ##'
 add.geno <- function(transbands, cross, regn.cM=5, max.p=100){
   allele <- attr(cross, "alleles")

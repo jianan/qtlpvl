@@ -1,10 +1,14 @@
 ##' find the QTL addtive and dominant effect for all traits in the transband.
+##'
+##' @inheritParams scanone.mvn
+##' @param transbands result from find.trans, a list of transband.
+##'
 add.effect <- function(transbands, cross){
   allele <- attr(cross, "alleles")
   gt <- c(paste0(allele[1], allele[1]),
           paste0(allele[1], allele[2]),
           paste0(allele[2], allele[2]))
-  for(i in 1:length(transbands)){  
+  for(i in 1:length(transbands)){
     chr <- attr(transbands[[i]], "info")$chr
     Y <- attr(transbands[[i]], "Y")
     genoprob <- pull.genoprob(cross, chr=chr)

@@ -5,7 +5,10 @@
 ##' @inheritParams find.trans
 ##' @inheritParams add.geno
 ##' @inheritParams scanone.mvn
-##' @return a list of transband.
+##' @param mlratio matrix of expression traits
+##' @return a list of transband, with each transband contains the
+##' infomations needed for exploration plots.
+##'
 ##' @export
 make.transbands <- function(out1, probepos, cross, chr, marker.info, mlratio,
                             lod.thr=5, trans.cM=5, kernal.width=1, window.cM=10,
