@@ -4,6 +4,7 @@
 -->
 
 ```{r, echo = FALSE, message = FALSE}
+set.seed(20150805)
 knitr::opts_chunk$set(
     fig.width=10, fig.height=6,
     comment = "#>",
