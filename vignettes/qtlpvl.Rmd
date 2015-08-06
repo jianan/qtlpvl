@@ -231,11 +231,11 @@ The function `plotGenetpattern` takes two kinds of input parameters:
 We'll use the labels B and R for the alleles in the cross. (These
 correspond to the strains in the main application that motivated this
 work).
-The additive QTL effect is defined as $a=(RR-BB)/2$. The dominance effect is
-$d=BR-(BB+RR)/2$. When plotted against each other, traits
+The additive QTL effect is defined as $a=(\mu_{RR}-\mu_{BB})/2$. The dominance effect is
+$d=\mu_{BR}-(\mu_{BB}+\mu_{RR})/2$. When plotted against each other, traits
 with pure additive effects are near the x-axis ($d=0$) and traits with
-dominant effects are along the diagonals, $d=a$ (BR=RR) and $d=-a$
-(BR=BB).
+dominant effects are along the diagonals, $d=a$ (that is, $\mu_{BR}=\mu_{RR}$) and $d=-a$
+(that is, $\mu_{BR}=\mu_{BB}$).
 
 Here, we'll make plots by each method: with a common QTL and with
 separate QTL for each trait.
