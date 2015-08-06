@@ -8,6 +8,9 @@
 ##' @param genotype QTL genotype for the common QTL.
 ##' @param a vector of additive effect
 ##' @param d vector of diminance effect
+##' @param xlab x-axis label
+##' @param ylab y-axis label
+##' @param mgp Margin parameters
 ##' @return a plot of QTL dominance effect versus QTL additive effect.
 ##'
 ##' @examples

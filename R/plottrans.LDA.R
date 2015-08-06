@@ -3,8 +3,6 @@
 ##' @inheritParams plottrans.PCA
 ##' @export
 plottrans.LDA <- function(Y, geno, nonrecomb, max.p=100, ...){
-  suppressMessages(require(MASS))|| stop("the required package 'MASS' is not installed. ")
-
   ## use the first 100.
   Y <- Y[, 1:min(max.p, ncol(Y))]
 

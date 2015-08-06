@@ -6,7 +6,14 @@
 ##' @inheritParams scanone.mvn
 ##' @param Y matrix, columns are quantitative traits maps to the same position.
 ##' @param LOD.threshold threshold for QTL to be displayed.
-##' @param ... Optional graphics arguments
+##' @param ... Optional graphics arguments, passed to \code{\link[graphics]{plot}}
+##' @param LODsign Optional vector of signed LOD scores
+##' @param maxPOS Optional vector of estimated QTL positions
+##' @param map Optional vector of marker positions
+##' @param xlab x-axis label
+##' @param ylab y-axis label
+##' @param mgp Margin parameters
+##' @param bgcolor Background color for the plot
 ##' @return a plot the signed LOD score versus QTL position for multiple traits.
 ##'
 ##' @examples

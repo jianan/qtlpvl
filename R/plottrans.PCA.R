@@ -4,6 +4,7 @@
 ##' @param geno genotype at the peak marker of scanone.mvn.
 ##' @param nonrecomb index for non-recombnent(in a 10cM region) individuals.
 ##' @param max.p max number of traits used for PCA analysis. This is
+##' @param ... Optional graphics parameters passed to \code{\link[broman]{grayplot}}
 ##' used to avoid rank deficiency.
 ##' @export
 plottrans.PCA <- function(Y, geno, nonrecomb, max.p=100, ...){

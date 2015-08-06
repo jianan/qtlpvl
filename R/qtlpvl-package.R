@@ -1,10 +1,10 @@
 ##' qtlpvl
-##' 
+##'
 ##' QTL: test of pleiotrophy vs. close linkage
 ##'
 ##' @import qtl
 ##' @import Rcpp
-##' @import RcppEigen
+##' @import plyr
 ##' @name qtlpvl
 ##' @useDynLib qtlpvl
 ##' @docType package
