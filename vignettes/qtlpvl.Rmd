@@ -94,7 +94,7 @@ the first QTL.
 We now turn to the question of pleiotropy vs. close
 linkage. Specifically, we test the hypotheses:
 * $H_0$: There is only one QTL affecting all the phenotypes;
-* $H_1$: There are two QTLs, with each phenotype affected by one or
+* $H_1$: There are two QTL, with each phenotype affected by one or
   the other QTL.
 
 We again assume that the residual variation in the traits follows
@@ -116,40 +116,43 @@ To get the null distribution of the statistics, we have two methods:
 * stratified permutation: randomly permute the genotype data versus
   phenotype data within each QTL genotype group,
 
-we repeat the whole procedure on data from either method and save the
+We repeat the entire procedure on data from either method and save the
 test statistics. The P-value is calculated from this empirical
 distribution.
 
-Function `testpleio.1vs2` is used to do this test. Input parameters:
-* cross: An object of class `cross`.
-* Y: matrix of multiple traits, with samples in the row, traits in the
+The function `testpleio.1vs2` is used to do this test. Input parameters:
+* `cross`: An [R/qtl](http://rqtl.org)  `cross` object.
+* `Y`: matrix of multiple traits, with samples in the row, traits in the
   column.
-* chr: One character strings referring to chromosome of interest by
+* `chr`: Character string referring to chromosome of interest by
   name.
-* region.l, region.r: left and right bound for the interval of
+* `region.l`, `region.r`: left and right bounds for the interval of
   interest.
-* int.method: can have value of `bayes` or `1.5lod`, method to
-  calculated the interval of interest if `region.l` and `region.r` is
-  not specified.
-* search.method: searching method for two-QTL model, can have value of
-  `fast` or `complete`, default is `fast`.
-* RandomStart: when search.method is `fast`, use random starting point
-  for the two-QTL model or not, default is `TRUE`.
-* RandomCut: use random cutting or not when there are traits mapped to
-  the same location. default is `FALSE`, triats mapped to the same
-  location will be bound together.
-* simu.method: `parametric` or `permutation` method for
-  simulations. default is `parametric`.
-* n.simu: number of simulations for p-value.
-* tol: Tolerance value for the `qr` decomposition in `lm` fitting.
-* addcovar, intcovar: Additive and interactive covariates to control
-  for when mapping.
+* `int.method`: method to
+  calculate the interval of interest if `region.l` and `region.r` is
+  not specified (either `bayes` or `1.5lod`)
+* `search.method`: method for searching the two-QTL model (either
+  `fast` or `complete`; the default is `fast`).
+* `RandomStart`: When `search.method` is `fast`, indicates whether to use a random starting point
+  for the search over two-QTL models; the default is `TRUE`.
+* `RandomCut`: Indicates whether to use random cutting or not when there are traits mapped to
+  the same location. The default is `FALSE` (traits mapped to the same
+  location will be bound together).
+* `simu.method`: method for determining the null distribution
+  (`parametric` or `permutation`; the default is `parametric`).
+* `n.simu`: number of simulations for p-value.
+* `tol`: Tolerance value for the `qr` decomposition in fitting the
+  linear models with `lm`.
+* `addcovar`, `intcovar`: Optional additive and interactive covariates to include
+  when mapping.
 
-This function will return a list with class `testpleio.1vs2`, similar
-to `scanone`, we could apply (S3) method `summary` and `plot` to look
-at the result. In the summary, we could see the position and LOD score
-for the single QTL and best two QTL model, as well as test statistics
+This function will return a list with class `testpleio.1vs2`. We can
+use `summary` and `plot` to study the results.
+The result of `summary` includes the estimated QTL position and LOD score
+for the single-QTL and two-QTL models, as well as the test statistic
 $\text{LOD}_{2v1}$ and its P-value.
+
+As a quick illustration, we will perform just 10 bootstrap simulation replicates.
 
 ```{r, fig.cap="LOD profile plot for result of test1vs2 on simulated traits"}
 obj <- testpleio.1vs2(cross=listeria, Y=Y, chr=chr, n.simu=10,
@@ -159,47 +162,50 @@ summary(obj)
 plot(obj)
 ```
 
-The above figure shows the joint mapping result in black and profile
-for each of the two QTLs under $H_1$:
+The above figure shows the joint mapping result in black and the
+profile LOD curves for each of the two QTL under $H_1$:
 
 * red line: $L_1(\lambda_1) = \max_{\lambda_2} LOD2(\lambda_1,
   \lambda_2)$
 * blue line: $L_2(\lambda_2) = \max_{\lambda_1} LOD2(\lambda_1,
   \lambda_2)$
 
-Triangles indicate the position of the QTLs and solid points indicate
+Triangles indicate the estimated positions of the QTL and solid points indicate
 QTL positions and LODs from single trait mapping.
+
+We use `plottrace` to see how $\text{LOD}_{2v1}$ changes
+when we move the cut-point of the left versus right group.
 
 ```{r, fig.cap="plot of LOD$_{2v1}$ by cut-point"}
 plottrace(obj)
 ```
 
-We use `plottrace` to see how $\text{LOD}_{2v1}$ changes
-when we move the cut-point of the left versus right group. There are 7
-possible QTL positions from the above plot (result of single trait
-mapping), thus we have 6 possible ways of grouping these positions
-into the left versus right group. The 6 dot indict the cut and
-their $\text{LOD}_{2v1}$. Thus when the first 5 traits and the last 5
+There are 7
+possible QTL positions from the above plot with the results of single-trait
+mapping. Thus we have 6 possible ways of grouping these positions
+into the left versus right group. The 6 dots indicate the possible cut-points and
+the corresponding value for  $\text{LOD}_{2v1}$.Thus when the first 5 traits and the last 5
 traits are grouped separately, the $\text{LOD}_{2v1}$ is the biggest,
-it is our best two QTL model. This figure could be used as a
-diagnostic figure, to see if our best two QTL model is better than the
-rest of all the possible models.
-
+it is our best two QTL model. This figure can be used as a
+diagnostic, to see how our inferred two-QTL model compares to other
+possible models.
 
 ### test of 1 vs p QTL: `testpleio.1vsp`
 
-We could also test the hypothesis of:
+We could also test the hypotheses:
 * $H_0$: There is only one QTL affecting all the phenotypes;
-* $H_1$: There are p QTLs, each affecting one of the phenotypes, i.e.,
-  each phenotype is allowed to has its own QTL.
+* $H_1$: There are p QTL, each affecting one of the phenotypes (i.e.,
+  each phenotype is allowed to have its own QTL).
 
-This function has much less parameters than the previous one. We have
-`cross`, `Y`, `chr`, `addcovar`, `intcovar` and `n.simu`, the usage is
-same as before.  This function will return a list with class
-`testpleio.1vsp`, similar to `scanone` and `testpleio.1vs2`, we could
-apply (S3) method `summary` and `plot` to look at the result. In the
-summary, we could see the position and LOD score for the single QTL
-and p QTL model, as well as test statistics $\text{LOD}_{2v1}$ and its
+This function has fewer parameters than `testpleio.1vs2`. The
+arguments are `cross`, `Y`, `chr`, `addcovar`, `intcovar` and
+`n.simu`, and their usage is
+the same as before.
+
+This function will return a list with class
+`testpleio.1vsp`. We can again use `summary` and `plot` to look at the results. The
+summary includes the estimated QTL positions and LOD score for the single-QTL
+and p-QTL models, as well as test statistics $\text{LOD}_{pv1}$ and its
 P-value.
 
 ```{r, fig.cap="plot for result of testpleio.1vsp, showing joing mapping LOD curve and max LOD score for each trait seperately"}
@@ -238,7 +244,7 @@ plotGenetpattern(Y=Y, cross=listeria, chr=chr,
 ```
 
 We can tell from both plots the there are two different genetic
-patterns, thus possible two different QTLs, even if they are closely
+patterns, thus possible two different QTL, even if they are closely
 linked.
 
 ### plot LOD score with sign: `plotLODsign`
@@ -309,10 +315,10 @@ genotype if it is non-recombinant, or yellow if it has recombiant.
 
 Lastely, we will show the whole procedure recommended for analysis of
 expression data. We start by mapping each phenotype individually,
-then count the number of eQTLs in windows of 10~cM, when there seems
+then count the number of eQTL in windows of 10~cM, when there seems
 to be a trans-eQTL hotspot, we can build a object `transband` by
 `make.transbands`, the object contains basic information of the
-transband: chromosome and postion of the transband, number of eQTLs in
+transband: chromosome and postion of the transband, number of eQTL in
 the transband, and estimate of QTL position and LOD score under
 multivariate assumption; it also contians all the information needed
 for the exploration plots: QTL LOD scores and positions, additive and
