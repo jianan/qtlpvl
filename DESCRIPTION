@@ -13,10 +13,10 @@ Maintainer: Jianan Tian <jiant17@gmail.com>
 Depends:
     R (>= 3.0.2),
     qtl,
-    Rcpp (>= 0.11.0),
-    plyr
+    Rcpp (>= 0.11.0)
 Imports:
-    broman
+    broman,
+    plyr
 Suggests:
     knitr,
     testthat,
