@@ -1,17 +1,19 @@
 Package: qtlpvl
-Title: QTL: test of pleiotrophy vs. close linkage
-Description: This package deal with multiple trait QTL problem.
-Version: 0.1
+Title: Test of Pleiotropy vs. Close Linkage of QTL
+Description: Exploratory plots and formal statistical tests for
+    pleiotropy vs. close linkage of QTL, in the case of multivariate
+    phenotypes, particularly for the case of eQTL analysis.
+Version: 0.1-2
+Date: 2015-08-05
 Authors@R: c( person("Jianan", "Tian", email = "jiant17@gmail.com", role =
-    c("aut","cre")), person("Karl", "Broman", email = "kbroman@gmail.com", role
+    c("aut","cre")), person("Karl", "Broman", email = "kbroman@biostat.wisc.edu", role
     = "aut") )
-Author: Jianan Tian and Karl Broman
+Author: Jianan Tian [aut, cre], Karl Broman [aut]
 Maintainer: Jianan Tian <jiant17@gmail.com>
 Depends:
     R (>= 3.0.2),
     qtl,
     Rcpp (>= 0.11.0),
-    RcppEigen (>= 0.3.2.0.2),
     plyr,
     broman
 Suggests:
