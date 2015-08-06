@@ -387,6 +387,10 @@ count of traits with a trans-eQTL in a sliding 10 cM window.
 
 
 ## Session Info
+
+The following indicates the set of R packages that were used, as well
+as the versions of R and the packages that we used.
+
 ```{r}
 sessionInfo()
 ```
