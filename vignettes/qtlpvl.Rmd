@@ -270,26 +270,30 @@ For each trait, the estimated additive QTL effect is used as the sign of the
 LOD score. We first run single-trait mapping to obtain LOD scores and
 estimated QTL
 positions. We use the R/qtl function `argmax.geno` to obtain imputed
-QTL genotypes, and
-calculate the mean trait value for each of the 3 genotype group. We define the
-direction positive when the mean of the first group is bigger than the
-mean of the third group, and negative if not. Only traits with LOD
+QTL genotypes, and estimated the additive QTL effect as $\mu_{RR} - \mu_{BB}$.
+Only traits with LOD
 score bigger than a threshold will be displayed, the default value of
-the threshold `LOD.threshold` is set as 3.
+the threshold (`LOD.threshold`) is 3.
 
 ```{r,fig.cap="plot of signed LOD score for all the simulated triats"}
 plotLODsign(Y=Y, cross=listeria, chr=chr)
 ```
 
-We indicate the positions of all the genotyped markers with little
-ticks at the x-axis. We can pass these values to parameter `map` or
-let the function handle it by pulling this information from the
-`cross` object at a fixed `chr`.
+We see that the traits mapping to the left side of the region all show
+positive QTL effects, with the R allele associated with larger average
+trait, while the traits mapping to the right side all show negative
+QTL effects, with the B allele associated with larger average
+trait. This is again evidence for two QTL in the region.
 
-If we already have mapped the traits (which, in most cases, is done in
-previouse steps), we can simply pass the signed LOD scores and their
-mapped positions to `LODsign` and `maxPOS` respectively, to speed up
-the procedure by skiping mapping the triats redundantly. The use of
+Tick marks at the bottom of the plot indicate the positions of genotyped markers.
+We can pass these values to parameter `map`, but the default is pull this information from the
+input `cross` object on the given chromosome, `chr`.
+
+If we had already performed QTL analysis on the traits,
+we can pass the signed LOD scores and their
+mapped positions to `LODsign` and `maxPOS`, respectively.
+By skipping the QTL analysis of the traits, this can speed up the
+procedure. The use of
 this feature will be shown at the last section.
 
 ### Linear discriminant plot: `plottrans.LDA`
