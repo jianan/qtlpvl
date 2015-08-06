@@ -259,17 +259,19 @@ with larger average trait value ($a > 0$). This is evidence for two
 QTL in the region, with different inheritance patterns.
 
 
-### plot LOD score with sign: `plotLODsign`
+### plot signed LOD score: `plotLODsign`
 
-Using the same data, we could also display the direction of the QTL
-effect with `plotLODsign`.  Function `plotLODsign` takes input
-`cross`, `Y` and `chr`, as well as `addcovar` and `intcovar`, all has
-been introduced above.
+The function `plotLODsign` gives a second exploratory plot to
+display the direction of the QTL
+effects.  The input arguments are
+`cross`, `Y`, and `chr`, as well as `addcovar` and `intcovar`, all as above.
 
-For each trait, the QTL effect direction is used as the sign of the
-LOD score. We first run single trait mapping for LOD scores and QTL
-positions, then we use `argmax.geno` to impute QTL genotypes and
-calculate mean for each of the 3 genotype group. We define the
+For each trait, the estimated additive QTL effect is used as the sign of the
+LOD score. We first run single-trait mapping to obtain LOD scores and
+estimated QTL
+positions. We use the R/qtl function `argmax.geno` to obtain imputed
+QTL genotypes, and
+calculate the mean trait value for each of the 3 genotype group. We define the
 direction positive when the mean of the first group is bigger than the
 mean of the third group, and negative if not. Only traits with LOD
 score bigger than a threshold will be displayed, the default value of
