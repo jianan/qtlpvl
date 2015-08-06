@@ -8,7 +8,6 @@
 ##' @param ... parameters to be passed through to plotting functions.
 ##' @export
 plottrans.LDA2 <- function(Y, geno, nonrecomb, max.p=100, geno2, addlegend=TRUE, ...){
-  suppressMessages(require(MASS))|| stop("the required package 'MASS' is not installed. ")
 
   ## use the first 100.
   Y <- Y[, 1:min(max.p, ncol(Y))]

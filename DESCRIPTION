@@ -16,14 +16,14 @@ Depends:
     Rcpp (>= 0.11.0)
 Imports:
     broman,
-    plyr
+    plyr,
+    MASS,
+    e1071,
+    Rtsne,
+    class
 Suggests:
     knitr,
-    testthat,
-    MASS,
-    class,
-    e1071,
-    Rtsne
+    testthat
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppEigen
 License: GPL-3

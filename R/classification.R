@@ -10,14 +10,13 @@
 ##' vector "sca" that could be used to generate the Linear
 ##' Discriminants.
 ##' @export
-classification <- function(data.train, data.test, class.train, 
+classification <- function(data.train, data.test, class.train,
                            method=c("LDA", "KNN", "SVM"), K=50){
-  
+
   method <- match.arg(method)
-  
+
   if(method == "LDA"){
-    suppressMessages(require(MASS))|| stop("the required package 'MASS' is not installed. ")
-    fit <- lda(data.train, grouping=class.train)
+    fit <- MASS::lda(data.train, grouping=class.train)
     pred <- predict(fit, data.test)
     pred.test <- pred$class
     names(pred.test) <- rownames(data.test)
@@ -25,28 +24,26 @@ classification <- function(data.train, data.test, class.train,
     pred.train <- predict(fit)$class
     error.train <- mean(pred.train != class.train)
     sca <- fit$scaling
-    return(list(pred.test=pred.test, pred.score=pred.score, 
+    return(list(pred.test=pred.test, pred.score=pred.score,
                 pred.train=pred.train, error.train=error.train, sca=sca))
   }else if(method == "KNN"){
-    suppressMessages(require(class))|| stop("the required package 'class' is not installed. ")
-    knnfit <- knn(data.train, data.test, cl = class.train, k = K, prob=TRUE)
+    knnfit <- class::knn(data.train, data.test, cl = class.train, k = K, prob=TRUE)
     pred.test <- knnfit
     names(pred.test) <- rownames(data.test)
     pred.score <- attr(knnfit, "prob")
-    pred.train <- knn(data.train, data.train, cl = class.train, k = K, prob=TRUE)
+    pred.train <- class::knn(data.train, data.train, cl = class.train, k = K, prob=TRUE)
     error.train <- mean(pred.train != class.train)
-    return(list(pred.test=pred.test, pred.score=pred.score, 
+    return(list(pred.test=pred.test, pred.score=pred.score,
                 pred.train=pred.train, error.train=error.train))
   }else if(method == "SVM"){
-    suppressMessages(require(e1071))|| stop("the required package 'e1071' is not installed. ")
-    fit <- svm(x=data.train, y=as.factor(class.train), probability=TRUE)
+    fit <- e1071::svm(x=data.train, y=as.factor(class.train), probability=TRUE)
     pred.test <- predict(fit, data.test, probability=TRUE)
     names(pred.test) <- rownames(data.test)
     pred.score <- apply(attr(pred.test, "probabilities"), 1, max)
     pred.train <- predict(fit)
     error.train <- mean(pred.train != class.train)
-    return(list(pred.test=pred.test, pred.score=pred.score, 
+    return(list(pred.test=pred.test, pred.score=pred.score,
                 pred.train=pred.train, error.train=error.train))
   }
-  
-}  
+
+}

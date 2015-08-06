@@ -3,7 +3,7 @@
 ##' @inheritParams plottrans.PCA
 ##' @export
 plottrans.tSNE <- function(Y, geno, nonrecomb, ...){
-  suppressMessages(require(Rtsne))|| stop("the required package 'Rtsne' is not installed. ")
+
   SNE <- Rtsne::Rtsne(Y)$Y # Run TSNE
 
   blue <- rgb(123, 104, 238, maxColorValue = 256)
