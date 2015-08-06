@@ -33,7 +33,13 @@ are converted to strings.}
 
 \item{LOD.threshold}{threshold for QTL to be displayed.}
 
-\item{...}{Optional graphics arguments}
+\item{xlab}{x-axis label}
+
+\item{ylab}{y-axis label}
+
+\item{mgp}{Margin parameters}
+
+\item{...}{Optional graphics arguments, passed to \code{\link[graphics]{plot}}}
 }
 \value{
 a plot of QTL dominance effect versus QTL additive effect.

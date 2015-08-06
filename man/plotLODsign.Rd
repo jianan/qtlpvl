@@ -20,13 +20,27 @@ LOD scores should be calculated. This should be a vector of
 character strings referring to chromosomes by name; numeric values
 are converted to strings.}
 
+\item{LODsign}{Optional vector of signed LOD scores}
+
+\item{maxPOS}{Optional vector of estimated QTL positions}
+
+\item{map}{Optional vector of marker positions}
+
 \item{addcovar}{Additive covariates, samples in the row.}
 
 \item{intcovar}{Interactive covariates (interact with QTL genotype).}
 
 \item{LOD.threshold}{threshold for QTL to be displayed.}
 
-\item{...}{Optional graphics arguments}
+\item{xlab}{x-axis label}
+
+\item{ylab}{y-axis label}
+
+\item{mgp}{Margin parameters}
+
+\item{bgcolor}{Background color for the plot}
+
+\item{...}{Optional graphics arguments, passed to \code{\link[graphics]{plot}}}
 }
 \value{
 a plot the signed LOD score versus QTL position for multiple traits.

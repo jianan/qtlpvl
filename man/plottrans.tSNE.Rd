@@ -12,6 +12,9 @@ plottrans.tSNE(Y, geno, nonrecomb, ...)
 \item{geno}{genotype at the peak marker of scanone.mvn.}
 
 \item{nonrecomb}{index for non-recombnent(in a 10cM region) individuals.}
+
+\item{...}{Optional graphics parameters passed to \code{\link[broman]{grayplot}}
+used to avoid rank deficiency.}
 }
 \description{
 tsne plot for a transband.

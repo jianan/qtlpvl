@@ -13,7 +13,9 @@ plottrans.LDA(Y, geno, nonrecomb, max.p = 100, ...)
 
 \item{nonrecomb}{index for non-recombnent(in a 10cM region) individuals.}
 
-\item{max.p}{max number of traits used for PCA analysis. This is
+\item{max.p}{max number of traits used for PCA analysis. This is}
+
+\item{...}{Optional graphics parameters passed to \code{\link[broman]{grayplot}}
 used to avoid rank deficiency.}
 }
 \description{

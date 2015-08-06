@@ -11,7 +11,9 @@ plottrans.PCA.sex(Y, sex, max.p = 100, ...)
 
 \item{sex}{Female =1, Male=2}
 
-\item{max.p}{max number of traits used for PCA analysis. This is
+\item{max.p}{max number of traits used for PCA analysis. This is}
+
+\item{...}{Optional graphics parameters passed to \code{\link[broman]{grayplot}}
 used to avoid rank deficiency.}
 }
 \description{

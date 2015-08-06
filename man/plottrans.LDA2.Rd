@@ -14,8 +14,7 @@ plottrans.LDA2(Y, geno, nonrecomb, max.p = 100, geno2, addlegend = TRUE,
 
 \item{nonrecomb}{index for non-recombnent(in a 10cM region) individuals.}
 
-\item{max.p}{max number of traits used for PCA analysis. This is
-used to avoid rank deficiency.}
+\item{max.p}{max number of traits used for PCA analysis. This is}
 
 \item{geno2}{2 QTL genotype}
 
