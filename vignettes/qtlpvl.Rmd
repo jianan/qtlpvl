@@ -84,8 +84,8 @@ plot(out)
 ```
 
 With this single-QTL analysis, the QTL is estimated to be at
-`r myround(summary(out)$pos, 1)` cM,
-with LOD score `r myround(summary(out)$lod, 1)`. This is closer to the
+`r broman::myround(summary(out)$pos, 1)` cM,
+with LOD score `r broman::myround(summary(out)$lod, 1)`. This is closer to the
 second QTL, as in our simulation, the second QTL had a larger effect than
 the first QTL.
 

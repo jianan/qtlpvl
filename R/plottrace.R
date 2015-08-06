@@ -28,9 +28,9 @@ plottrace.testpleio.1vs2 <- function(x, xlab="cut point", ylab=expression(LOD["2
   n.max <- which.max(t)
   v.max <- max(t, na.rm=TRUE)
   ylim <- c(-v.max*0.05, v.max*1.05)
-  grayplot(1:length(t), t, type = "n", xlab = xlab, ylab = ylab,
-           ylim = ylim, yaxs="i", mgp = mgp,
-           xlim=c(0.5, length(t)+0.5), xaxs="i", las=1, ...)
+  broman::grayplot(1:length(t), t, type = "n", xlab = xlab, ylab = ylab,
+                   ylim = ylim, yaxs="i", mgp = mgp,
+                   xlim=c(0.5, length(t)+0.5), xaxs="i", las=1, ...)
   u <- par()$usr
   segments(x0=n.max, y0=u[3], x1=n.max, y1=v.max, lwd=2, col="violetred")
   lines(seq(along=t), t, type="o", pch=21, bg="slateblue", cex=0.8)
