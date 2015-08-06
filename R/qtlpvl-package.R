@@ -4,6 +4,7 @@
 ##'
 ##' @import qtl
 ##' @import Rcpp
+##' @import plyr
 ##' @name qtlpvl
 ##' @useDynLib qtlpvl
 ##' @docType package

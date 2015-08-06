@@ -32,7 +32,7 @@ find.trans <- function(out1, probepos, chr, marker.info,
   ##                 count=0)
   ## x$count <- sample(1:100, size=nrow(x))
 
-  trans.info <- plyr::ddply(out, .(chr), function(x) {
+  trans.info <- ddply(out, .(chr), function(x) {
     ## if two peaks are near each other(<5cM), combine them;
     ## otherwise treat them as different transband.
     if(all(diff(x$pos) < trans.cM)) {

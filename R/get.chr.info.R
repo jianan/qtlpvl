@@ -1,4 +1,3 @@
-##' @importFrom plyr ddply summarise
 get.chr.info <- function(marker.info){
   chr <- unique(marker.info$chr)
   chr.info <- ddply(marker.info, .(chr), summarise,
@@ -11,6 +10,3 @@ get.chr.info <- function(marker.info){
   len <- end-start
   data.frame(chr, start, end, len, stringsAsFactors=FALSE)
 }
-
-# avoid warnings from R CMD check
-globalVariables(c("pos", "."))
