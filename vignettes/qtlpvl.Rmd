@@ -298,21 +298,21 @@ this feature will be shown at the last section.
 
 ### Linear discriminant plot: `plottrans.LDA`
 
-In this method we group individuals into two groups by whether there
-is a recombiantion event in the region. For individuals with no
-recombinantion events, we will know there eQTL genotype since they
-have the same genotype in the region, we then apply linear
-discriminant analysis to the traits with the eQTL genotype as `label`
-and plot the first two linear discriminants, shown as three distince
-clusters. We then calculate the linear discriminants for the other
-group with recombinantion event in the region by using the same
-coffecients, and add them to the plot. If the recombinant individuals
+In our final exploratory plot, we identify individuals with no
+recombination event in the region of the QTL. For these individuals,
+we will know their QTL genotype. We apply linear
+discriminant analysis to the traits with the QTL genotype as the label
+and plot the first two linear discriminants. If the QTL effect is
+strong, this should show three distinct
+clusters. We then calculate the linear discriminants for the
+individuals that show a recombinantion event in the region, using the same
+coffecients, and add them as points in the plot. If the recombinant individuals
 fall within the clusters defined by the non-recombinants, this is
-consistent with there being a single eQTL. If, on the other hand, the
-recombinants look distinctly different from the non-recombinants, then
-there might be more than one eQTL.
+consistent with there being a single QTL. If, on the other hand, the
+recombinants look distinctly different from the non-recombinants, this
+suggests more than one QTL.
 
-In the following code, we first find which inidviduals have no
+In the following code, we first find which individuals have no
 recombinant event, and then call the function `plottrans.LDA` with
 phenotype matrix `Y`, QTL genotype `qtlgeno` and nonrecombinant IDs
 `nonrecomb`.
@@ -326,23 +326,28 @@ names(nonrecomb) <- rownames(Y)[nonrecomb]
 plottrans.LDA(Y, qtlgeno, nonrecomb)
 ```
 
-In the above plot each point is a individual colored by its QTL
-genotype if it is non-recombinant, or yellow if it has recombiant.
+In the above plot, each point is a individual colored by its QTL
+genotype if it is non-recombinant, or yellow if it was recombinant.
+This particular example is not terribly informative about whether
+there is one or two QTL.
 
-## Analysis as trans-eQTL hotspot with probepos
+## Analysis of a trans-eQTL hotspot with gene positions
 
-Lastely, we will show the whole procedure recommended for analysis of
+Lastly, we will demonstrate the entire procedure, as recommended for
+the analysis of
 expression data. We start by mapping each phenotype individually,
-then count the number of eQTL in windows of 10~cM, when there seems
-to be a trans-eQTL hotspot, we can build a object `transband` by
-`make.transbands`, the object contains basic information of the
-transband: chromosome and postion of the transband, number of eQTL in
-the transband, and estimate of QTL position and LOD score under
-multivariate assumption; it also contians all the information needed
-for the exploration plots: QTL LOD scores and positions, additive and
-dominance effects, QTL geneotypes, and non-recombinant IDs. It is
-easier to extract these infomations from this object and run all the
-statistical test and exploration plots in a batch.
+then count the number of eQTL in windows of 10~cM.  When there seems
+to be a trans-eQTL hotspot, we can build an object `transband` with
+the function
+`make.transbands`. This object contains basic information on the
+transband: chromosome and position of the transband, number of eQTL in
+the transband, and an estimate of the QTL position and LOD score under
+the multivariate normal assumption. It also contains all of the information needed
+for the exploratory plots: LOD scores and estimated QTL positions,
+estimated additive and
+dominance effects, QTL genotypes, and the IDs for the non-recombinant individuals.
+By extracting such information from this object, we can run all of the
+statistical tests and create the exploratory plots as a batch.
 
 ```{r, all, fig.width=12, fig.height=8, fig.cap="Summary plot for a trans-eQTL hotspot using simulated data"}
 phenoname <- colnames(Y)
@@ -376,6 +381,9 @@ plotGenetpattern(a=out$eff.a, d=out$eff.d, main="Inheritance Pattern")
 plottrans.LDA(Y, geno, nonrecomb, main="LDA plot")
 
 ```
+
+The results are as before, with one added plot in the top left: a
+count of traits with a trans-eQTL in a sliding 10 cM window.
 
 
 ## Session Info
