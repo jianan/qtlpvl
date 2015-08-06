@@ -215,23 +215,30 @@ summary(obj2)
 plot(obj2)
 ```
 
-## Exploration plots
+## Exploratry plots
 
-### plot Genetic Pattern: `plotGenetpattern`
+### plot of genetic pattern: `plotGenetpattern`
 
-Function `plotGenetpattern` takes two kinds of input parameters:
+The function `plotGenetpattern` takes two kinds of input parameters:
 * a phenotype matrix `Y` and a genotype vector `genotype`, the later
-  should be genotype of the common QTL in most suspicious.
+  being genotypes at a common QTL.
 * a phenotype matrix `Y` and a cross object `cross` and chromosome
-  number `chr`. This is used when there is no certainty of a single
-  QTL for all traits and thus each trait is mapped separately and its
-  own QTL genotype is used.
+  number `chr`. This is used when there is uncertainty in the QTL
+  locations for the traits. In this case, each trait is mapped
+  separately and the genotypes at corresponding estimated QTL
+  position are used.
 
-QTL additive effect is defined as a=(RR-BB)/2, QTL dominant effect is
-defined as d=BR-(BB+RR)/2, when plotted against each other, traits
+We'll use the labels B and R for the alleles in the cross. (These
+correspond to the strains in the main application that motivated this
+work).
+The additive QTL effect is defined as $a=(RR-BB)/2$. The dominance effect is
+$d=BR-(BB+RR)/2$. When plotted against each other, traits
 with pure additive effects are near the x-axis ($d=0$) and traits with
 dominant effects are along the diagonals, $d=a$ (BR=RR) and $d=-a$
 (BR=BB).
+
+Here, we'll make plots by each method: with a common QTL and with
+separate QTL for each trait.
 
 ```{r, fig.width=12, fig.height=6, fig.cap="plot of inheritance pattern for all the simulated traits"}
 par(mfrow=c(1,2))
@@ -244,9 +251,13 @@ plotGenetpattern(Y=Y, cross=listeria, chr=chr,
                  main="by individual QTL genotype")
 ```
 
-We can tell from both plots the there are two different genetic
-patterns, thus possible two different QTL, even if they are closely
-linked.
+In both plots, we see one set of traits for which the QTL is dominant,
+with the B allele associated with larger average trait value ($d
+\approx -a$ and $a < 0$), and another set of traits for which the QTL
+alleles are additive ($d \approx 0$), with the R allele associated
+with larger average trait value ($a > 0$). This is evidence for two
+QTL in the region, with different inheritance patterns.
+
 
 ### plot LOD score with sign: `plotLODsign`
 
