@@ -36,7 +36,7 @@ The 10 phenotypes were generated with these QTL effects plus
 independent, normally distributed residual variation.
 Treating these traits as gene expression measurements, we
 assigned genomic positions at random. The phenotype data is stored
-in matrix `Y` and their positions are stored in data frame `probepos`.
+in matrix `fake.phenos` and their positions are stored in data frame `fake.probepos`.
 
 We load the qtlpvl package, the simulated phenotype data, and the
 `listeria` data set as follows. (The R/qtl package is automatically
@@ -58,13 +58,12 @@ variable `chr=1` for use throughout.
 ```{r,plotLOD,fig.cap="LOD score and QTL positions for each of the simulated traits"}
 listeria <- calc.genoprob(listeria, step=1)
 chr <- 1
-Y <- fake.phenos
-plotLOD(Y=Y, cross=listeria, chr=chr)
+plotLOD(Y=fake.phenos, cross=listeria, chr=chr)
 ```
 
 ## joint mapping: `scanone.mvn`
 
-Having the cross object `listeria` and phenotype trait matrix `Y`
+Having the cross object `listeria` and phenotype trait matrix `fake.phenos`
 loaded, we can perform joint, multi-trait QTL mapping with the
 function `scanone.mvn`. This assumes
 a multivariate normal model. `chr` is set to be "1", which
@@ -79,7 +78,7 @@ is, in the same form as returned by the R/qtl function `scanone`).
 We can then use `summary` and `plot` to look at the results.
 
 ```{r,scanonemvn, fig.cap="Joint mapping result under multivariate normal model for all the simulated triats"}
-out <- scanone.mvn(cross=listeria, Y=Y, chr=chr)
+out <- scanone.mvn(cross=listeria, Y=fake.phenos, chr=chr)
 summary(out)
 plot(out)
 ```
@@ -157,7 +156,7 @@ $\text{LOD}_{2v1}$ and its P-value.
 As a quick illustration, we will perform just 10 bootstrap simulation replicates.
 
 ```{r, fig.cap="LOD profile plot for result of test1vs2 on simulated traits"}
-obj <- testpleio.1vs2(cross=listeria, Y=Y, chr=chr, n.simu=10,
+obj <- testpleio.1vs2(cross=listeria, Y=fake.phenos, chr=chr, n.simu=10,
                       region.l=60, region.r=90,
                       search.method="complete")
 summary(obj)
@@ -211,7 +210,7 @@ and p-QTL models, as well as test statistics $\text{LOD}_{pv1}$ and its
 P-value.
 
 ```{r, fig.cap="plot for result of testpleio.1vsp, showing joing mapping LOD curve and max LOD score for each trait seperately"}
-obj2 <- testpleio.1vsp(cross=listeria, Y=Y, chr=chr, n.simu=10)
+obj2 <- testpleio.1vsp(cross=listeria, Y=fake.phenos, chr=chr, n.simu=10)
 summary(obj2)
 plot(obj2)
 ```
@@ -247,8 +246,8 @@ qtlpos <- max(out)$pos
 m <- find.pseudomarker(listeria, chr, qtlpos, "prob", addchr=FALSE)
 qtlgeno <- apply(listeria$geno[[chr]]$prob[,m,], 1, which.max)
 
-plotGenetpattern(Y=Y, genotype=qtlgeno, main="by common QTL genotype")
-plotGenetpattern(Y=Y, cross=listeria, chr=chr,
+plotGenetpattern(Y=fake.phenos, genotype=qtlgeno, main="by common QTL genotype")
+plotGenetpattern(Y=fake.phenos, cross=listeria, chr=chr,
                  main="by individual QTL genotype")
 ```
 
@@ -277,7 +276,7 @@ score bigger than a threshold will be displayed, the default value of
 the threshold (`LOD.threshold`) is 3.
 
 ```{r,fig.cap="plot of signed LOD score for all the simulated triats"}
-plotLODsign(Y=Y, cross=listeria, chr=chr)
+plotLODsign(Y=fake.phenos, cross=listeria, chr=chr)
 ```
 
 We see that the traits mapping to the left side of the region all show
@@ -323,8 +322,8 @@ out <- out[out$chr==chr, ]
 m <- which(out$pos >= qtlpos-5 & out$pos <= qtlpos+5)
 g <- apply(listeria$geno[[chr]]$prob[,m,], 1:2, which.max)
 nonrecomb <- which(sapply(apply(g, 1, unique), length) == 1)
-names(nonrecomb) <- rownames(Y)[nonrecomb]
-plottrans.LDA(Y, qtlgeno, nonrecomb)
+names(nonrecomb) <- rownames(fake.phenos)[nonrecomb]
+plottrans.LDA(Y=fake.phenos, qtlgeno, nonrecomb)
 ```
 
 In the above plot, each point is a individual colored by its QTL
@@ -352,8 +351,8 @@ statistical tests and create the exploratory plots as a batch.
 
 ```{r, all, fig.width=12, fig.height=8, fig.cap="Summary plot for a trans-eQTL hotspot using simulated data"}
 data(fake.probepos)
-phenoname <- colnames(Y)
-listeria$pheno <- data.frame(listeria$pheno, Y)
+phenoname <- colnames(fake.phenos)
+listeria$pheno <- data.frame(listeria$pheno, fake.phenos)
 out <- scanone(listeria, pheno.col=phenoname, chr=1:19)
 out1 <- convert_scan1(out, phenoname, chr=1:19)
 
@@ -364,7 +363,7 @@ par(mfrow=c(2,3))
 plot(out.count, main="Count of trans-eQTL")
 
 trans <- make.transbands(out1, fake.probepos, cross=listeria, chr=1:19,
-                         mlratio = Y, lod.thr = 5,
+                         mlratio = fake.phenos, lod.thr = 5,
                          trans.cM = 5, kernal.width = 1,
                          window.cM = 10, trans.count.thr = 0,
                          regn.cM = 5)
@@ -380,7 +379,7 @@ plottrace(obj, main="Trace")
 plotLODsign(maxPOS=out$pos, LODsign=sign(out$eff.a)*out$lod1, map=map[[chr]],
             main="Signed LOD")
 plotGenetpattern(a=out$eff.a, d=out$eff.d, main="Inheritance Pattern")
-plottrans.LDA(Y, geno, nonrecomb, main="LDA plot")
+plottrans.LDA(Y=fake.phenos, geno, nonrecomb, main="LDA plot")
 
 ```
 
