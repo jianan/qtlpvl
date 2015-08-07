@@ -42,7 +42,6 @@ LOD is bigger than a threshold.
 data(fake.phenos)
 data(listeria)
 listeria <- calc.genoprob(listeria, step=1)
-chr <- 1
-plotLOD(Y, listeria, chr)
+plotLOD(Y=fake.phenos, cross=listeria, chr=1)
 }
 

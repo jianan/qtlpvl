@@ -58,6 +58,7 @@ variable `chr=1` for use throughout.
 ```{r,plotLOD,fig.cap="LOD score and QTL positions for each of the simulated traits"}
 listeria <- calc.genoprob(listeria, step=1)
 chr <- 1
+Y <- fake.phenos
 plotLOD(Y=Y, cross=listeria, chr=chr)
 ```
 
@@ -350,18 +351,19 @@ By extracting such information from this object, we can run all of the
 statistical tests and create the exploratory plots as a batch.
 
 ```{r, all, fig.width=12, fig.height=8, fig.cap="Summary plot for a trans-eQTL hotspot using simulated data"}
+data(fake.probepos)
 phenoname <- colnames(Y)
 listeria$pheno <- data.frame(listeria$pheno, Y)
 out <- scanone(listeria, pheno.col=phenoname, chr=1:19)
 out1 <- convert_scan1(out, phenoname, chr=1:19)
 
 marker.info <- get.marker.info(listeria, chr)
-out.count <- count.trans(out1, probepos, chr, marker.info)
+out.count <- count.trans(out1, fake.probepos, chr, marker.info)
 
 par(mfrow=c(2,3))
 plot(out.count, main="Count of trans-eQTL")
 
-trans <- make.transbands(out1, probepos, cross=listeria, chr=1:19,
+trans <- make.transbands(out1, fake.probepos, cross=listeria, chr=1:19,
                          mlratio = Y, lod.thr = 5,
                          trans.cM = 5, kernal.width = 1,
                          window.cM = 10, trans.count.thr = 0,

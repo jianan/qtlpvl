@@ -14,17 +14,18 @@ G1 <- matrix(genotype1, n, p1)
 G2 <- matrix(genotype2, n, p-p1)
 G2[G2==3] <- 2
 G <- cbind(G1, G2*(-2))
-Y <- matrix(rnorm(n*p),n,p)
-Y <- Y + G
+fake.phenos <- matrix(rnorm(n*p),n,p)
+fake.phenos <- fake.phenos + G
 phenoname <- paste0("phenos", 1:p)
-colnames(Y) <- phenoname
+colnames(fake.phenos) <- phenoname
 
 map <- pull.map(listeria)
 chrs <- sample(2:19, size=p,replace=TRUE)
 cM <- runif(n=p, min=0, max=sapply(map, max)[chrs])
-probepos <- data.frame(chr=chrs,cM=cM)
-rownames(probepos) <- phenoname
-o <- order(probepos$chr, probepos$cM)
-probepos <- probepos[o, ]
+fake.probepos <- data.frame(chr=chrs,cM=cM)
+rownames(fake.probepos) <- phenoname
+o <- order(fake.probepos$chr, fake.probepos$cM)
+fake.probepos <- fake.probepos[o, ]
 
-save(Y, probepos, file="../data/fake.phenos.RData")
+save(fake.phenos, file="../../data/fake.phenos.rda")
+save(fake.probepos, file="../../data/fake.probepos.rda")

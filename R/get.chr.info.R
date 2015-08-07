@@ -1,12 +1,9 @@
 get.chr.info <- function(marker.info){
   chr <- unique(marker.info$chr)
-  chr.info <- ddply(marker.info, .(chr), summarise,
-                    start=min(pos),
-                    end=max(pos))
-  rownames(chr.info) <- chr.info$chr
-  chr.info <- chr.info[chr, ]
-  start <- chr.info$start
-  end <- chr.info$end
+  for(i in chr){
+    start[i] <- min(marker.info[marker.info$chr==i, "pos"])
+    end[i] <- max(marker.info[marker.info$chr==i, "pos"])
+  }
   len <- end-start
   data.frame(chr, start, end, len, stringsAsFactors=FALSE)
 }

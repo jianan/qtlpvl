@@ -45,8 +45,7 @@ traits.
 data(fake.phenos)
 data(listeria)
 listeria <- calc.genoprob(listeria, step=1)
-chr <- 1
-out <- scanone.mvn(listeria, Y, chr)
+out <- scanone.mvn(Y=fake.phenos, cross=listeria, chr=1)
 summary(out)
 plot(out)
 }

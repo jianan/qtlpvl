@@ -52,7 +52,6 @@ QTL dominant effect is defined as d=BR-(BB+RR)/2.
 data(fake.phenos)
 data(listeria)
 listeria <- calc.genoprob(listeria, step=1)
-chr <- 1
-plotGenetpattern(Y, cross=listeria, chr=chr)
+plotGenetpattern(Y=fake.phenos, cross=listeria, chr=1)
 }
 

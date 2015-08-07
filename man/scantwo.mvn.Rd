@@ -5,7 +5,8 @@
 \title{Multivariate normal genome 2d scan.}
 \usage{
 scantwo.mvn(cross, Y, chr = NULL, addcovar = NULL, intcovar = NULL,
-  method = c("maxlikelihood", "pillaitrace"), tol = 1e-07)
+  method = c("ML", "Pillai", "Wilks", "Hotelling-Lawley", "Roy"),
+  tol = 1e-07)
 }
 \arguments{
 \item{cross}{An object of class \code{cross}. See

@@ -53,7 +53,6 @@ the LOD score.
 data(fake.phenos)
 data(listeria)
 listeria <- calc.genoprob(listeria, step=1)
-chr <- 1
-plotLODsign(Y, listeria, chr)
+plotLODsign(Y=fake.phenos, cross=listeria, chr=1)
 }
 
