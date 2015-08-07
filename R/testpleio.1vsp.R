@@ -20,8 +20,7 @@
 ##' data(fake.phenos)
 ##' data(listeria)
 ##' listeria <- calc.genoprob(listeria, step=1)
-##' chr <- 1
-##' obj <- testpleio.1vsp(listeria, Y, chr, n.simu=100)
+##' obj <- testpleio.1vsp(cross=listeria, Y=fake.phenos, chr=1, n.simu=100)
 ##' summary(obj)
 ##' plot(obj)
 ##'

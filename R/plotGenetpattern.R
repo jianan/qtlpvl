@@ -17,8 +17,7 @@
 ##' data(fake.phenos)
 ##' data(listeria)
 ##' listeria <- calc.genoprob(listeria, step=1)
-##' chr <- 1
-##' plotGenetpattern(Y, cross=listeria, chr=chr)
+##' plotGenetpattern(Y=fake.phenos, cross=listeria, chr=1)
 ##'
 ##' @export
 plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d,
