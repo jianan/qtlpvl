@@ -7,7 +7,7 @@
 ##' @inheritParams scanone.mvn
 ##' @export
 scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
-                        method=c("maxlikelihood", "pillaitrace"),
+                        method = c("ML", "Pillai", "Wilks", "Hotelling-Lawley", "Roy"),
                         tol=1e-7){
 
   method <- match.arg(method)
@@ -39,24 +39,21 @@ scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
   m <- ncol(genoprob)/(ngeno-1)
 
   X0 <- cbind(rep(1, n), addcovar, intcovar)
-  if(method == "maxlikelihood"){
-    L0 <- det_AtA(lm.resid(X0, Y))
-  }else if(method == "pillaitrace"){
-    Sigma <- crossprod(lm.resid(X0, Y))
-    S0inv <- solve(Sigma)
-  }
+  L0 <- det_AtA(lm.resid(X0, Y))
+  Sigma <- crossprod(lm.resid(X0, Y))
+  S0inv <- solve(Sigma)
 
   L1 <- matrix(NA, m, m)
   for(i in 1:m){
+    q <- ifelse(ngeno==3, 4*p, 2*p)
+    df.res <- n-q-1
     if(ngeno==3) X1 <- genoprob[, 2*(i-1)+1:2] else X1 <- genoprob[, i]
     X <- cbind(rep(1, n), addcovar, intcovar, X1, interact(intcovar, X1))
-    if(method == "maxlikelihood"){
-      L1[i, i] <- det_AtA(lm.resid(X, Y))
-    }else if(method == "pillaitrace"){
-      L1[i, i] <- pillai(crossprod(lm.resid(X, Y)), S0inv)
-    }
+    L1[i, i] <- calc.L(lm.resid(X, Y), S0inv, q, df.res, method)
   }
   for(i in 1:(m-1)){
+    q <- ifelse(ngeno==3, 2*p, p)
+    df.res <- n-q-1
     if(ngeno==3) X1 <- genoprob[, 2*(i-1)+1:2] else X1 <- genoprob[, i]
     for(j in (i+1):m){
       if(ngeno==3) X2 <- genoprob[, 2*(j-1)+1:2] else X2 <- genoprob[, j]
@@ -64,34 +61,16 @@ scantwo.mvn <- function(cross, Y, chr=NULL, addcovar=NULL, intcovar=NULL,
                   interact(intcovar, X1), interact(intcovar, X2))
       Xi <- interact(X1, X2)
       Xf <- cbind(Xa, Xi, interact(intcovar, Xi))
-      if(method == "maxlikelihood"){
-        L1[i, j] <- det_AtA(lm.resid(Xa, Y)) ## upper tri, add model
-        L1[j, i] <- det_AtA(lm.resid(Xf, Y)) ## lower tri, full model
-      }else if(method == "pillaitrace"){
-        L1[i, j] <- pillai(crossprod(lm.resid(Xa, Y)), S0inv)
-        L1[j, i] <- pillai(crossprod(lm.resid(Xf, Y)), S0inv)
-      }
+      L1[i, j] <- calc.L(lm.resid(Xa, Y), S0inv, q, df.res, method) ## upper tri, add model
+      L1[j, i] <- calc.L(lm.resid(Xf, Y), S0inv, q, df.res, method) ## lower tri, full model
     }
   }
 
-  if(method == "maxlikelihood"){
+  if(method == "ML"){
     LOD <- n/2 * log10(exp(1)) * (L0 - L1)
-  }else if(method == "pillaitrace"){
-    LOD <- (L1 - p/2)/p
+  }else{
+    LOD <- - L1
   }
 
-  ## out <- NULL
-  ## for(i in chr){
-  ##   map <- attr(cross[[c("geno", i, "prob")]], "map")
-  ##   ind <- substr(names(map), 1, 3) == "loc"
-  ##   names(map)[ind] <- paste("c", i, ".", names(map)[ind], sep="")
-  ##   out <- rbind(out, data.frame(chr=i, pos=map))
-  ## }
-  ## out$lod <- LOD
-  ## class(out) <- c("scanone", "data.frame")
-  ## ## attr(out, "method") <- method
-  ## ## attr(out, "type") <- type
-  ## ## attr(out, "model") <- model
-  ## return(out)
   return(LOD)
 }
