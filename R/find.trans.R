@@ -19,7 +19,7 @@ find.trans <- function(out1, probepos, chr, marker.info,
     out1 <- get.trans.info(out1, probepos, chr, marker.info,
                            lod.thr=lod.thr, trans.cM=trans.cM)
   }
-  out1 <- subset(out1, is.trans)
+  out1 <- out1[out1$is.trans, ]
   if(nrow(out1) == 0) return()
 
   ## find trans.info, chr, left and right bound of each transband.
