@@ -215,7 +215,7 @@ summary(obj2)
 plot(obj2)
 ```
 
-## Exploratry plots
+## Exploratory plots
 
 ### plot of genetic pattern: `plotGenetpattern`
 
