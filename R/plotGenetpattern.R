@@ -81,8 +81,11 @@ plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d,
   lim <- max(abs(c(a,d)), na.rm=TRUE)
   if(lim == -Inf) lim <- 1
   xlim <- ylim <- c(-lim, lim)*1.1
-  plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab,
-       mgp=mgp, las=1, tck=0, ...)
+  plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, xlab="", ylab=ylab,
+       mgp=mgp, las=1, tck=0, xaxt="n", yaxt="n", ...)
+  axis(side=1, mgp=mgp+c(0,0.2,0), tick=TRUE, tck=-0.02)
+  axis(side=2, mgp=mgp+c(0,0.2,0), tick=TRUE, tck=-0.02)
+  title(xlab=xlab, mgp=mgp-c(0.5,0,0), ...)
   u <- par("usr")
   rect(u[1], u[3], u[2], u[4], col="gray80")
   abline(v = 0, h = 0, col="white")

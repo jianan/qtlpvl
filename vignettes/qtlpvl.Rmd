@@ -61,7 +61,7 @@ chr <- 1
 plotLOD(Y=fake.phenos, cross=listeria, chr=chr)
 ```
 
-## joint mapping: `scanone.mvn`
+## Joint mapping: `scanone.mvn`
 
 Having the cross object `listeria` and phenotype trait matrix `fake.phenos`
 loaded, we can perform joint, multi-trait QTL mapping with the
@@ -215,7 +215,7 @@ summary(obj2)
 plot(obj2)
 ```
 
-## Exploratry plots
+## Exploratory plots
 
 ### plot of genetic pattern: `plotGenetpattern`
 
