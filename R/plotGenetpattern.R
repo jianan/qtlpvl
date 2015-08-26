@@ -22,8 +22,8 @@
 ##' @export
 plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d,
                              addcovar=NULL, intcovar=NULL, LOD.threshold=3,
-                             xlab="additive effect: a=(RR-BB)/2",
-                             ylab= "dominance effect: d=BR-(BB+RR)/2",
+                             xlab="Additive effect",
+                             ylab= "Dominance effect",
                              mgp=c(1.6, 0.2, 0),
                              ...){
 
@@ -81,7 +81,7 @@ plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d,
   lim <- max(abs(c(a,d)), na.rm=TRUE)
   if(lim == -Inf) lim <- 1
   xlim <- ylim <- c(-lim, lim)*1.1
-  plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, xlab="", ylab=ylab,
+  plot(x=a, y=d, pch=20, xlim=xlim, ylim=ylim, xlab="", ylab=ylab, type="n",
        mgp=mgp, las=1, tck=0, xaxt="n", yaxt="n", ...)
   axis(side=1, mgp=mgp+c(0,0.2,0), tick=TRUE, tck=-0.02)
   axis(side=2, mgp=mgp+c(0,0.2,0), tick=TRUE, tck=-0.02)
@@ -91,6 +91,6 @@ plotGenetpattern <- function(Y, genotype=NULL, cross, chr, a, d,
   abline(v = 0, h = 0, col="white")
   abline(a = 0, b = -1, col="white")
   abline(a = 0, b = +1, col="white")
-  points(a, d, pch=20)
+  points(x=a, y=d, col=c("violetred", "slateblue")[ifelse(a>0, 1, 2)], pch=20, cex=0.7)
   rect(u[1], u[3], u[2], u[4])
 }
