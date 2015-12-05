@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 # Introduction to qtlpvl
 
 This package focuses on QTL mapping with multiple traits and
-on testing of pleiotrophy vs. close linkage when multiple traits map
+on testing of pleiotropy vs. close linkage when multiple traits map
 near each other, particularly for the of a trans-eQTL hotspot.
 We provide both exploratory plots and formal
 statistical tests aimed at dissecting trans-eQTL hotspots.
@@ -77,7 +77,7 @@ The result of joint mapping is a data frame with class `scanone` (that
 is, in the same form as returned by the R/qtl function `scanone`).
 We can then use `summary` and `plot` to look at the results.
 
-```{r,scanonemvn, fig.cap="Joint mapping result under multivariate normal model for all the simulated triats"}
+```{r,scanonemvn, fig.cap="Joint mapping result under multivariate normal model for all the simulated traits"}
 out <- scanone.mvn(cross=listeria, Y=fake.phenos, chr=chr)
 summary(out)
 plot(out)
@@ -209,7 +209,7 @@ summary includes the estimated QTL positions and LOD score for the single-QTL
 and p-QTL models, as well as test statistics $\text{LOD}_{pv1}$ and its
 P-value.
 
-```{r, fig.cap="plot for result of testpleio.1vsp, showing joing mapping LOD curve and max LOD score for each trait seperately"}
+```{r, fig.cap="plot for result of testpleio.1vsp, showing joint mapping LOD curve and max LOD score for each trait separately"}
 obj2 <- testpleio.1vsp(cross=listeria, Y=fake.phenos, chr=chr, n.simu=10)
 summary(obj2)
 plot(obj2)
@@ -275,7 +275,7 @@ Only traits with LOD
 score bigger than a threshold will be displayed, the default value of
 the threshold (`LOD.threshold`) is 3.
 
-```{r,fig.cap="plot of signed LOD score for all the simulated triats"}
+```{r,fig.cap="plot of signed LOD score for all the simulated traits"}
 plotLODsign(Y=fake.phenos, cross=listeria, chr=chr)
 ```
 
@@ -305,8 +305,8 @@ discriminant analysis to the traits with the QTL genotype as the label
 and plot the first two linear discriminants. If the QTL effect is
 strong, this should show three distinct
 clusters. We then calculate the linear discriminants for the
-individuals that show a recombinantion event in the region, using the same
-coffecients, and add them as points in the plot. If the recombinant individuals
+individuals that show a recombination event in the region, using the same
+coefficients, and add them as points in the plot. If the recombinant individuals
 fall within the clusters defined by the non-recombinants, this is
 consistent with there being a single QTL. If, on the other hand, the
 recombinants look distinctly different from the non-recombinants, this
@@ -317,7 +317,7 @@ recombinant event, and then call the function `plottrans.LDA` with
 phenotype matrix `Y`, QTL genotype `qtlgeno` and nonrecombinant IDs
 `nonrecomb`.
 
-```{r, fig.cap="LDA plot for the simulated triats, non-recombinant mice are colored as yellow"}
+```{r, fig.cap="LDA plot for the simulated traits, non-recombinant mice are colored as yellow"}
 out <- out[out$chr==chr, ]
 m <- which(out$pos >= qtlpos-5 & out$pos <= qtlpos+5)
 g <- apply(listeria$geno[[chr]]$prob[,m,], 1:2, which.max)
