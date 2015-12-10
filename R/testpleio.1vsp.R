@@ -1,6 +1,6 @@
 ##' Test of pleiotrophic QTL vs close linked QTLs.
 ##'
-##' Test if multitriats are controlled by one pleiotrophic QTL or
+##' Test if multitraits are controlled by one pleiotrophic QTL or
 ##' multiple close linked QTLs, allowing each trait to have its own
 ##' QTL. p-value is calculated from parametric bootstrap, which takes
 ##' the estimated parameters under null hypothesis and generate data

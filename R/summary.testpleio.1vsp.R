@@ -17,7 +17,7 @@ print.summary.testpleio.1vsp <- function(x, ...){
   cat("lod ")
   cat(sprintf("%.2f",x$LODp))
   cat("\n")
-  print(data.frame(Triat=1:length(maxLOD), POS=maxPOS, LOD=maxLOD))
+  print(data.frame(Trait=1:length(maxLOD), POS=maxPOS, LOD=maxLOD))
   cat("\n")
   
   cat("Difference of LOD score: ")

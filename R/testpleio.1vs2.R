@@ -1,6 +1,6 @@
 ##' Test of one pleiotrophic QTL vs two close linked QTLs.
 ##'
-##' Test if multitriats are controlled by one pleiotrophic QTL or two
+##' Test if multitraits are controlled by one pleiotrophic QTL or two
 ##' close linked QTLs. p-value is calculated from parametric
 ##' bootstrap, which takes the estimated parameters under null
 ##' hypothesis and generate data from them to get the null empirical
@@ -17,7 +17,7 @@
 ##' @param RandomStart Use random starting point for the two-QTL model
 ##' or not. default is \code{TRUE}.
 ##' @param RandomCut Use random cutting or not when there are traits
-##' mapped to the same location. Default is \code{FALSE}, triats
+##' mapped to the same location. Default is \code{FALSE}, traits
 ##' mapped to the same location will be bound together.
 ##' @param simu.method "parametric" or "permutation" method for
 ##' simulations. Default is "parametric".
